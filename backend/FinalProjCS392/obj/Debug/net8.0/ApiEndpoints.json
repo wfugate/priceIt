@@ -1,0 +1,113 @@
+[
+  {
+    "ContainingType": "FinalProjCS392.Controllers.CartController",
+    "Method": "GetUserCarts",
+    "RelativePath": "api/cart",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FinalProjCS392.Controllers.CartController",
+    "Method": "CreateNewUserCart",
+    "RelativePath": "api/cart",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FinalProjCS392.Controllers.CreateCartRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FinalProjCS392.Controllers.CartController",
+    "Method": "SaveToCart",
+    "RelativePath": "api/cart/add/{cartId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "FinalProjCS392.Controllers.AddToCartRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ImageProcessingAPI.Controllers.ImageProcessingController",
+    "Method": "ProcessImage",
+    "RelativePath": "api/ImageProcessing/process",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ImageProcessingAPI.Controllers.ImageRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ImageProcessingAPI.Controllers.ImageProcessingController",
+    "Method": "TestConnection",
+    "RelativePath": "api/ImageProcessing/test",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UnwrangleTargetDemo.Controllers.TargetController",
+    "Method": "Search",
+    "RelativePath": "api/Target/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FinalProjCS392.Controllers.WalmartController",
+    "Method": "Search",
+    "RelativePath": "api/Walmart/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
