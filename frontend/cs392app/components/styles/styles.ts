@@ -30,6 +30,26 @@ export const cameraStyles = StyleSheet.create({
         flexDirection: 'row',
         width: '80%',
       },
+      // components/styles/styles.ts
+// Add these to your cameraStyles object:
+
+errorContainer: {
+  marginVertical: 10,
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  borderRadius: 5,
+  alignSelf: 'center',
+},
+errorText: {
+  color: '#e63b60',
+  fontWeight: 'bold',
+  textAlign: 'center',
+  fontSize: 14,
+},
+disabledButton: {
+  opacity: 0.6,
+},
       // Add these to cameraStyles in styles.ts
       fullScreenResults: {
         flex: 1,
