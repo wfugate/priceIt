@@ -25,3 +25,6 @@
 - run: `npm install`
 - cd into `cs392app`
 - run: `npm expo start`
+
+### Notes
+- If everything is still red after running npm install and other commands. Some of the errors you might get will have to do with `--jsx` files: just reset visual studio code when running the front end.
