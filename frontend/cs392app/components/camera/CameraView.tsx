@@ -1,16 +1,39 @@
-// app/components/camera/CameraView.tsx
+// components/camera/CameraView.tsx
 import React from 'react';
-import { CameraView, CameraCapturedPicture } from 'expo-camera';
+import { CameraView as ExpoCameraView, BarcodeScanningResult } from 'expo-camera';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { cameraStyles } from '../styles/styles';
 
-export default React.forwardRef<CameraView, {
-  facing: 'back' | 'front';
-  onFlip: () => void;
-}>(({ facing, onFlip }, ref) => (
-  <CameraView style={cameraStyles.camera} facing={facing} ref={ref}>
-    <TouchableOpacity onPress={onFlip}>
-      <Text style={cameraStyles.buttonText}>Flip</Text>
-    </TouchableOpacity>
-  </CameraView>
-));
+interface CameraViewProps {
+  onBarCodeScanned?: (result: BarcodeScanningResult) => void;
+}
+
+const CameraView = React.forwardRef<ExpoCameraView, CameraViewProps>(
+  ({ onBarCodeScanned }, ref) => (
+    <ExpoCameraView 
+      style={cameraStyles.camera} 
+      facing="back" 
+      ref={ref}
+      barcodeScannerSettings={{
+        barcodeTypes: [
+          'aztec',
+          'codabar',
+          'code39',
+          'code93',
+          'code128',
+          'datamatrix',
+          'ean13',
+          'ean8',
+          'itf14',
+          'pdf417',
+          'upc_a',
+          'upc_e',
+          'qr'
+        ]
+      }}
+      onBarcodeScanned={onBarCodeScanned}
+    />
+  )
+);
+
+export default CameraView;

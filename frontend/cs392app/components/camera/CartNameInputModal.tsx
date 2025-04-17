@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface CartNameInputModalProps {
   visible: boolean;
@@ -50,7 +51,13 @@ export const CartNameInputModal: React.FC<CartNameInputModalProps> = ({
     >
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <Text style={styles.title}>Create a New Cart</Text>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity style={styles.backButton} onPress={onClose}>
+              <FontAwesome name="arrow-left" size={16} color="#333" />
+            </TouchableOpacity>
+            <Text style={styles.title}>Create a New Cart</Text>
+            <View style={styles.spacer} />
+          </View>
           
           <Text style={styles.subtitle}>
             You don't have any carts yet. Create your first cart!
@@ -72,13 +79,13 @@ export const CartNameInputModal: React.FC<CartNameInputModalProps> = ({
               onPress={onClose}
               disabled={isLoading}
             >
-              <Text style={styles.buttonText}>Cancel</Text>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
-              style={[styles.button, styles.createButton]} 
+              style={[styles.button, styles.createButton, !cartName.trim() && styles.disabledButton]} 
               onPress={handleSubmit}
-              disabled={isLoading}
+              disabled={isLoading || !cartName.trim()}
             >
               {isLoading ? (
                 <ActivityIndicator color="white" size="small" />
@@ -111,11 +118,22 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    flex: 1,
     textAlign: 'center',
+  },
+  backButton: {
+    padding: 8,
+  },
+  spacer: {
+    width: 24, // Same width as the back button for alignment
   },
   subtitle: {
     fontSize: 14,
@@ -151,11 +169,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cancelButton: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#f0f0f0',
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  cancelButtonText: {
+    color: '#555',
+    fontWeight: '500',
   },
   createButton: {
     backgroundColor: '#e63b60',
+  },
+  disabledButton: {
+    backgroundColor: '#cccccc',
   },
   buttonText: {
     color: 'white',

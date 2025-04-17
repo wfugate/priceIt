@@ -1,74 +1,67 @@
-// // app/components/camera/CameraControls.tsx
-// import React from 'react';
-// import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-// import { cameraStyles } from '../styles/styles';
-
-// interface Props {
-//     onCapture: () => void;
-//     onSubmit: () => void;
-//     loading: boolean;
-//   }
-// export default function CameraControls({
-//     onCapture,
-//     onSubmit,
-//     loading,
-//   }: Props) {
-//   return (
-//     <View style={cameraStyles.bottomContainer}>
-//         <TouchableOpacity style={cameraStyles.button} onPress={onCapture}>
-//           <Text style={cameraStyles.buttonText} onPress={onSubmit}>Submit</Text>
-//         </TouchableOpacity>
-//       <TouchableOpacity 
-//         style={cameraStyles.button} 
-//         onPress={onCapture}
-//         disabled={loading}
-//       >
-//         <Text style={cameraStyles.buttonText}>
-//           {loading ? 'Loading' : 'Capture'}
-//         </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// }
-
-// app/components/camera/CameraControls.tsx
+// components/camera/CameraControls.tsx
 import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { cameraStyles } from '../styles/styles';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface Props {
   onCapture: () => void;
-  onSubmit: (query: string) => void; // Updated to accept a string parameter
+  onSubmit: (query: string) => void;
   loadingCapture: boolean;
   loadingSubmit: boolean;
+  scanMode: 'image' | 'barcode'; // Added scanMode property
 }
 
 export default function CameraControls({
   onCapture,
   onSubmit,
   loadingCapture,
-  loadingSubmit
+  loadingSubmit,
+  scanMode
 }: Props) {
   return (
     <View style={cameraStyles.bottomContainer}>
-      <TouchableOpacity 
-        style={cameraStyles.button} 
-        onPress={() => onSubmit("")} // Pass empty string or get query from state
-        disabled={loadingCapture || loadingSubmit}
-      >
-        <Text style={cameraStyles.buttonText}>
-          {loadingSubmit ? 'Loading' : 'Submit'}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={cameraStyles.button} 
-        onPress={onCapture}
-        disabled={loadingCapture || loadingSubmit}
-      >
-        <Text style={cameraStyles.buttonText}>
-          {loadingCapture ? 'Loading' : 'Capture'}
-        </Text>
-      </TouchableOpacity>
+      {scanMode === 'image' && (
+        <>
+          <TouchableOpacity 
+            style={cameraStyles.button} 
+            onPress={() => onSubmit("")}
+            disabled={loadingCapture || loadingSubmit}
+          >
+            <Text style={cameraStyles.buttonText}>
+              {loadingSubmit ? (
+                <ActivityIndicator color="white" size="small" />
+              ) : (
+                "Submit"
+              )}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={cameraStyles.button} 
+            onPress={onCapture}
+            disabled={loadingCapture || loadingSubmit}
+          >
+            <Text style={cameraStyles.buttonText}>
+              {loadingCapture ? (
+                <ActivityIndicator color="white" size="small" />
+              ) : (
+                "Capture"
+              )}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+      
+      {scanMode === 'barcode' && (
+        <View style={{ alignItems: 'center' }}>
+          <Text>
+            Position barcode in the center of the screen
+          </Text>
+          {loadingCapture && (
+            <ActivityIndicator color="white" size="large" style={{ marginTop: 10 }} />
+          )}
+        </View>
+      )}
     </View>
   );
 }

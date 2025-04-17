@@ -1,3 +1,4 @@
+// components/camera/ProductResults.tsx
 import React, { useState, useEffect } from 'react';
 import { 
   View, 
@@ -12,6 +13,7 @@ import {
 import { CartSelectionModal } from './CartSelectionModal';
 import { CartNameInputModal } from './CartNameInputModal';
 import { getUserCarts, createNewUserCart } from '../../app/services/scanService';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface Product {
   id: string;
@@ -155,12 +157,27 @@ export default function ProductResultsScreen({
     return (
       <View style={[styles.container, { justifyContent: 'center' }]}>
         <Text style={styles.title}>No products found</Text>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={onClose}
+        >
+          <Text style={styles.buttonText}>Back to Scanner</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
+      {/* Back button at the top */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={onClose}
+      >
+        <FontAwesome name="arrow-left" size={16} color="white" style={{marginRight: 8}} />
+        <Text style={styles.buttonText}>Back to Scanner</Text>
+      </TouchableOpacity>
+      
       <Text style={styles.title}>Select Products</Text>
       
       <ScrollView contentContainerStyle={styles.productsContainer}>
@@ -230,7 +247,7 @@ export default function ProductResultsScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#223bc9', // Using the same blue background as the main app
     padding: 16,
   },
   title: {
@@ -238,13 +255,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#333',
+    color: 'white',
   },
   productsContainer: {
     paddingBottom: 80,
   },
   productCard: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -265,19 +282,21 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 5,
     marginRight: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   productInfo: {
     flex: 1,
   },
   productBrand: {
     fontSize: 14,
-    color: '#666',
+    color: '#bbdefb',
     marginBottom: 4,
   },
   productName: {
     fontSize: 16,
     marginBottom: 5,
-    color: '#333',
+    color: 'white',
+    fontWeight: '500',
   },
   productPrice: {
     fontSize: 16,
@@ -296,5 +315,16 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  backButton: {
+    backgroundColor: '#e63b60',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    paddingHorizontal: 15,
+    marginTop: 40, // Add padding from top of screen
   },
 });
