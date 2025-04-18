@@ -34,3 +34,5 @@ export const getProductByBarcode = async (barcode: string) => {
     return [];
   }
 };
+
+export default {}; 
