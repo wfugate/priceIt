@@ -1,0 +1,160 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\controllers\\walmartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\walmartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\services\\walmartscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\walmartscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\controllers\\costcocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\costcocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\services\\costcoscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\costcoscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\services\\samsclubscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\samsclubscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\controllers\\samsclubcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\samsclubcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\env.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\env.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\anthony xie\\desktop\\priceit\\backend\\finalprojcs392\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CostcoController.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Controllers\\CostcoController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\CostcoController.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Controllers\\CostcoController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\CostcoController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:55:45.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SamsClubScraperService.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Services\\SamsClubScraperService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\SamsClubScraperService.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Services\\SamsClubScraperService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\SamsClubScraperService.cs",
+              "ViewState": "AgIAAFkAAAAAAAAAAAAiwI4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:54:54.12Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CostcoScraperService.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Services\\CostcoScraperService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\CostcoScraperService.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Services\\CostcoScraperService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\CostcoScraperService.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAuwI4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:53:32.057Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "WalmartScraperService.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:55:09.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WalmartController.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Controllers\\WalmartController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\WalmartController.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Controllers\\WalmartController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\WalmartController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:56:24.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SamsClubController.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Controllers\\SamsClubController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\SamsClubController.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Controllers\\SamsClubController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\SamsClubController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:56:12.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Env.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Env.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Env.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Env.cs",
+              "RelativeToolTip": "FinalProjCS392\\Env.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:59:21.831Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Program.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Program.cs",
+              "ToolTip": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\Program.cs",
+              "RelativeToolTip": "FinalProjCS392\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAADYAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:57:08.176Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

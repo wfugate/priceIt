@@ -1,36 +1,3 @@
-// // app/components/camera/CameraControls.tsx
-// import React from 'react';
-// import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-// import { cameraStyles } from '../styles/styles';
-
-// interface Props {
-//     onCapture: () => void;
-//     onSubmit: () => void;
-//     loading: boolean;
-//   }
-// export default function CameraControls({
-//     onCapture,
-//     onSubmit,
-//     loading,
-//   }: Props) {
-//   return (
-//     <View style={cameraStyles.bottomContainer}>
-//         <TouchableOpacity style={cameraStyles.button} onPress={onCapture}>
-//           <Text style={cameraStyles.buttonText} onPress={onSubmit}>Submit</Text>
-//         </TouchableOpacity>
-//       <TouchableOpacity 
-//         style={cameraStyles.button} 
-//         onPress={onCapture}
-//         disabled={loading}
-//       >
-//         <Text style={cameraStyles.buttonText}>
-//           {loading ? 'Loading' : 'Capture'}
-//         </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// }
-
 // app/components/camera/CameraControls.tsx
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
@@ -38,7 +5,7 @@ import { cameraStyles } from '../styles/styles';
 
 interface Props {
   onCapture: () => void;
-  onSubmit: (query: string) => void; // Updated to accept a string parameter
+  onSubmit: () => void; // Updated to match expected function signature
   loadingCapture: boolean;
   loadingSubmit: boolean;
 }
@@ -53,7 +20,7 @@ export default function CameraControls({
     <View style={cameraStyles.bottomContainer}>
       <TouchableOpacity 
         style={cameraStyles.button} 
-        onPress={() => onSubmit("")} // Pass empty string or get query from state
+        onPress={onSubmit} // Now simply calls onSubmit with no parameters
         disabled={loadingCapture || loadingSubmit}
       >
         <Text style={cameraStyles.buttonText}>

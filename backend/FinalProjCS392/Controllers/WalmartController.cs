@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
-using FinalProjCS392.Services; 
+using FinalProjCS392.Services;
 
 namespace FinalProjCS392.Controllers
 {
@@ -25,16 +26,32 @@ namespace FinalProjCS392.Controllers
                 return BadRequest("Query parameter is required.");
             }
 
-            //call the correct scraping service method
-            var products = _walmartScraperService.SimpleSearchWalmartProducts(query);
-
-            //if no products found, return a 404
-            if (products.Count == 0)
+            try
             {
-                return NotFound("No products found.");
-            }
+                var products = await _walmartScraperService.SearchProductsAsync(query);
 
-            return Ok(products);
+                if (products.Count == 0)
+                {
+                    return NotFound("No products found.");
+                }
+
+                // Transform the results to match the expected format
+                var formattedResults = products.Select(r => new
+                {
+                    name = r.Name,
+                    brand = r.Brand,
+                    price = r.Price,
+                    thumbnail = r.Thumbnail
+                });
+
+                return Ok(formattedResults);
+            }
+            catch (Exception ex)
+            {
+                // Log the full exception
+                Console.WriteLine($"Error in WalmartController: {ex}");
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
     }
 }
