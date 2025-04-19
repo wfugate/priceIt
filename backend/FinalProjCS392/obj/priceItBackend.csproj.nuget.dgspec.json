@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {}
+    "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {
+    "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
+        "projectUniqueName": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
         "projectName": "priceItBackend",
-        "projectPath": "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
-        "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\obj\\",
+        "projectPath": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
+        "packagesPath": "C:\\Users\\Anthony Xie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Anthony Xie\\Desktop\\priceIt\\backend\\FinalProjCS392\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\willi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Anthony Xie\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -90,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

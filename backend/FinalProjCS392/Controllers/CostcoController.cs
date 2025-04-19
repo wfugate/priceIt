@@ -6,37 +6,32 @@ using FinalProjCS392.Services;
 
 namespace FinalProjCS392.Controllers
 {
-    [Route("api/[controller]", Name = "Walmart")]
     [ApiController]
-    public class WalmartController : ControllerBase
+    [Route("api/[controller]", Name = "Costco")]
+    public class CostcoController : ControllerBase
     {
-        private readonly WalmartScraperService _walmartScraperService;
+        private readonly CostcoScraperService _scraper;
 
-        public WalmartController(WalmartScraperService walmartScraperService)
+        public CostcoController(CostcoScraperService scraper)
         {
-            _walmartScraperService = walmartScraperService;
+            _scraper = scraper;
         }
 
-        // GET api/walmart/search?query=apple
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] string query)
+        public async Task<IActionResult> Search(string query)
         {
-            if (string.IsNullOrEmpty(query))
-            {
+            if (string.IsNullOrWhiteSpace(query))
                 return BadRequest("Query parameter is required.");
-            }
 
             try
             {
-                var products = await _walmartScraperService.SearchProductsAsync(query);
+                var results = await _scraper.SearchProductsAsync(query);
 
-                if (products.Count == 0)
-                {
-                    return NotFound("No products found.");
-                }
+                if (results.Count == 0)
+                    return NotFound($"No products found for \"{query}\".");
 
                 // Transform the results to match the expected format
-                var formattedResults = products.Select(r => new
+                var formattedResults = results.Select(r => new
                 {
                     name = r.Name,
                     brand = r.Brand,
@@ -49,7 +44,7 @@ namespace FinalProjCS392.Controllers
             catch (Exception ex)
             {
                 // Log the full exception
-                Console.WriteLine($"Error in WalmartController: {ex}");
+                Console.WriteLine($"Error in CostcoController: {ex}");
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
