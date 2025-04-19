@@ -11,7 +11,7 @@ export default function TabOneScreen() {
   const testConnection = async () => {
     try {
       const response = await axios.get(
-        'https://a867-2600-387-15-915-00-5.ngrok-free.app/api/ImageProcessing/test',
+        'https://55e9-168-122-156-26.ngrok-free.app/api/ImageProcessing/test',
         { timeout: 5000 } // 5 second timeout
       );
       console.log('Connection test success:', response.data);
