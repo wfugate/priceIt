@@ -10,6 +10,7 @@ import ProductResultsScreen from '../../components/camera/ProductResults';
 import { cameraStyles } from '../../components/styles/styles';
 import { searchProducts, saveToCart } from '../services/scanService';
 import { Product, Stores } from '../types';
+import { getProductByBarcode, isBarcode } from '../services/barcodeService';
 
 export default function ScanScreen() {
   const [showResults, setShowResults] = useState(false);
@@ -83,9 +84,28 @@ export default function ScanScreen() {
       
       setIsSearching(true);
       try {
+        // First validate that the item looks like a barcode
+        if (!isBarcode(currentItem)) {
+          console.warn(`Scanned value "${currentItem}" doesn't look like a valid barcode`);
+          Alert.alert(
+            'Invalid Barcode',
+            `"${currentItem}" doesn't appear to be a valid barcode.`,
+            [{ 
+              text: 'OK',
+              onPress: () => {
+                if (isCurrentEffect && scanMode === 'barcode') {
+                  resetBarcodeScanner();
+                }
+              }
+            }]
+          );
+          return;
+        }
+        
         console.log("Searching for products with barcode:", currentItem);
         
-        const foundProducts = await searchProducts(currentItem, stores);
+        // Use our enhanced barcode service with the full barcode lookup flow
+        const foundProducts = await getProductByBarcode(currentItem, stores);
         
         // Debug log to see what's happening
         console.log(`Found ${foundProducts.length} products for barcode ${currentItem}`);
@@ -105,7 +125,7 @@ export default function ScanScreen() {
           console.log('No products found for barcode, showing alert');
           Alert.alert(
             'No Products Found',
-            'No products found for this barcode.',
+            `No products found for barcode ${currentItem}.`,
             [{ 
               text: 'OK',
               onPress: () => {
@@ -152,7 +172,8 @@ export default function ScanScreen() {
       clearTimeout(searchTimeout);
     };
   }, [item, scanMode]);
-
+  
+  // Also update the handleSubmit function to use our enhanced barcode service for image scans
   const handleSubmit = async () => {
     if (!item) {
       Alert.alert('Error', 'No item scanned yet');
@@ -161,8 +182,16 @@ export default function ScanScreen() {
     
     setIsSearching(true);
     try {
-      // Pass selected stores to search function
-      const foundProducts = await searchProducts(item, stores);
+      let foundProducts;
+      
+      // If the scanned item appears to be a barcode, use the special barcode handling
+      if (isBarcode(item)) {
+        console.log('Detected barcode in image scan, using barcode service');
+        foundProducts = await getProductByBarcode(item, stores);
+      } else {
+        // Otherwise use regular search
+        foundProducts = await searchProducts(item, stores);
+      }
       
       if (foundProducts.length > 0) {
         setProducts(foundProducts);
