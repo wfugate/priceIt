@@ -8,20 +8,20 @@ import {
   ScrollView, 
   StyleSheet, 
   Alert, 
-  ActivityIndicator 
+  ActivityIndicator,
+  Modal,
+  SafeAreaView,
+  Platform,
+  TextInput
 } from 'react-native';
 import { CartSelectionModal } from './CartSelectionModal';
 import { CartNameInputModal } from './CartNameInputModal';
 import { getUserCarts, createNewUserCart } from '../../app/services/scanService';
-import { FontAwesome } from '@expo/vector-icons';
+import { Product } from '../../app/types'; // Import Product from types.ts
 
-interface Product {
-  id: string;
-  thumbnail: string;
-  price: number;
-  name: string;
-  brand: string;
-  selected?: boolean;
+// Extended product interface with guaranteed relevanceScore
+interface ProductWithRelevance extends Product {
+  relevanceScore: number;
 }
 
 interface Cart {
@@ -34,27 +34,64 @@ interface ProductResultsProps {
   onAddToCart: (selectedProducts: Product[], cartId: string) => Promise<void>;
   userId: string;
   onClose: () => void;
+  searchQuery?: string; // The original search query
 }
+
+type SortOption = 'relevance' | 'price-asc' | 'price-desc' | 'name-asc' | 'name-desc';
+type FilterOption = 'all' | 'walmart' | 'target' | 'costco' | 'samsClub';
 
 export default function ProductResultsScreen({ 
   products = [], 
   onAddToCart,
   userId,
-  onClose
+  onClose,
+  searchQuery = ''
 }: ProductResultsProps) {
-  const [localProducts, setLocalProducts] = useState<Product[]>(
-    products.map(p => ({ ...p, selected: p.selected || false }))
+  // Initialize products with relevance scores
+  const [localProducts, setLocalProducts] = useState<ProductWithRelevance[]>(
+    products.map(p => ({ 
+      ...p, 
+      selected: p.selected || false, 
+      relevanceScore: p.relevanceScore || 0 
+    }))
   );
+  
+  const [displayedProducts, setDisplayedProducts] = useState<ProductWithRelevance[]>(localProducts);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userCarts, setUserCarts] = useState<Cart[]>([]);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showCartNameModal, setShowCartNameModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [currentSort, setCurrentSort] = useState<SortOption>('relevance');
+  const [currentFilter, setCurrentFilter] = useState<FilterOption>('all');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [relevanceKeywords, setRelevanceKeywords] = useState<string>(searchQuery);
 
   useEffect(() => {
     // Load user carts when component mounts
     fetchUserCarts();
+    
+    // Calculate initial relevance scores based on the search query
+    calculateRelevanceScores(searchQuery);
   }, []);
+
+  useEffect(() => {
+    // Apply sorting and filtering whenever they change
+    applyFiltersAndSort();
+  }, [localProducts, currentSort, currentFilter, relevanceKeywords]);
+
+  // Auto-hide success message after 3 seconds
+  useEffect(() => {
+    if (showSuccessMessage) {
+      const timer = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessMessage]);
 
   const fetchUserCarts = async () => {
     if (!userId) return;
@@ -68,6 +105,34 @@ export default function ProductResultsScreen({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const calculateRelevanceScores = (query: string) => {
+    if (!query) return;
+
+    const keywords = query.toLowerCase().split(/\s+/);
+    
+    // Update local products with relevance scores
+    setLocalProducts(prev => 
+      prev.map(product => {
+        // Calculate relevance score based on how many keywords match the product name and brand
+        let score = 0;
+        const productText = (product.name + ' ' + product.brand).toLowerCase();
+        
+        keywords.forEach(keyword => {
+          if (productText.includes(keyword)) {
+            // More weight for exact matches
+            if (productText.includes(` ${keyword} `)) {
+              score += 3;
+            } else {
+              score += 1;
+            }
+          }
+        });
+        
+        return { ...product, relevanceScore: score };
+      })
+    );
   };
 
   const toggleProductSelection = (productId: string) => {
@@ -115,9 +180,15 @@ export default function ProductResultsScreen({
       const selectedProducts = localProducts.filter(p => p.selected);
       await onAddToCart(selectedProducts, cartId);
       setShowCartModal(false);
-      Alert.alert('Success', 'Products added to cart successfully!', [
-        { text: 'OK', onPress: onClose }
-      ]);
+      
+      // Instead of closing the page with an alert, show a success message
+      const count = selectedProducts.length;
+      setSuccessMessage(`${count} ${count === 1 ? 'product' : 'products'} added to cart`);
+      setShowSuccessMessage(true);
+      
+      // Clear selections after adding to cart
+      setLocalProducts(prev => prev.map(p => ({ ...p, selected: false })));
+      
     } catch (error) {
       console.error('Failed to add to cart:', error);
       Alert.alert('Error', 'Failed to add products to cart. Please try again.');
@@ -140,11 +211,17 @@ export default function ProductResultsScreen({
       const selectedProducts = localProducts.filter(p => p.selected);
       await onAddToCart(selectedProducts, newCart.id);
       
-      // Close modals and show success message
+      // Close modal and show success message
       setShowCartNameModal(false);
-      Alert.alert('Success', 'Products added to your new cart!', [
-        { text: 'OK', onPress: onClose }
-      ]);
+      
+      // Instead of closing the page with an alert, show a success message
+      const count = selectedProducts.length;
+      setSuccessMessage(`${count} ${count === 1 ? 'product' : 'products'} added to new cart: ${name}`);
+      setShowSuccessMessage(true);
+      
+      // Clear selections after adding to cart
+      setLocalProducts(prev => prev.map(p => ({ ...p, selected: false })));
+      
     } catch (error) {
       console.error('Failed to create cart:', error);
       Alert.alert('Error', 'Failed to create new cart. Please try again.');
@@ -153,35 +230,118 @@ export default function ProductResultsScreen({
     }
   };
 
+  const handleRelevanceKeywordsChange = (text: string) => {
+    setRelevanceKeywords(text);
+    calculateRelevanceScores(text);
+  };
+
+  const applyFiltersAndSort = () => {
+    // First filter by store
+    let filtered = [...localProducts];
+    if (currentFilter !== 'all') {
+      filtered = filtered.filter(p => {
+        if (currentFilter === 'walmart') return p.store === 'Walmart';
+        if (currentFilter === 'target') return p.store === 'Target';
+        if (currentFilter === 'costco') return p.store === 'Costco';
+        if (currentFilter === 'samsClub') return p.store === "Sam's Club";
+        return true;
+      });
+    }
+
+    // Then sort
+    let sorted = [...filtered];
+    if (currentSort === 'relevance') {
+      sorted.sort((a, b) => {
+        // First sort by relevance score (descending)
+        const scoreCompare = b.relevanceScore - a.relevanceScore;
+        // If scores are equal, sort by price (ascending) as a tiebreaker
+        return scoreCompare !== 0 ? scoreCompare : a.price - b.price;
+      });
+    } else if (currentSort === 'price-asc') {
+      sorted.sort((a, b) => a.price - b.price);
+    } else if (currentSort === 'price-desc') {
+      sorted.sort((a, b) => b.price - a.price);
+    } else if (currentSort === 'name-asc') {
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (currentSort === 'name-desc') {
+      sorted.sort((a, b) => b.name.localeCompare(a.name));
+    }
+
+    setDisplayedProducts(sorted);
+  };
+
+  const getSortLabel = (sort: SortOption): string => {
+    switch (sort) {
+      case 'relevance': return 'Most Relevant';
+      case 'price-asc': return 'Price: Low to High';
+      case 'price-desc': return 'Price: High to Low';
+      case 'name-asc': return 'Name: A to Z';
+      case 'name-desc': return 'Name: Z to A';
+      default: return 'Sort';
+    }
+  };
+
+  const getFilterLabel = (filter: FilterOption): string => {
+    switch (filter) {
+      case 'all': return 'All Stores';
+      case 'walmart': return 'Walmart';
+      case 'target': return 'Target';
+      case 'costco': return 'Costco';
+      case 'samsClub': return "Sam's Club";
+      default: return 'Filter';
+    }
+  };
+
+  // Close filter modal and apply the current filters
+  const applyFilters = () => {
+    setShowFilterModal(false);
+  };
+
   if (products.length === 0) {
     return (
-      <View style={[styles.container, { justifyContent: 'center' }]}>
+      <SafeAreaView style={[styles.container, { justifyContent: 'center' }]}>
         <Text style={styles.title}>No products found</Text>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={onClose}
-        >
-          <Text style={styles.buttonText}>Back to Scanner</Text>
-        </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {/* Back button at the top */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={onClose}
-      >
-        <FontAwesome name="arrow-left" size={16} color="white" style={{marginRight: 8}} />
-        <Text style={styles.buttonText}>Back to Scanner</Text>
-      </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={onClose}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.title}>Compare Prices</Text>
+        
+        <TouchableOpacity 
+          style={styles.filterButton} 
+          onPress={() => setShowFilterModal(true)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.filterButtonText}>Filter</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.filterInfo}>
+        <Text style={styles.filterInfoText}>
+          Showing: {getFilterLabel(currentFilter)} • {getSortLabel(currentSort)}
+        </Text>
+      </View>
       
-      <Text style={styles.title}>Select Products</Text>
+      {/* Success Message Banner */}
+      {showSuccessMessage && (
+        <View style={styles.successBanner}>
+          <Text style={styles.successText}>✓ {successMessage}</Text>
+        </View>
+      )}
       
       <ScrollView contentContainerStyle={styles.productsContainer}>
-        {localProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <TouchableOpacity
             key={product.id}
             style={[
@@ -196,12 +356,37 @@ export default function ProductResultsScreen({
               resizeMode="contain"
             />
             <View style={styles.productInfo}>
+              <Text style={styles.storeLabel}>{product.store}</Text>
               <Text style={styles.productBrand}>{product.brand}</Text>
               <Text style={styles.productName}>{product.name}</Text>
               <Text style={styles.productPrice}>${product.price.toFixed(2)}</Text>
+              
+              {/* Show relevance indicator if sort is by relevance */}
+              {currentSort === 'relevance' && product.relevanceScore > 0 && (
+                <View style={styles.relevanceContainer}>
+                  <Text style={styles.relevanceText}>
+                    Relevance: {product.relevanceScore > 3 ? 'High' : 'Medium'}
+                  </Text>
+                </View>
+              )}
             </View>
           </TouchableOpacity>
         ))}
+
+        {/* Show a message if no products match the current filter */}
+        {displayedProducts.length === 0 && (
+          <View style={styles.noResultsContainer}>
+            <Text style={styles.noResultsText}>
+              No products match your current filter.
+            </Text>
+            <TouchableOpacity 
+              style={styles.resetButton}
+              onPress={() => setCurrentFilter('all')}
+            >
+              <Text style={styles.resetButtonText}>Reset Filters</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
 
       <TouchableOpacity
@@ -220,6 +405,105 @@ export default function ProductResultsScreen({
           </Text>
         )}
       </TouchableOpacity>
+
+      {/* Filter and Sort Modal */}
+      <Modal
+        visible={showFilterModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowFilterModal(false)}
+      >
+        <SafeAreaView style={styles.modalOverlay}>
+          <View style={styles.filterModalContent}>
+            <Text style={styles.modalTitle}>Filter & Sort</Text>
+            
+            {/* Main content in ScrollView to ensure everything is accessible */}
+            <ScrollView style={styles.filterScrollView}>
+              <View style={styles.filterSection}>
+                <Text style={styles.sectionTitle}>Sort By</Text>
+                {[
+                  { value: 'relevance', label: 'Most Relevant' },
+                  { value: 'price-asc', label: 'Price: Low to High' },
+                  { value: 'price-desc', label: 'Price: High to Low' },
+                  { value: 'name-asc', label: 'Name: A to Z' },
+                  { value: 'name-desc', label: 'Name: Z to A' }
+                ].map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[
+                      styles.filterOption,
+                      currentSort === option.value && styles.selectedOption
+                    ]}
+                    onPress={() => setCurrentSort(option.value as SortOption)}
+                  >
+                    <Text style={[
+                      styles.filterOptionText,
+                      currentSort === option.value && styles.selectedOptionText
+                    ]}>
+                      {option.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Relevance Keywords Input (only shown when relevance sort is selected) */}
+              {currentSort === 'relevance' && (
+                <View style={styles.keywordsSection}>
+                  <Text style={styles.sectionTitle}>Relevance Keywords</Text>
+                  <TextInput
+                    style={styles.keywordsInput}
+                    value={relevanceKeywords}
+                    onChangeText={handleRelevanceKeywordsChange}
+                    placeholder="Enter keywords for relevance sorting"
+                    placeholderTextColor="#999"
+                  />
+                  <Text style={styles.keywordsHelp}>
+                    Enter words to match against product names and brands
+                  </Text>
+                </View>
+              )}
+
+              <View style={styles.filterSection}>
+                <Text style={styles.sectionTitle}>Filter By Store</Text>
+                {[
+                  { value: 'all', label: 'All Stores' },
+                  { value: 'walmart', label: 'Walmart' },
+                  { value: 'target', label: 'Target' },
+                  { value: 'costco', label: 'Costco' },
+                  { value: 'samsClub', label: "Sam's Club" }
+                ].map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[
+                      styles.filterOption,
+                      currentFilter === option.value && styles.selectedOption
+                    ]}
+                    onPress={() => setCurrentFilter(option.value as FilterOption)}
+                  >
+                    <Text style={[
+                      styles.filterOptionText,
+                      currentFilter === option.value && styles.selectedOptionText
+                    ]}>
+                      {option.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              
+              {/* Add padding at the bottom for better scroll experience */}
+              <View style={styles.scrollPadding} />
+            </ScrollView>
+            
+            {/* Apply button stays fixed at bottom */}
+            <TouchableOpacity 
+              style={styles.applyButton}
+              onPress={applyFilters}
+            >
+              <Text style={styles.applyButtonText}>Apply Filters</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
 
       {/* Cart Selection Modal */}
       <CartSelectionModal
@@ -240,28 +524,82 @@ export default function ProductResultsScreen({
         onCreateCart={handleCreateNewCart}
         isLoading={isSaving}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#223bc9', // Using the same blue background as the main app
-    padding: 16,
+    backgroundColor: '#f8f8f8',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 10,
+    paddingHorizontal: 5,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#333',
+    flex: 1,
     textAlign: 'center',
+  },
+  backButton: {
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    minWidth: 60,
+    alignItems: 'center',
+  },
+  backButtonText: {
+    color: '#151a7b',
+    fontWeight: 'bold',
+  },
+  filterButton: {
+    backgroundColor: '#151a7b',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
+    minWidth: 60,
+    alignItems: 'center',
+  },
+  filterButtonText: {
     color: 'white',
+    fontWeight: 'bold',
+  },
+  filterInfo: {
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    marginBottom: 15,
+  },
+  filterInfoText: {
+    color: '#666',
+    fontSize: 12,
+  },
+  successBanner: {
+    backgroundColor: '#4CAF50', // Green color for success
+    padding: 12,
+    borderRadius: 4,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  successText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   productsContainer: {
     paddingBottom: 80,
   },
   productCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -282,30 +620,64 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 5,
     marginRight: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   productInfo: {
     flex: 1,
   },
+  storeLabel: {
+    fontSize: 12,
+    color: '#ffffff',
+    backgroundColor: '#151a7b',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    marginBottom: 4,
+  },
   productBrand: {
     fontSize: 14,
-    color: '#bbdefb',
+    color: '#666',
     marginBottom: 4,
   },
   productName: {
     fontSize: 16,
     marginBottom: 5,
-    color: 'white',
-    fontWeight: '500',
+    color: '#333',
   },
   productPrice: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#e63b60',
   },
+  relevanceContainer: {
+    marginTop: 5,
+  },
+  relevanceText: {
+    fontSize: 12,
+    color: '#151a7b',
+  },
+  noResultsContainer: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 10,
+  },
+  resetButton: {
+    backgroundColor: '#151a7b',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  resetButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   addToCartButton: {
     position: 'absolute',
-    bottom: 20,
+    bottom: Platform.OS === 'ios' ? 35 : 20,
     left: 20,
     right: 20,
     padding: 15,
@@ -316,15 +688,87 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  backButton: {
-    backgroundColor: '#e63b60',
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  filterModalContent: {
+    width: '90%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    maxHeight: '80%',
+    // Add flex to make the inner content more manageable
+    flex: 0,
+    // Position the modal to leave space at top and bottom
+    marginVertical: 40,
+  },
+  filterScrollView: {
+    maxHeight: Platform.OS === 'ios' ? 450 : 400, // Limit height for scrolling
+  },
+  scrollPadding: {
+    height: 20, // Add padding at the bottom of scroll content
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  filterSection: {
+    marginBottom: 20,
+  },
+  keywordsSection: {
+    marginBottom: 20,
+  },
+  keywordsInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
     padding: 10,
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  keywordsHelp: {
+    fontSize: 12,
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  filterOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 6,
+    marginBottom: 8,
+    backgroundColor: '#f0f0f0',
+  },
+  selectedOption: {
+    backgroundColor: '#e63b60',
+  },
+  filterOptionText: {
+    color: '#333',
+  },
+  selectedOptionText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  applyButton: {
+    backgroundColor: '#151a7b',
+    padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 10,
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    paddingHorizontal: 15,
-    marginTop: 40, // Add padding from top of screen
+    marginTop: 10, 
+  },
+  applyButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });

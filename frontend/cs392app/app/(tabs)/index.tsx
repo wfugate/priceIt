@@ -5,7 +5,7 @@ import { Text, View } from '@/components/Themed';
 import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
 import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
-import { Cart, Product } from '../services/scanService';
+import { Cart, Product } from '../types';
 import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
