@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9L5A9Ho2QmE=",
+  "dgSpecHash": "53tnu6zBGPI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
+  "projectFilePath": "C:\\Users\\willi\\repos\\priceItv2\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\willi\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\willi\\.nuget\\packages\\google.api.commonprotos\\2.15.0\\google.api.commonprotos.2.15.0.nupkg.sha512",

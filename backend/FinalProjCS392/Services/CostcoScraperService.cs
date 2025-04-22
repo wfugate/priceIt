@@ -9,7 +9,7 @@ using Env;
 
 namespace FinalProjCS392.Services
 {
-    public class WalmartSearchResult
+    public class CostcoSearchResult
     {
         private double _price;
         private string _rawPrice;
@@ -75,33 +75,33 @@ namespace FinalProjCS392.Services
         public string Thumbnail { get; set; }
     }
 
-    public class WalmartSearchResponse
+    public class CostcoSearchResponse
     {
         [JsonPropertyName("results")]
-        public List<WalmartSearchResult> Results { get; set; }
+        public List<CostcoSearchResult> Results { get; set; }
     }
 
-    public class WalmartScraperService
+    public class CostcoScraperService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey = EnvConfig.UnwrangleApiKey;
 
-        public WalmartScraperService()
+        public CostcoScraperService()
         {
             _httpClient = new HttpClient();
         }
 
-        public async Task<List<WalmartSearchResult>> SearchProductsAsync(string query)
+        public async Task<List<CostcoSearchResult>> SearchProductsAsync(string query)
         {
             string encodedQuery = Uri.EscapeDataString(query);
-            string requestUrl = $"https://data.unwrangle.com/api/getter/?platform=walmart_search&search={encodedQuery}&api_key={_apiKey}";
+            string requestUrl = $"https://data.unwrangle.com/api/getter/?platform=costco_search&search={encodedQuery}&api_key={_apiKey}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
-            Console.WriteLine($"Walmart search URL: {requestUrl}");
+            Console.WriteLine($"Costco search URL: {requestUrl}");
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Walmart request failed (HTTP {response.StatusCode}).");
+                throw new Exception($"Costco request failed (HTTP {response.StatusCode}).");
             }
 
             string jsonResponse = await response.Content.ReadAsStringAsync();
@@ -115,8 +115,8 @@ namespace FinalProjCS392.Services
 
             try
             {
-                WalmartSearchResponse data = JsonSerializer.Deserialize<WalmartSearchResponse>(jsonResponse, options);
-                var results = data?.Results ?? new List<WalmartSearchResult>();
+                CostcoSearchResponse data = JsonSerializer.Deserialize<CostcoSearchResponse>(jsonResponse, options);
+                var results = data?.Results ?? new List<CostcoSearchResult>();
 
                 foreach (var result in results)
                 {
@@ -136,14 +136,8 @@ namespace FinalProjCS392.Services
             {
                 Console.WriteLine($"JSON parsing error: {ex.Message}");
                 Console.WriteLine($"Raw JSON: {jsonResponse}");
-                throw new Exception($"Error parsing Walmart response: {ex.Message}");
+                throw new Exception($"Error parsing Costco response: {ex.Message}");
             }
-        }
-
-        // Keeping this method for backwards compatibility
-        public List<WalmartSearchResult> SimpleSearchWalmartProducts(string query)
-        {
-            return SearchProductsAsync(query).GetAwaiter().GetResult();
         }
     }
 }

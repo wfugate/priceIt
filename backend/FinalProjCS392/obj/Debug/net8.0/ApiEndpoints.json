@@ -53,6 +53,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "FinalProjCS392.Controllers.CostcoController",
+    "Method": "Search",
+    "RelativePath": "api/Costco/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ImageProcessingAPI.Controllers.ImageProcessingController",
     "Method": "ProcessImage",
     "RelativePath": "api/ImageProcessing/process",
@@ -76,6 +92,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FinalProjCS392.Controllers.SamsClubController",
+    "Method": "Search",
+    "RelativePath": "api/SamsClub/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {

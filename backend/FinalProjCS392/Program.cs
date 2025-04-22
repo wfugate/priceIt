@@ -1,6 +1,4 @@
-﻿
-
-using FinalProjCS392.Services;
+﻿using FinalProjCS392.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +9,13 @@ var mongoDatabase = mongoClient.GetDatabase("priceItDB");
 
 builder.Services.AddSingleton<IMongoDatabase>(mongoDatabase);
 builder.Services.AddScoped<CartService>();
+
+// Register all scraper services
+builder.Services.AddScoped<WalmartScraperService>();
+builder.Services.AddScoped<CostcoScraperService>();
+builder.Services.AddScoped<SamsClubScraperService>();
+builder.Services.AddScoped<UnwrangleTargetDemo.TargetWebScraperService>();
+
 // Add services to the container.
 builder.Services.AddCors(options =>
 {
@@ -23,11 +28,8 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddControllers();
 builder.Services.AddHttpClient(); //register HttpClient
-builder.Services.AddScoped<WalmartScraperService>(); // register service
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
 
 var app = builder.Build();
 
@@ -37,20 +39,15 @@ app.UseCors("AllowAllOrigins");
 //app.UseHttpsRedirection();
 app.UseRouting();
 
-
-
-
 //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
 
 ////configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();  
+    app.UseDeveloperExceptionPage();
 }
-
 
 app.UseAuthorization();
 

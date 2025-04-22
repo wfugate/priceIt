@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {}
+    "C:\\Users\\willi\\repos\\priceItv2\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {
+    "C:\\Users\\willi\\repos\\priceItv2\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
+        "projectUniqueName": "C:\\Users\\willi\\repos\\priceItv2\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
         "projectName": "priceItBackend",
-        "projectPath": "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
+        "projectPath": "C:\\Users\\willi\\repos\\priceItv2\\priceIt\\backend\\FinalProjCS392\\priceItBackend.csproj",
         "packagesPath": "C:\\Users\\willi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\willi\\Desktop\\priceIt\\backend\\FinalProjCS392\\obj\\",
+        "outputPath": "C:\\Users\\willi\\repos\\priceItv2\\priceIt\\backend\\FinalProjCS392\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
