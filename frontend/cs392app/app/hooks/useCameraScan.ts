@@ -133,3 +133,6 @@ export function useCameraScan() {
     resetBarcodeScanner
   };
 }
+
+
+export default function removeWarning(){}

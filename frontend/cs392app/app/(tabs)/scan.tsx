@@ -371,8 +371,8 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: 'absolute',
-    top: 50,  // Increased to avoid status bar
-    left: 20,
+    bottom: 190,  // Increased to avoid status bar
+    left: 30,
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 12,  // Increased for better touch target
     borderRadius: 8,

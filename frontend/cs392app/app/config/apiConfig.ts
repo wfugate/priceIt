@@ -2,7 +2,7 @@
 // Central configuration file for API endpoints
 
 // Base URL for all API requests - change this when your ngrok URL changes
-export const API_BASE_URL = 'https://5e90-128-197-28-168.ngrok-free.app';
+export const API_BASE_URL = 'https://da3a-128-197-28-168.ngrok-free.app';
 
 // API endpoints derived from the base URL
 export const API_ENDPOINTS = {
@@ -36,3 +36,5 @@ export const COMMON_HEADERS = {
   'Accept': 'application/json',
   'ngrok-skip-browser-warning': 'true'
 };
+
+export default function removeWarning(){}

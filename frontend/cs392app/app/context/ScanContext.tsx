@@ -14,7 +14,7 @@ export const ScanContext = createContext({
   setProducts: (products: Product[]) => {}
 });
 
-export function ScanProvider({ children }: { children: React.ReactNode }) {
+export default function ScanProvider({ children }: { children: React.ReactNode }) {
   const [showResults, setShowResults] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
 

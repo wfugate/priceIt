@@ -34,3 +34,5 @@ export interface CartProduct {
     store: string;
     quantity?: number;
 }
+
+export default function removeWarning(){}

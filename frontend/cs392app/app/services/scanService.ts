@@ -368,3 +368,5 @@ export const getProductByBarcode = async (barcode: string, stores: Stores = { wa
     return [];
   }
 };
+
+export default function removeWarning(){}
