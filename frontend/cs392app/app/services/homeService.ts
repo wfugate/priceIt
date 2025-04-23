@@ -1,6 +1,6 @@
 // app/services/homeService.ts
 import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
-import { Cart, Product } from './scanService';
+import { Cart, Product } from '../types';
 
 // Get user carts with additional options
 export const getUserCartsWithOptions = async (userId: string, options: { includeProducts?: boolean } = {}) => {

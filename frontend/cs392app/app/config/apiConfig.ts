@@ -2,7 +2,7 @@
 // Central configuration file for API endpoints
 
 // Base URL for all API requests - change this when your ngrok URL changes
-export const API_BASE_URL = 'https://ce8b-128-197-28-168.ngrok-free.app';
+export const API_BASE_URL = 'https://a21a-128-197-28-135.ngrok-free.app';
 
 // API endpoints derived from the base URL
 export const API_ENDPOINTS = {
@@ -26,8 +26,10 @@ export const API_ENDPOINTS = {
     getAll: `${API_BASE_URL}/api/cart`,
     create: `${API_BASE_URL}/api/cart`,
     addProducts: (cartId: string) => `${API_BASE_URL}/api/cart/add/${cartId}`,
-    update: (cartId: string) => `${API_BASE_URL}/api/cart/${cartId}`
-  }
+    update: (cartId: string) => `${API_BASE_URL}/api/cart/${cartId}`,
+    delete: (cartId: string) => `${API_BASE_URL}/api/cart/${cartId}`,
+    removeProduct: (cartId: string, productId: string) => 
+      `${API_BASE_URL}/api/cart/${cartId}/products/${productId}`  }
 };
 
 // Request headers used across all API calls
@@ -36,5 +38,6 @@ export const COMMON_HEADERS = {
   'Accept': 'application/json',
   'ngrok-skip-browser-warning': 'true'
 };
+// Update the API_ENDPOINTS object in app/config/apiConfig.ts
 
 export default function removeWarning(){}

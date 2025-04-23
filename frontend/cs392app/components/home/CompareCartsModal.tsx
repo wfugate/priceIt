@@ -13,15 +13,16 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { updateCart, Cart, Product } from '../../app/services/scanService';
+import { updateCart } from '../../app/services/scanService';
+import {Product, Cart} from '../../app/types';
 
 // Update the prop interface to include the callback
 interface CompareCartsModalProps {
   visible: boolean;
-  cartA: Cart | undefined;
-  cartB: Cart | undefined;
+  cartA:  Cart | undefined;
+  cartB:  Cart | undefined;
   onClose: () => void;
-  onCartsUpdated?: (updatedCartA: Cart, updatedCartB: Cart) => void;
+  onCartsUpdated?: (updatedCartA:  Cart, updatedCartB:  Cart) => void;
 }
 
 const { width } = Dimensions.get('window');

@@ -58,7 +58,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         onPress={onInspect}
       >
         <Text style={styles.cartName} numberOfLines={1}>
-          {cart.name}
+          {cart.name.toString()}
         </Text>
         <Text style={styles.cartPrice}>
           Price: ${totalPrice.toFixed(2)}
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 4,
+    color:'#666',
   },
   cartPrice: {
     fontSize: 14,

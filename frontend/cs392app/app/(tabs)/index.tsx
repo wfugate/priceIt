@@ -1,6 +1,6 @@
 // app/(tabs)/index.tsx
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share } from 'react-native';
+import { StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share, RefreshControl } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
@@ -10,6 +10,13 @@ import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
 import { router } from 'expo-router';
+
+import CartInspectionModal from '../../components/home/CartInspectionModal';
+import { deleteCart, removeProductFromCart } from '../services/scanService';
+
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 
 // Extended Cart interface with selection state
 interface CartWithSelection extends Cart {
@@ -27,14 +34,31 @@ export default function HomeScreen() {
   const [selectedCarts, setSelectedCarts] = useState<CartWithSelection[]>([]);
   const [emailingCart, setEmailingCart] = useState(false);
 
+  const [deletingCartId, setDeletingCartId] = useState<string | null>(null);
+  const [inspectModalVisible, setInspectModalVisible] = useState(false);
+  const [currentCart, setCurrentCart] = useState<CartWithSelection | null>(null);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchUserCarts(false); // false means don't show the separate loading indicator
+    setRefreshing(false);
+  }, []);
+  
   // Fetch carts when component mounts
   useEffect(() => {
     fetchUserCarts();
   }, []);
 
-  // Function to fetch user carts
-  const fetchUserCarts = async () => {
-    setLoading(true);
+  // Update the fetchUserCarts function to include a success callback
+  const fetchUserCarts = async (showLoadingIndicator = true) => {
+    if (showLoadingIndicator) {
+      setIsRefreshing(true);
+    }
+    
     try {
       const response = await fetch(`${API_ENDPOINTS.cart.getAll}?userId=${userId}`, {
         method: 'GET',
@@ -54,14 +78,31 @@ export default function HomeScreen() {
       }));
       
       setCarts(cartsWithSelection);
+      
+      // Return success
+      return true;
     } catch (error) {
       console.error('Error fetching carts:', error);
       Alert.alert('Error', 'Failed to load your carts. Please try again.');
+      return false;
     } finally {
-      setLoading(false);
+      setIsRefreshing(false);
     }
   };
-
+  
+  // Then add this hook inside the HomeScreen component, after the useFetchUserCarts hook and before any other code
+// This will automatically refresh the carts when the screen comes into focus
+useFocusEffect(
+  useCallback(() => {
+    // Refresh carts when the screen comes into focus, without showing loading indicator
+    fetchUserCarts(false);
+    
+    return () => {
+      // Cleanup function (optional)
+    };
+  }, []) // Empty dependency array means this effect runs every time the screen comes into focus
+);
+  
   // Toggle selection of a cart
   const toggleCartSelection = (cartId: string) => {
     setCarts(prevCarts => 
@@ -97,24 +138,28 @@ export default function HomeScreen() {
       setCompareModalVisible(true);
     }, 100);
   };
+
+  //Handle Inspect Cart --> modal populates screen with product information iin that cart
+  const handleInspectCart = (cartId: string) => {
+    const cart = carts.find(c => c.id === cartId);
+    if (cart) {
+      setCurrentCart(cart);
+      setInspectModalVisible(true);
+    }
+  };
   
-  // Handle updates when carts are modified in the compare modal
-  const handleCartsUpdated = (updatedCartA: Cart, updatedCartB: Cart) => {
+  
+  // Update the compareCartsModal onCartsUpdated callback to refresh the cart list
+  const handleCartsUpdated = async (updatedCartA: Cart, updatedCartB: Cart) => {
     console.log('Received updated carts from modal');
     
-    // Update the carts list with the updated carts
-    setCarts(prevCarts => 
-      prevCarts.map(cart => {
-        if (cart.id === updatedCartA.id) {
-          return {...updatedCartA, selected: cart.selected};
-        }
-        if (cart.id === updatedCartB.id) {
-          return {...updatedCartB, selected: cart.selected};
-        }
-        return cart;
-      })
-    );
+    // Refresh the entire cart list instead of manually updating
+    await fetchUserCarts(false);
   };
+
+  useEffect(() => {
+    // This will run when the component mounts or when userId changes
+    fetchUserCarts();}, [userId]);
 
   // Handle share cart button press
   const handleSharePress = () => {
@@ -183,78 +228,91 @@ export default function HomeScreen() {
     }
   };
 
-  // Handle delete cart press
-  const handleDeleteCart = async (cartId: string) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this cart?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setLoading(true);
-              // In a real app, call API to delete the cart
-              // Simulate API call
-              await new Promise(resolve => setTimeout(resolve, 800));
-              
-              // Update state to remove the cart
-              setCarts(prevCarts => prevCarts.filter(cart => cart.id !== cartId));
-            } catch (error) {
-              console.error('Error deleting cart:', error);
-              Alert.alert('Error', 'Failed to delete cart. Please try again.');
-            } finally {
-              setLoading(false);
-            }
-          }
-        }
-      ]
-    );
-  };
 
-  // Handle inspect cart press
-  const handleInspectCart = (cartId: string) => {
-    // In a real app, navigate to cart detail screen
-    // For now, just show an alert
-    const cart = carts.find(c => c.id === cartId);
-    if (cart) {
-      Alert.alert(
-        `${cart.name} Details`,
-        `This cart contains ${cart.products.length} items with a total value of $${
-          cart.products.reduce((sum, product) => sum + product.price, 0).toFixed(2)
-        }`
-      );
-    }
-  };
-
-  // Render cart item
-  const renderCartItem = ({ item }: { item: CartWithSelection }) => {
-    // Calculate total price
-    const totalPrice = item.products.reduce((sum, product) => sum + product.price, 0);
+  //Update the handleInspectCart function that's called when "Inspect selected cart" is pressed
+  const handleInspectSelectedCart = () => {
+    const selected = getSelectedCarts();
     
+    if (selected.length !== 1) {
+      Alert.alert('Selection Error', 'Please select exactly 1 cart to inspect.');
+      return;
+    }
+    
+    handleInspectCart(selected[0].id);
+  };
+
+
+  // Replace the existing renderCartItem function with this updated version
+  const renderCartItem = ({ item }: { item: CartWithSelection }) => {
     return (
       <CartItemCard
         cart={item}
         onSelect={() => toggleCartSelection(item.id)}
-        onDelete={() => handleDeleteCart(item.id)}
+        onDelete={() => handleDeleteCart()}
         onInspect={() => handleInspectCart(item.id)}
       />
     );
   };
+  // Update the handleDeleteCart function to refresh the list after successful deletion
+  const handleDeleteCart = async () => {
+    //need something to be ab
+    if (!currentCart) return;
+    
+    try {
+      // Call the backend API to delete the cart
+      await deleteCart(currentCart.id, userId);
+      
+      // Refresh the cart list instead of manually updating the state
+      await fetchUserCarts(false);
+      
+      // Close the modal
+      setInspectModalVisible(false);
+      setCurrentCart(null);
+      
+      // Show a success message
+      Alert.alert('Success', 'Cart deleted successfully');
+    } catch (error) {
+      console.error('Error deleting cart:', error);
+      throw error; // Re-throw to be handled by the modal
+    }
+  };
 
-  // Loading state
-  if (loading && carts.length === 0) {
-    return (
-      <View style={[styles.container, styles.centered]}>
-        <ActivityIndicator size="large" color="#e63b60" />
-        <Text style={styles.loadingText}>Loading your carts...</Text>
-      </View>
-    );
-  }
+  const handleDeleteItem = async (productId: string) => {
+    if (!currentCart) return;
+    
+    try {
+      // Call the backend API to remove the product
+      const updatedCart = await removeProductFromCart(currentCart.id, productId, userId);
+      
+      // Update the current cart in the modal
+      setCurrentCart({
+        ...updatedCart,
+        selected: currentCart.selected
+      });
+      
+      // Update the cart in the carts list
+      setCarts(prevCarts => 
+        prevCarts.map(cart => 
+          cart.id === updatedCart.id ? { ...updatedCart, selected: cart.selected } : cart
+        )
+      );
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      throw error; // Re-throw to be handled by the modal
+    }
+  };
 
-  return (
+  // // Loading state
+  // if (loading && carts.length === 0) {
+  //   return (
+  //     <View style={[styles.container, styles.centered]}>
+  //       <ActivityIndicator size="large" color="#e63b60" />
+  //       <Text style={styles.loadingText}>Loading your carts...</Text>
+  //     </View>
+  //   );
+  // }
+
+ return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
@@ -291,41 +349,74 @@ export default function HomeScreen() {
       </View>
 
       {/* Carts list */}
-      {carts.length > 0 ? (
-        <FlatList
-          data={carts}
-          renderItem={renderCartItem}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.cartsList}
+{carts.length > 0 ? (
+  <>
+    <FlatList
+      data={carts}
+      renderItem={renderCartItem}
+      keyExtractor={item => item.id}
+      contentContainerStyle={styles.cartsList}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#e63b60']}
+          tintColor={'#e63b60'}
         />
-      ) : (
-        <View style={styles.noCartsContainer}>
-          <Text style={styles.noCartsText}>You don't have any carts yet.</Text>
-          <Text style={styles.noCartsSubText}>Go to the Scan tab to create your first cart!</Text>
-          <TouchableOpacity 
-            style={styles.scanNowButton}
-            onPress={() => router.push('/scan')}
-          >
-            <Text style={styles.scanNowButtonText}>Scan now</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      }
+    />
+    
+    {/* Refresh button at bottom of list */}
+    <View style={styles.refreshButtonContainer}>
+      <TouchableOpacity 
+        style={[styles.refreshButton, isRefreshing && styles.disabledButton]}
+        onPress={() => fetchUserCarts()}
+        disabled={isRefreshing}
+      >
+        {isRefreshing ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <>
+            <FontAwesome name="refresh" size={16} color="white" style={styles.refreshIcon} />
+            <Text style={styles.refreshButtonText}>Refresh Carts</Text>
+          </>
+        )}
+      </TouchableOpacity>
+    </View>
+  </>
+) : (
+  <View style={styles.noCartsContainer}>
+    <Text style={styles.noCartsText}>You don't have any carts yet.</Text>
+    <Text style={styles.noCartsSubText}>Go to the Scan tab to create your first cart!</Text>
+    <View style={styles.noCartsButtonsContainer}>
+      <TouchableOpacity 
+        style={styles.scanNowButton}
+        onPress={() => router.push('/scan')}
+      >
+        <Text style={styles.scanNowButtonText}>Scan now</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity 
+        style={[styles.refreshButtonSmall, isRefreshing && styles.disabledButton]}
+        onPress={() => fetchUserCarts()}
+        disabled={isRefreshing}
+      >
+        {isRefreshing ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <>
+            <FontAwesome name="refresh" size={16} color="white" style={styles.refreshIcon} />
+            <Text style={styles.refreshButtonTextSmall}>Refresh</Text>
+          </>
+        )}
+      </TouchableOpacity>
+    </View>
+  </View>
+)}
 
       {/* Action buttons */}
       {carts.length > 0 && (
         <View style={styles.actionButtonsContainer}>
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={() => handleInspectCart(getSelectedCarts()[0]?.id)}
-            disabled={getSelectedCarts().length !== 1}
-          >
-            <Text style={[
-              styles.actionButtonText,
-              getSelectedCarts().length !== 1 && styles.disabledButtonText
-            ]}>
-              Inspect selected cart
-            </Text>
-          </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.actionButton}
@@ -379,9 +470,21 @@ export default function HomeScreen() {
         onClose={() => setShareModalVisible(false)}
         carts={selectedCarts}
       />
+
+      {/* Cart Inspection Modal */}
+      <CartInspectionModal
+        visible={inspectModalVisible}
+        cart={currentCart}
+        onClose={() => setInspectModalVisible(false)}
+        onDeleteItem={handleDeleteItem}
+        onDeleteCart={handleDeleteCart}
+      />
     </View>
   );
 }
+
+
+  
 
 const styles = StyleSheet.create({
   container: {
@@ -434,6 +537,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
+  },
+  deletingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  deletingText: {
+    marginLeft: 10,
+    color: '#666',
   },
   userInfo: {
     flex: 1,
@@ -518,6 +634,52 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   disabledButtonText: {
+    opacity: 0.7,
+  },
+  // Add these style definitions to the StyleSheet
+  refreshButtonContainer: {
+    paddingBottom: 20,
+    marginBottom: 60, // Add space for the action buttons at the bottom
+    alignItems: 'center',
+  },
+  refreshButton: {
+    backgroundColor: '#151a7b',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+  },
+  refreshButtonSmall: {
+    backgroundColor: '#151a7b',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginLeft: 10,
+  },
+  refreshIcon: {
+    marginRight: 8,
+  },
+  refreshButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  refreshButtonTextSmall: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  noCartsButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  disabledButton: {
     opacity: 0.7,
   },
 });
