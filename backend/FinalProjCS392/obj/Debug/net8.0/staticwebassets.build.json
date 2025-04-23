@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "ivu6+zLVHAtYIvFC4WKJLxD5awUFgF7OBy9HiTjM0CQ=",
+  "Source": "priceItBackend",
+  "BasePath": "_content/priceItBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

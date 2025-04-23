@@ -1,0 +1,125 @@
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\appsettings.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.staticwebassets.endpoints.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.exe
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.deps.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.runtimeconfig.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.pdb
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Api.CommonProtos.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Api.Gax.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Api.Gax.Grpc.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Apis.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Apis.Auth.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Apis.Core.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Cloud.Vision.V1.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.LongRunning.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Google.Protobuf.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Grpc.Auth.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Grpc.Core.Api.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Grpc.Net.Client.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Grpc.Net.Common.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\System.CodeDom.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\System.Management.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.csproj.AssemblyReference.cache
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.AssemblyInfoInputs.cache
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.AssemblyInfo.cs
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.csproj.CoreCompileInputs.cache
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\scopedcss\bundle\FinalProjCS392.styles.css
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.FinalProjCS392.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.FinalProjCS392.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.build.FinalProjCS392.props
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.FinalProjCS392.props
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.FinalProjCS392.props
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalPro.791FF0B7.Up2Date
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\refint\FinalProjCS392.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.pdb
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.genruntimeconfig.cache
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\obj\Debug\net8.0\ref\FinalProjCS392.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\HtmlAgilityPack.dll
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\selenium-manager\linux\selenium-manager
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\selenium-manager\macos\selenium-manager
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\selenium-manager\windows\selenium-manager.exe
+C:\Users\willi\source\repos\Project Stack CS392\FinalProjCS392\bin\Debug\net8.0\WebDriver.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\appsettings.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\selenium-manager\linux\selenium-manager
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\selenium-manager\macos\selenium-manager
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\selenium-manager\windows\selenium-manager.exe
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.staticwebassets.endpoints.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.exe
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.deps.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.runtimeconfig.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\FinalProjCS392.pdb
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Api.CommonProtos.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Api.Gax.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Api.Gax.Grpc.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Apis.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Apis.Auth.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Apis.Core.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Cloud.Vision.V1.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.LongRunning.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Google.Protobuf.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Grpc.Auth.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Grpc.Core.Api.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Grpc.Net.Client.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Grpc.Net.Common.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\HtmlAgilityPack.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\WebDriver.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\System.CodeDom.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\System.Management.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.csproj.AssemblyReference.cache
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.AssemblyInfoInputs.cache
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.AssemblyInfo.cs
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.csproj.CoreCompileInputs.cache
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\scopedcss\bundle\FinalProjCS392.styles.css
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.FinalProjCS392.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.FinalProjCS392.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.build.FinalProjCS392.props
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.FinalProjCS392.props
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.FinalProjCS392.props
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalPro.791FF0B7.Up2Date
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\refint\FinalProjCS392.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.pdb
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.genruntimeconfig.cache
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\ref\FinalProjCS392.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\obj\Debug\net8.0\FinalProjCS392.sourcelink.json
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\DnsClient.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\MongoDB.Bson.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\MongoDB.Driver.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\SharpCompress.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\Snappier.dll
+C:\Users\willi\Desktop\CS392MiniResearch\FinalProjCS392\bin\Debug\net8.0\ZstdSharp.dll
