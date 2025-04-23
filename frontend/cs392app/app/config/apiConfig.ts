@@ -26,7 +26,7 @@ export const API_ENDPOINTS = {
     getAll: `${API_BASE_URL}/api/cart`,
     create: `${API_BASE_URL}/api/cart`,
     addProducts: (cartId: string) => `${API_BASE_URL}/api/cart/add/${cartId}`,
-    update: (cartId: string) => `${API_BASE_URL}/api/cart/${cartId}`
+    update: (cartId: string) => `${API_BASE_URL}/api/cart/update/${cartId}`
   }
 };
 

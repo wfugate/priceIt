@@ -313,6 +313,7 @@ export const saveToCart = async (
 };
 
 // Update an existing cart
+// In your scanService.ts, modify the updateCart function to use the correct endpoint
 export const updateCart = async (
   cartId: string,
   userId: string,
@@ -320,7 +321,8 @@ export const updateCart = async (
   name?: string
 ): Promise<Cart> => {
   try {
-    const response = await fetch(API_ENDPOINTS.cart.update(cartId), {
+    // Change this line to use the correct endpoint
+    const response = await fetch(API_ENDPOINTS.cart.addProducts(cartId), {
       method: 'PUT',
       headers: COMMON_HEADERS,
       body: JSON.stringify({
