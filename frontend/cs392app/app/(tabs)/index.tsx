@@ -1,6 +1,6 @@
 // app/(tabs)/index.tsx
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share, Platform } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
@@ -10,6 +10,11 @@ import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
 import { router } from 'expo-router';
+import { useAuth } from '../context/AuthContext'; 
+import { API_BASE_URL } from '../config/apiConfig';
+//additions for auth
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 // Extended Cart interface with selection state
 interface CartWithSelection extends Cart {
@@ -17,8 +22,11 @@ interface CartWithSelection extends Cart {
 }
 
 export default function HomeScreen() {
-  // Mock userId - In a real app, this would come from authentication
-  const userId = '123';
+
+  const { user, logout } = useAuth(); 
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [profileImageKey, setProfileImageKey] = useState<number>(0); 
+  const userId = user?.UserId;
   
   const [carts, setCarts] = useState<CartWithSelection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,10 +35,210 @@ export default function HomeScreen() {
   const [selectedCarts, setSelectedCarts] = useState<CartWithSelection[]>([]);
   const [emailingCart, setEmailingCart] = useState(false);
 
+
+  const [imageLoading, setImageLoading] = useState(false);
+
+  // For cleanup of object URLs on web
+  const objectUrlRef = useRef<string | null>(null);
   // Fetch carts when component mounts
   useEffect(() => {
+    fetchProfilePic();
     fetchUserCarts();
-  }, []);
+
+    // Cleanup function to revoke object URLs when component unmounts
+    return () => {
+      if (Platform.OS === 'web' && objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
+    };
+  }, [userId]);
+
+//Function to fetch user profile picture
+const fetchProfilePic = async () => {
+  console.log("UserID:", userId)
+  if (!userId) {
+    console.log("No user ID available for fetching profile image");
+    return;
+  }
+  setImageLoading(true);
+
+  try {
+    // Make sure to invalidate cache by adding timestamp
+    const timestamp = new Date().getTime();
+    const response = await fetch(`${API_BASE_URL}/api/images/profile-image/${userId}?t=${timestamp}`, {
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.log("No profile image found for user");
+        setImageUri(null);
+        return;
+      }
+      throw new Error(`Server responded with ${response.status}: ${await response.text()}`);
+    }
+
+    const blob = await response.blob();
+    
+    if (Platform.OS === 'web') {
+
+      // Cleanup previous URL if exists
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+      
+
+      //Create a new URL object from the blob for web
+      const imageUrl = URL.createObjectURL(blob);
+      objectUrlRef.current = imageUrl;
+      console.log("Created web image URL:", imageUrl);
+      
+      // Set the image URI
+      setImageUri(imageUrl);
+
+      // Force re-render of the image by updating key
+      setProfileImageKey(prevKey => prevKey + 1);
+    } else {
+      // For mobile: Use FileSystem to store image
+      const fileReader = new FileReader();
+      fileReader.onload = async () => {
+        try {
+          const result = fileReader.result;
+          
+          if (typeof result === 'string') {
+            const base64data = result.split(',')[1];
+            if (base64data) {
+              const path = `${FileSystem.cacheDirectory}profile-${timestamp}.jpg`;
+              await FileSystem.writeAsStringAsync(path, base64data, {
+                encoding: FileSystem.EncodingType.Base64,
+              });
+              
+              console.log("Saved mobile image to:", path);
+              setImageUri(path);
+            }
+          }
+        } catch (error) {
+          console.error("Error in FileReader processing:", error);
+        }
+      };
+      
+      fileReader.onerror = (error) => {
+        console.error("FileReader error:", error);
+      };
+      
+      fileReader.readAsDataURL(blob);
+    }
+  } catch (error) {
+    console.error('Error fetching profile image:', error);
+  } finally {
+    setImageLoading(false);
+  }
+
+};
+
+//Pick and upload new image
+const handleImagePick = async () => {
+  if (!userId) {
+    Alert.alert('Error', 'User ID not available. Please log in again.');
+    return;
+  }
+
+  try {
+    // Request permissions first
+    if (Platform.OS !== 'web') {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permissionResult.granted) {
+        Alert.alert('Permission denied', 'Permission to access gallery is required!');
+        return;
+      }
+    }
+
+    // Launch image picker
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+    
+    if (pickerResult.canceled || !pickerResult.assets || pickerResult.assets.length === 0) {
+      return;
+    }
+
+    const selectedAsset = pickerResult.assets[0];
+    console.log("Selected image:", selectedAsset.uri);
+    
+    // Upload to backend
+    const formData = new FormData();
+    formData.append('userId', userId);
+    
+    // Handle the image differently for web and mobile
+    if (Platform.OS === 'web') {
+      try {
+        // For web, we need to fetch the file first
+        const response = await fetch(selectedAsset.uri);
+        const blob = await response.blob();
+
+        formData.append("image", blob, "profile.jpg");
+        console.log("Web: Prepared image blob for upload");
+      } catch (error) {
+        console.error("Error preparing web image:", error);
+        Alert.alert('Error', 'Failed to prepare image for upload.');
+        return;
+      }
+    } else {
+      // For mobile, use the asset directly
+      formData.append('image', {
+        uri: selectedAsset.uri,
+        name: 'profile.jpg',
+        type: 'image/jpeg',
+      } as any);
+      console.log('📱 Mobile: Added image to FormData');
+    }
+    
+    // Show loading indicator
+    setImageLoading(true);
+
+
+    try {
+      // Upload the image
+      console.log("Uploading image to:", `${API_BASE_URL}/api/images/upload`);
+
+      const uploadResponse  = await fetch(`${API_BASE_URL}/api/images/upload`, {
+        method: 'POST',
+        body: formData,
+        headers: Platform.OS === 'web' ? undefined : {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (!uploadResponse .ok) {
+        const errorText = await uploadResponse .text();
+        console.error('XXXXX Upload failed:', errorText);
+        throw new Error(`Upload failed with status ${uploadResponse.status}: ${errorText}`);
+      } 
+      
+      // After successful upload, fetch the updated profile image
+      await fetchProfilePic();
+      
+      Alert.alert('Success', 'Profile image updated successfully!');
+      
+    } catch (uploadError) {
+      console.error('Upload error:', uploadError);
+      Alert.alert('Upload Failed', 'There was a problem uploading your image. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error in image picking process:', error);
+    Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+    setImageLoading(false);
+  }
+};
 
   // Function to fetch user carts
   const fetchUserCarts = async () => {

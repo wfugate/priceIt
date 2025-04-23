@@ -11,7 +11,7 @@ import { cameraStyles } from '../../components/styles/styles';
 import { searchProducts, saveToCart } from '../services/scanService';
 import { Product, Stores } from '../types';
 import { getProductByBarcode, isBarcode } from '../services/barcodeService';
-
+import { useAuth } from '../context/AuthContext'; 
 export default function ScanScreen() {
   const [showResults, setShowResults] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,7 +25,8 @@ export default function ScanScreen() {
   });
   
   // Mock userId - In a real app, this would come from authentication
-  const userId = '123';
+  const { user } = useAuth();
+  const userId = user?.UserId;
 
   const {
     cameraRef,
@@ -209,6 +210,7 @@ export default function ScanScreen() {
 
   const handleAddToCart = async (selectedProducts: Product[], cartId: string) => {
     try {
+      if (!userId) return;
       await saveToCart(selectedProducts, userId, cartId);
       return Promise.resolve();
     } catch (error) {
