@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     zIndex: 10,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(74, 29, 150, 0.7)', // Semi-transparent deep purple
     borderRadius: 25,
     padding: 5,
   },
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for active button
   },
   buttonText: {
     color: 'white',

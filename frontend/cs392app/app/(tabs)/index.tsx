@@ -486,35 +486,287 @@ useFocusEffect(
 
   
 
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     paddingHorizontal: 16,
+//     paddingTop: 16,
+//     backgroundColor: '#fff',
+//   },
+//   centered: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   loadingText: {
+//     marginTop: 10,
+//     fontSize: 16,
+//     color: '#666',
+//   },
+//   header: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     marginTop: 40,
+//     marginBottom: 20,
+//   },
+//   title: {
+//     fontSize: 24,
+//     fontWeight: 'bold',
+//   },
+//   logoutButton: {
+//     backgroundColor: '#e63b60',
+//     paddingHorizontal: 16,
+//     paddingVertical: 8,
+//     borderRadius: 20,
+//   },
+//   logoutButtonText: {
+//     color: 'white',
+//     fontWeight: '600',
+//   },
+//   userInfoContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 20,
+//   },
+//   avatarContainer: {
+//     width: 60,
+//     height: 60,
+//     borderWidth: 1,
+//     borderColor: '#ccc',
+//     borderRadius: 5,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginRight: 16,
+//   },
+//   deletingContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     padding: 10,
+//     backgroundColor: 'rgba(0,0,0,0.05)',
+//     borderRadius: 5,
+//     marginBottom: 10,
+//   },
+//   deletingText: {
+//     marginLeft: 10,
+//     color: '#666',
+//   },
+//   userInfo: {
+//     flex: 1,
+//   },
+//   userInfoText: {
+//     fontSize: 16,
+//     marginBottom: 4,
+//   },
+//   separator: {
+//     height: 1,
+//     backgroundColor: '#eee',
+//     marginVertical: 20,
+//   },
+//   cartsHeaderContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     marginBottom: 16,
+//   },
+//   sectionTitle: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//   },
+//   compareButton: {
+//     backgroundColor: '#e63b60',
+//     paddingHorizontal: 16,
+//     paddingVertical: 8,
+//     borderRadius: 20,
+//   },
+//   compareButtonText: {
+//     color: 'white',
+//     fontWeight: '600',
+//   },
+//   cartsList: {
+//     paddingBottom: 160, // Add padding for buttons at bottom
+//   },
+//   noCartsContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     paddingBottom: 100,
+//   },
+//   noCartsText: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     marginBottom: 8,
+//     color: '#666',
+//   },
+//   noCartsSubText: {
+//     fontSize: 16,
+//     color: '#999',
+//     marginBottom: 24,
+//     textAlign: 'center',
+//   },
+//   scanNowButton: {
+//     backgroundColor: '#e63b60',
+//     paddingHorizontal: 32,
+//     paddingVertical: 12,
+//     borderRadius: 25,
+//   },
+//   scanNowButtonText: {
+//     color: 'white',
+//     fontSize: 16,
+//     fontWeight: 'bold',
+//   },
+//   actionButtonsContainer: {
+//     position: 'absolute',
+//     bottom: 20,
+//     left: 16,
+//     right: 16,
+//   },
+//   actionButton: {
+//     backgroundColor: '#e63b60',
+//     padding: 14,
+//     borderRadius: 5,
+//     alignItems: 'center',
+//     marginBottom: 10,
+//   },
+//   actionButtonText: {
+//     color: 'white',
+//     fontWeight: 'bold',
+//     fontSize: 16,
+//   },
+//   disabledButtonText: {
+//     opacity: 0.7,
+//   },
+//   // Add these style definitions to the StyleSheet
+//   refreshButtonContainer: {
+//     paddingBottom: 20,
+//     marginBottom: 60, // Add space for the action buttons at the bottom
+//     alignItems: 'center',
+//   },
+//   refreshButton: {
+//     backgroundColor: '#151a7b',
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     paddingHorizontal: 20,
+//     paddingVertical: 10,
+//     borderRadius: 25,
+//   },
+//   refreshButtonSmall: {
+//     backgroundColor: '#151a7b',
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     paddingHorizontal: 15,
+//     paddingVertical: 8,
+//     borderRadius: 20,
+//     marginLeft: 10,
+//   },
+//   refreshIcon: {
+//     marginRight: 8,
+//   },
+//   refreshButtonText: {
+//     color: 'white',
+//     fontWeight: 'bold',
+//     fontSize: 14,
+//   },
+//   refreshButtonTextSmall: {
+//     color: 'white',
+//     fontWeight: 'bold',
+//     fontSize: 12,
+//   },
+//   noCartsButtonsContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginTop: 20,
+//   },
+//   disabledButton: {
+//     opacity: 0.7,
+//   },
+// });
+
 const styles = StyleSheet.create({
+  disabledButtonText: {
+        opacity: 0.7,
+      },
+      // Add these style definitions to the StyleSheet
+      refreshButtonContainer: {
+        paddingBottom: 20,
+        marginBottom: 60, // Add space for the action buttons at the bottom
+        alignItems: 'center',
+      },
+      refreshButton: {
+        backgroundColor: '#151a7b',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 25,
+      },
+      refreshButtonSmall: {
+        backgroundColor: '#151a7b',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        marginLeft: 10,
+      },
+      refreshIcon: {
+        marginRight: 8,
+      },
+      refreshButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 14,
+      },
+      refreshButtonTextSmall: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 12,
+      },
+      noCartsButtonsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 20,
+      },
+      disabledButton: {
+        opacity: 0.7,
+      },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 40,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff', // White background
   },
   centered: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  noCartsContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 100,
+      },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 20,
+    color: '#4A1D96', // Deep purple for text
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#4A1D96', // Deep purple for title
   },
   logoutButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -523,58 +775,78 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
-  userInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatarContainer: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  deletingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  deletingText: {
-    marginLeft: 10,
-    color: '#666',
-  },
-  userInfo: {
-    flex: 1,
-  },
+// Fix for the userInfoContainer in index.tsx
+userInfoContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 20,
+  backgroundColor: '#ffffff', // White background
+  padding: 10,
+  borderRadius: 8,
+  borderWidth: 1,
+  borderColor: '#E9D8FD', // Light purple border
+},
+avatarContainerTwo: {
+  width: 60,
+  height: 60, 
+  alignItems: 'center',
+  marginRight: 16,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the avatarContainer to ensure white background
+avatarContainer: {
+  width: 60,
+  height: 60,
+  borderWidth: 1,
+  borderColor: '#4A1D96', // Purple border
+  borderRadius: 30, // Make it round
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 16,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the userInfo section
+userInfo: {
+  flex: 1,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the header to ensure white background
+header: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: 40,
+  marginBottom: 20,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
   userInfoText: {
     fontSize: 16,
     marginBottom: 4,
+    color: '#4A1D96', // Deep purple for text
   },
   separator: {
     height: 1,
-    backgroundColor: '#eee',
+    backgroundColor: '#4A1D96', // Deep purple separator
     marginVertical: 20,
+    opacity: 0.3,
   },
   cartsHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+    backgroundColor: '#ffffff', // White background
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#4A1D96', // Deep purple for section title
   },
   compareButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -586,26 +858,20 @@ const styles = StyleSheet.create({
   cartsList: {
     paddingBottom: 160, // Add padding for buttons at bottom
   },
-  noCartsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 100,
-  },
   noCartsText: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#666',
+    color: '#4A1D96', // Deep purple for text
   },
   noCartsSubText: {
     fontSize: 16,
-    color: '#999',
+    color: '#6B46C1', // Lighter purple
     marginBottom: 24,
     textAlign: 'center',
   },
   scanNowButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 25,
@@ -620,66 +886,40 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 16,
     right: 16,
+    backgroundColor: 'transparent', // Transparent background
   },
   actionButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     padding: 14,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   actionButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  disabledButtonText: {
-    opacity: 0.7,
-  },
-  // Add these style definitions to the StyleSheet
-  refreshButtonContainer: {
-    paddingBottom: 20,
-    marginBottom: 60, // Add space for the action buttons at the bottom
-    alignItems: 'center',
-  },
-  refreshButton: {
-    backgroundColor: '#151a7b',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+  profileButton: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 10,
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     borderRadius: 25,
-  },
-  refreshButtonSmall: {
-    backgroundColor: '#151a7b',
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: 40,
+    height: 40,
     justifyContent: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginLeft: 10,
-  },
-  refreshIcon: {
-    marginRight: 8,
-  },
-  refreshButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  refreshButtonTextSmall: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
-  noCartsButtonsContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
-  },
-  disabledButton: {
-    opacity: 0.7,
-  },
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  }
 });
