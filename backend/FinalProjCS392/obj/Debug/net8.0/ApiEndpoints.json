@@ -33,6 +33,27 @@
   },
   {
     "ContainingType": "FinalProjCS392.Controllers.CartController",
+    "Method": "UpdateCart",
+    "RelativePath": "api/cart/{cartId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "FinalProjCS392.Controllers.AddToCartRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FinalProjCS392.Controllers.CartController",
     "Method": "SaveToCart",
     "RelativePath": "api/cart/add/{cartId}",
     "HttpMethod": "PUT",
@@ -47,6 +68,27 @@
       {
         "Name": "request",
         "Type": "FinalProjCS392.Controllers.AddToCartRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FinalProjCS392.Controllers.CartController",
+    "Method": "UpdateCartProducts",
+    "RelativePath": "api/cart/update/{cartId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "FinalProjCS392.Controllers.CartController\u002BUpdateCartRequest",
         "IsRequired": true
       }
     ],

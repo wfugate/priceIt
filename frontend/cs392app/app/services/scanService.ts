@@ -371,4 +371,49 @@ export const getProductByBarcode = async (barcode: string, stores: Stores = { wa
   }
 };
 
+export const deleteCart = async (cartId: string, userId: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_ENDPOINTS.cart.getAll}/${cartId}?userId=${userId}`, {
+      method: 'DELETE',
+      headers: COMMON_HEADERS
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `Failed to delete cart: ${response.status}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Delete cart error:', error);
+    throw error;
+  }
+};
+
+// Remove a product from a cart
+export const removeProductFromCart = async (
+  cartId: string,
+  productId: string,
+  userId: string
+): Promise<Cart> => {
+  try {
+    const response = await fetch(`${API_ENDPOINTS.cart.getAll}/${cartId}/products/${productId}?userId=${userId}`, {
+      method: 'DELETE',
+      headers: COMMON_HEADERS
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `Failed to remove product from cart: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Remove product error:', error);
+    throw error;
+  }
+};
+
+
+
 export default function removeWarning(){}

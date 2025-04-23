@@ -13,7 +13,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { updateCart, Cart, Product } from '../../app/services/scanService';
+import { updateCart} from '../../app/services/scanService';
+import { Cart } from '../../app/types';
 
 // Update the prop interface to include the callback
 interface CompareCartsModalProps {
