@@ -6,17 +6,18 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
 // Custom colors for the tab bar
+// For (tabs)/_layout.tsx
 const TabColors = {
   dark: {
-    background: '#151a7b', // Dark blue
+    background: '#4A1D96', // Deep royal purple
     activeTint: '#ffffff', // White
-    inactiveTint: '#bbdefb', // Light blue
+    inactiveTint: '#E9D8FD', // Light purple
     iconSize: 24,
   },
   light: {
-    background: '#151a7b', // Medium blue
+    background: '#4A1D96', // Deep royal purple
     activeTint: '#ffffff', // White
-    inactiveTint: '#e8eaf6', // Very light blue
+    inactiveTint: '#E9D8FD', // Light purple
     iconSize: 24,
   },
 };

@@ -501,7 +501,7 @@ export default function HomeScreen() {
           <Text style={styles.userInfoText}>Email: {user?.email ?? 'xxxxx'}</Text>
         </View>
         
-        <View>
+        <View style={styles.avatarContainerTwo}>
           <TouchableOpacity
             style={styles.profileButton}
             onPress={() => router.push('/info')}>
@@ -628,7 +628,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff', // White background
   },
   centered: {
     justifyContent: 'center',
@@ -637,21 +637,15 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 20,
+    color: '#4A1D96', // Deep purple for text
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#4A1D96', // Deep purple for title
   },
   logoutButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -660,45 +654,78 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
-  userInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatarContainer: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  userInfo: {
-    flex: 1,
-  },
+// Fix for the userInfoContainer in index.tsx
+userInfoContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 20,
+  backgroundColor: '#ffffff', // White background
+  padding: 10,
+  borderRadius: 8,
+  borderWidth: 1,
+  borderColor: '#E9D8FD', // Light purple border
+},
+avatarContainerTwo: {
+  width: 60,
+  height: 60, 
+  alignItems: 'center',
+  marginRight: 16,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the avatarContainer to ensure white background
+avatarContainer: {
+  width: 60,
+  height: 60,
+  borderWidth: 1,
+  borderColor: '#4A1D96', // Purple border
+  borderRadius: 30, // Make it round
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 16,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the userInfo section
+userInfo: {
+  flex: 1,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the header to ensure white background
+header: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: 40,
+  marginBottom: 20,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
   userInfoText: {
     fontSize: 16,
     marginBottom: 4,
+    color: '#4A1D96', // Deep purple for text
   },
   separator: {
     height: 1,
-    backgroundColor: '#eee',
+    backgroundColor: '#4A1D96', // Deep purple separator
     marginVertical: 20,
+    opacity: 0.3,
   },
   cartsHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+    backgroundColor: '#ffffff', // White background
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#4A1D96', // Deep purple for section title
   },
   compareButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -715,21 +742,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 100,
+    backgroundColor: '#ffffff', // White background
   },
   noCartsText: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#666',
+    color: '#4A1D96', // Deep purple for text
   },
   noCartsSubText: {
     fontSize: 16,
-    color: '#999',
+    color: '#6B46C1', // Lighter purple
     marginBottom: 24,
     textAlign: 'center',
   },
   scanNowButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 25,
@@ -744,13 +772,19 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 16,
     right: 16,
+    backgroundColor: 'transparent', // Transparent background
   },
   actionButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     padding: 14,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   actionButtonText: {
     color: 'white',
@@ -765,7 +799,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     marginRight: 10,
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     borderRadius: 25,
     width: 40,
     height: 40,
