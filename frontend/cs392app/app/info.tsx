@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, TextInput, Platform, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from '../context/AuthContext';  
+import { useAuth } from './context/AuthContext';  
 import { useRouter } from 'expo-router';
 import { router } from 'expo-router';
-import { API_BASE_URL } from '../config/apiConfig'; 
+import { API_BASE_URL } from './config/apiConfig'; 
 
 export default function SetInfoScreen() {
   const { user, updateProfile } = useAuth(); // Accessing the updateProfile function in AuthContext
