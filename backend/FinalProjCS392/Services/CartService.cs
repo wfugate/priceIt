@@ -210,5 +210,30 @@ namespace FinalProjCS392.Services
 
             return result;
         }
+
+        public async Task<Cart> UpdateCart(Cart cart)
+        {
+            var filter = Builders<Cart>.Filter.And(
+                Builders<Cart>.Filter.Eq(c => c.UserId, cart.UserId),
+                Builders<Cart>.Filter.Eq(c => c.Id, cart.Id)
+            );
+
+            var update = Builders<Cart>.Update
+                .Set(c => c.Products, cart.Products)
+                .Set(c => c.Name, cart.Name);
+
+            var result = await _carts.FindOneAndUpdateAsync(
+                filter,
+                update,
+                new FindOneAndUpdateOptions<Cart> { ReturnDocument = ReturnDocument.After }
+            );
+
+            if (result == null)
+            {
+                throw new Exception("Cart not found or user doesn't have access");
+            }
+
+            return result;
+        }
     }
 }

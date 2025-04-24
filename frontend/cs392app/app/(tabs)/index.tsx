@@ -691,7 +691,7 @@ const styles = StyleSheet.create({
       // Add these style definitions to the StyleSheet
       refreshButtonContainer: {
         paddingBottom: 20,
-        marginBottom: 60, // Add space for the action buttons at the bottom
+        marginBottom: 145, // Add space for the action buttons at the bottom
         alignItems: 'center',
       },
       refreshButton: {

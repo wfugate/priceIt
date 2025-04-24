@@ -396,6 +396,46 @@ namespace FinalProjCS392.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        // PUT /api/cart/{cartId} - Updates an existing cart
+        [HttpPut("{cartId}")]
+        public async Task<IActionResult> UpdateCart(string cartId, [FromBody] UpdateCartRequest request)
+        {
+            if (string.IsNullOrEmpty(request.UserId))
+            {
+                return BadRequest("User ID is required");
+            }
+
+            try
+            {
+                // Verify the cart exists and belongs to the user
+                var existingCarts = await _cartService.GetUserCarts(request.UserId);
+                var cart = existingCarts.FirstOrDefault(c => c.Id == cartId);
+
+                if (cart == null)
+                {
+                    return NotFound($"Cart with ID {cartId} not found for this user");
+                }
+
+                // Update the cart with new products
+                cart.Products = request.Products;
+
+                //// If a new name was provided, update it
+                //if (!string.IsNullOrEmpty(request.Name))
+                //{
+                //    cart.Name = request.Name;
+                //}
+
+                // Save the updated cart
+                var updatedCart = await _cartService.UpdateCart(cart);
+
+                return Ok(updatedCart);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 
     public class CreateCartRequest
@@ -407,6 +447,13 @@ namespace FinalProjCS392.Controllers
     public class AddToCartRequest
     {
         public string UserId { get; set; }
+        public List<CartProduct> Products { get; set; }
+    }
+
+    public class UpdateCartRequest
+    {
+        public string UserId { get; set; }
+        public string Name { get; set; }
         public List<CartProduct> Products { get; set; }
     }
 }

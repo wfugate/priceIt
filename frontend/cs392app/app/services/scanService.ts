@@ -318,6 +318,7 @@ export const updateCart = async (
   userId: string,
   products: Product[],
   name?: string
+  
 ): Promise<Cart> => {
   try {
     const response = await fetch(API_ENDPOINTS.cart.update(cartId), {

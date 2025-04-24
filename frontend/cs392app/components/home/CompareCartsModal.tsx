@@ -260,9 +260,9 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
           <Text style={styles.title}>COMPARE CARTS</Text>
-          <TouchableOpacity style={styles.deleteButton}>
+          {/* <TouchableOpacity style={styles.deleteButton}>
             <FontAwesome name="trash" size={20} color="#333" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Cart titles */}
@@ -423,6 +423,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+    justifyContent: 'center'
   },
   deleteButton: {
     padding: 10,
