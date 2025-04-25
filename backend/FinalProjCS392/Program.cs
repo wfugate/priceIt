@@ -1,20 +1,26 @@
-﻿using FinalProjCS392.Services;
+﻿using FinalProjCS392.Models;
+using FinalProjCS392.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add to Program.cs
-var mongoConnectionString = "mongodb+srv://williamfugate:rQNXj0wUb0GuzJwh@user-info.111hyzz.mongodb.net/?retryWrites=true&w=majority&appName=user-info";
-var mongoClient = new MongoClient(mongoConnectionString);
-var mongoDatabase = mongoClient.GetDatabase("priceItDB");
+//var mongoConnectionString = "mongodb+srv://williamfugate:rQNXj0wUb0GuzJwh@user-info.111hyzz.mongodb.net/?retryWrites=true&w=majority&appName=user-info";
+//var mongoClient = new MongoClient(mongoConnectionString);
+//var mongoDatabase = mongoClient.GetDatabase("priceItDB");
 
-builder.Services.AddSingleton<IMongoDatabase>(mongoDatabase);
 builder.Services.AddScoped<CartService>();
-
+builder.Services.AddSingleton<ImageService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<UserService>();
 // Register all scraper services
 builder.Services.AddScoped<WalmartScraperService>();
 builder.Services.AddScoped<CostcoScraperService>();
 builder.Services.AddScoped<SamsClubScraperService>();
 builder.Services.AddScoped<UnwrangleTargetDemo.TargetWebScraperService>();
+
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 
 // Add services to the container.
 builder.Services.AddCors(options =>

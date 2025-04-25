@@ -2,7 +2,7 @@
 // Central configuration file for API endpoints
 
 // Base URL for all API requests - change this when your ngrok URL changes
-export const API_BASE_URL = 'https://ce8b-128-197-28-168.ngrok-free.app';
+export const API_BASE_URL = 'https://c0f0-128-197-28-168.ngrok-free.app';
 
 // API endpoints derived from the base URL
 export const API_ENDPOINTS = {
@@ -26,7 +26,7 @@ export const API_ENDPOINTS = {
     getAll: `${API_BASE_URL}/api/cart`,
     create: `${API_BASE_URL}/api/cart`,
     addProducts: (cartId: string) => `${API_BASE_URL}/api/cart/add/${cartId}`,
-    update: (cartId: string) => `${API_BASE_URL}/api/cart/${cartId}`
+    update: (cartId: string) => `${API_BASE_URL}/api/cart/update/${cartId}`
   }
 };
 

@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
     textAlign: 'center',
+    color: '#4A1D96', // Deep purple for text
   },
   backButton: {
     padding: 8,
@@ -137,22 +138,22 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: '#555',
+    color: '#6B46C1', // Lighter purple
     marginBottom: 20,
     textAlign: 'center',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#E9D8FD', // Light purple border
     borderRadius: 5,
     padding: 12,
     fontSize: 16,
   },
   inputError: {
-    borderColor: '#e63b60',
+    borderColor: '#F59E0B', // Yellow/orange for error
   },
   errorText: {
-    color: '#e63b60',
+    color: '#F59E0B', // Yellow/orange for error
     marginTop: 5,
     fontSize: 14,
   },
@@ -172,14 +173,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#E9D8FD', // Light purple border
   },
   cancelButtonText: {
-    color: '#555',
+    color: '#4A1D96', // Deep purple for text
     fontWeight: '500',
   },
   createButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange button
   },
   disabledButton: {
     backgroundColor: '#cccccc',

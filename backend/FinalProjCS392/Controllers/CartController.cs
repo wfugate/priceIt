@@ -175,6 +175,52 @@ namespace FinalProjCS392.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        // PUT /api/cart/:cartId - Adds products to a specific cart
+        [HttpPut("{cartId}")]
+        public async Task<IActionResult> UpdateCart(string cartId, [FromBody] AddToCartRequest request)
+        {
+            if (string.IsNullOrEmpty(request.UserId))
+            {
+                return BadRequest("User ID is required");
+            }
+
+            try
+            {
+                await _cartService.AddProductsToCart(request.UserId, cartId, request.Products);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // PUT /api/cart/update/{cartId} - Updates products in a specific cart
+        [HttpPut("update/{cartId}")]
+        public async Task<IActionResult> UpdateCartProducts(string cartId, [FromBody] UpdateCartRequest request)
+        {
+            if (string.IsNullOrEmpty(request.UserId))
+            {
+                return BadRequest("User ID is required");
+            }
+
+            try
+            {
+                var cart = await _cartService.UpdateCartProducts(request.UserId, cartId, request.Products);
+                return Ok(cart);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        public class UpdateCartRequest
+        {
+            public string UserId { get; set; }
+            public List<CartProduct> Products { get; set; }
+            public string Name { get; set; }
+        }
     }
 
     public class CreateCartRequest

@@ -11,7 +11,7 @@ import { cameraStyles } from '../../components/styles/styles';
 import { searchProducts, saveToCart } from '../services/scanService';
 import { Product, Stores } from '../types';
 import { getProductByBarcode, isBarcode } from '../services/barcodeService';
-
+import { useAuth } from '../context/AuthContext'; 
 export default function ScanScreen() {
   const [showResults, setShowResults] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,7 +25,8 @@ export default function ScanScreen() {
   });
   
   // Mock userId - In a real app, this would come from authentication
-  const userId = '123';
+  const { user } = useAuth();
+  const userId = user?.UserId;
 
   const {
     cameraRef,
@@ -209,6 +210,7 @@ export default function ScanScreen() {
 
   const handleAddToCart = async (selectedProducts: Product[], cartId: string) => {
     try {
+      if (!userId) return;
       await saveToCart(selectedProducts, userId, cartId);
       return Promise.resolve();
     } catch (error) {
@@ -387,23 +389,23 @@ export default function ScanScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#223bc9',
+    backgroundColor: '#4A1D96', // Deep royal purple
     padding: 0,
     margin: 0,
   },
   scanModeContainer: {
     position: 'absolute',
-    top: 40, // Increased to avoid notch on newer phones
+    top: 40,
     left: 10,
     right: 10,
     zIndex: 10,
   },
   settingsButton: {
     position: 'absolute',
-    bottom: 190,  // Increased to avoid status bar
+    bottom: 190,
     left: 30,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: 12,  // Increased for better touch target
+    backgroundColor: 'rgba(255,255,255,0.2)', // Semi-transparent white
+    padding: 12,
     borderRadius: 8,
     zIndex: 10,
   },
@@ -419,7 +421,7 @@ const styles = StyleSheet.create({
     right: '10%',
     height: 100,
     borderWidth: 2,
-    borderColor: '#e63b60',
+    borderColor: '#F59E0B', // Yellow/orange border
     borderRadius: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     justifyContent: 'center',
@@ -437,7 +439,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange button
     padding: 14,
     borderRadius: 5,
     width: '80%',
@@ -470,6 +472,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#4A1D96', // Deep purple for title
   },
   storeOption: {
     flexDirection: 'row',
@@ -477,13 +480,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#E9D8FD', // Light purple border
   },
   storeText: {
     fontSize: 16,
+    color: '#4A1D96', // Deep purple for text
   },
   closeButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange button
     padding: 12,
     borderRadius: 5,
     marginTop: 20,

@@ -1,6 +1,9 @@
 // app/(tabs)/index.tsx
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share } from 'react-native';
+import React, { useState, useEffect, useRef, useContext  } from 'react';
+import { Image, Platform, StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+
 import { Text, View } from '@/components/Themed';
 import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
@@ -10,15 +13,21 @@ import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
 import { router } from 'expo-router';
+import { useAuth } from '../context/AuthContext'; 
+import { API_BASE_URL } from '../config/apiConfig';
 
 // Extended Cart interface with selection state
 interface CartWithSelection extends Cart {
   selected: boolean;
 }
 
+
 export default function HomeScreen() {
-  // Mock userId - In a real app, this would come from authentication
-  const userId = '123';
+  const { user, logout } = useAuth(); 
+  
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [profileImageKey, setProfileImageKey] = useState<number>(0); 
+  const userId = user?.UserId;
   
   const [carts, setCarts] = useState<CartWithSelection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,13 +36,214 @@ export default function HomeScreen() {
   const [selectedCarts, setSelectedCarts] = useState<CartWithSelection[]>([]);
   const [emailingCart, setEmailingCart] = useState(false);
 
+  const [imageLoading, setImageLoading] = useState(false);
+
+  // For cleanup of object URLs on web
+  const objectUrlRef = useRef<string | null>(null);
+
   // Fetch carts when component mounts
   useEffect(() => {
+    fetchProfilePic();
     fetchUserCarts();
-  }, []);
+
+    // Cleanup function to revoke object URLs when component unmounts
+    return () => {
+      if (Platform.OS === 'web' && objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
+    };
+  }, [userId]);
+
+  //Function to fetch user profile picture
+  const fetchProfilePic = async () => {
+    console.log("UserID:", userId)
+    if (!userId) {
+      console.log("No user ID available for fetching profile image");
+      return;
+    }
+    setImageLoading(true);
+
+    try {
+      // Make sure to invalidate cache by adding timestamp
+      const timestamp = new Date().getTime();
+      const response = await fetch(`${API_BASE_URL}/api/images/profile-image/${userId}?t=${timestamp}`, {
+        method: 'GET',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.log("No profile image found for user");
+          setImageUri(null);
+          return;
+        }
+        throw new Error(`Server responded with ${response.status}: ${await response.text()}`);
+      }
+
+      const blob = await response.blob();
+      
+      if (Platform.OS === 'web') {
+
+        // Cleanup previous URL if exists
+        if (objectUrlRef.current) {
+          URL.revokeObjectURL(objectUrlRef.current);
+        }
+        
+  
+        //Create a new URL object from the blob for web
+        const imageUrl = URL.createObjectURL(blob);
+        objectUrlRef.current = imageUrl;
+        console.log("Created web image URL:", imageUrl);
+        
+        // Set the image URI
+        setImageUri(imageUrl);
+
+        // Force re-render of the image by updating key
+        setProfileImageKey(prevKey => prevKey + 1);
+      } else {
+        // For mobile: Use FileSystem to store image
+        const fileReader = new FileReader();
+        fileReader.onload = async () => {
+          try {
+            const result = fileReader.result;
+            
+            if (typeof result === 'string') {
+              const base64data = result.split(',')[1];
+              if (base64data) {
+                const path = `${FileSystem.cacheDirectory}profile-${timestamp}.jpg`;
+                await FileSystem.writeAsStringAsync(path, base64data, {
+                  encoding: FileSystem.EncodingType.Base64,
+                });
+                
+                console.log("Saved mobile image to:", path);
+                setImageUri(path);
+              }
+            }
+          } catch (error) {
+            console.error("Error in FileReader processing:", error);
+          }
+        };
+        
+        fileReader.onerror = (error) => {
+          console.error("FileReader error:", error);
+        };
+        
+        fileReader.readAsDataURL(blob);
+      }
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+    } finally {
+      setImageLoading(false);
+    }
+
+  };
+
+  //Pick and upload new image
+  const handleImagePick = async () => {
+    if (!userId) {
+      Alert.alert('Error', 'User ID not available. Please log in again.');
+      return;
+    }
+
+    try {
+      // Request permissions first
+      if (Platform.OS !== 'web') {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+          Alert.alert('Permission denied', 'Permission to access gallery is required!');
+          return;
+        }
+      }
+
+      // Launch image picker
+      const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.7,
+      });
+      
+      if (pickerResult.canceled || !pickerResult.assets || pickerResult.assets.length === 0) {
+        return;
+      }
+
+      const selectedAsset = pickerResult.assets[0];
+      console.log("Selected image:", selectedAsset.uri);
+      
+      // Upload to backend
+      const formData = new FormData();
+      formData.append('userId', userId);
+      
+      // Handle the image differently for web and mobile
+      if (Platform.OS === 'web') {
+        try {
+          // For web, we need to fetch the file first
+          const response = await fetch(selectedAsset.uri);
+          const blob = await response.blob();
+
+          formData.append("image", blob, "profile.jpg");
+          console.log("Web: Prepared image blob for upload");
+        } catch (error) {
+          console.error("Error preparing web image:", error);
+          Alert.alert('Error', 'Failed to prepare image for upload.');
+          return;
+        }
+      } else {
+        // For mobile, use the asset directly
+        formData.append('image', {
+          uri: selectedAsset.uri,
+          name: 'profile.jpg',
+          type: 'image/jpeg',
+        } as any);
+        console.log('📱 Mobile: Added image to FormData');
+      }
+      
+      // Show loading indicator
+      setImageLoading(true);
+
+
+      try {
+        // Upload the image
+        console.log("Uploading image to:", `${API_BASE_URL}/api/images/upload`);
+
+        const uploadResponse  = await fetch(`${API_BASE_URL}/api/images/upload`, {
+          method: 'POST',
+          body: formData,
+          headers: Platform.OS === 'web' ? undefined : {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        if (!uploadResponse .ok) {
+          const errorText = await uploadResponse .text();
+          console.error('XXXXX Upload failed:', errorText);
+          throw new Error(`Upload failed with status ${uploadResponse.status}: ${errorText}`);
+        } 
+        
+        // After successful upload, fetch the updated profile image
+        await fetchProfilePic();
+        
+        Alert.alert('Success', 'Profile image updated successfully!');
+        
+      } catch (uploadError) {
+        console.error('Upload error:', uploadError);
+        Alert.alert('Upload Failed', 'There was a problem uploading your image. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error in image picking process:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+      setImageLoading(false);
+    }
+  };
 
   // Function to fetch user carts
   const fetchUserCarts = async () => {
+    console.log("FETCHING USER CARTS");
     setLoading(true);
     try {
       const response = await fetch(`${API_ENDPOINTS.cart.getAll}?userId=${userId}`, {
@@ -46,7 +256,7 @@ export default function HomeScreen() {
       }
 
       const data = await response.json();
-      
+
       // Add selected property to each cart
       const cartsWithSelection = data.map((cart: Cart) => ({
         ...cart,
@@ -259,19 +469,44 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Account Information</Text>
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} 
+          onPress={() => {logout()}}>
+
           <Text style={styles.logoutButtonText}>Log out</Text>
         </TouchableOpacity>
       </View>
 
       {/* User info */}
       <View style={styles.userInfoContainer}>
-        <View style={styles.avatarContainer}>
-          <FontAwesome name="user" size={24} color="#333" />
-        </View>
+      <TouchableOpacity
+          style={styles.avatarContainer}
+          onLongPress={handleImagePick}
+          disabled={imageLoading}
+        >
+          {imageLoading ? (
+            <ActivityIndicator size="small" color="#e63b60" />
+          ) : imageUri ? (
+            <Image 
+              source={{ uri: imageUri }} 
+              style={styles.avatarImage} 
+              key={`profile-image-${profileImageKey}`} // Key to force re-render
+            />
+          ) : (
+            <FontAwesome name="user" size={40} color="#333" />
+          )}
+
+        </TouchableOpacity>
         <View style={styles.userInfo}>
-          <Text style={styles.userInfoText}>Username: xxxxx</Text>
-          <Text style={styles.userInfoText}>Email: xxxxxxxxx</Text>
+          <Text style={styles.userInfoText}>Username: {user?.name ?? 'xxxxx'} </Text>
+          <Text style={styles.userInfoText}>Email: {user?.email ?? 'xxxxx'}</Text>
+        </View>
+        
+        <View style={styles.avatarContainerTwo}>
+          <TouchableOpacity
+            style={styles.profileButton}
+            onPress={() => router.push('/info')}>
+            <FontAwesome name="user" size={20} color="white" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -384,11 +619,16 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 40,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff', // White background
   },
   centered: {
     justifyContent: 'center',
@@ -397,21 +637,15 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 20,
+    color: '#4A1D96', // Deep purple for text
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#4A1D96', // Deep purple for title
   },
   logoutButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -420,45 +654,78 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
-  userInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatarContainer: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  userInfo: {
-    flex: 1,
-  },
+// Fix for the userInfoContainer in index.tsx
+userInfoContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 20,
+  backgroundColor: '#ffffff', // White background
+  padding: 10,
+  borderRadius: 8,
+  borderWidth: 1,
+  borderColor: '#E9D8FD', // Light purple border
+},
+avatarContainerTwo: {
+  width: 60,
+  height: 60, 
+  alignItems: 'center',
+  marginRight: 16,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the avatarContainer to ensure white background
+avatarContainer: {
+  width: 60,
+  height: 60,
+  borderWidth: 1,
+  borderColor: '#4A1D96', // Purple border
+  borderRadius: 30, // Make it round
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 16,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the userInfo section
+userInfo: {
+  flex: 1,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
+
+// Fix for the header to ensure white background
+header: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: 40,
+  marginBottom: 20,
+  backgroundColor: '#ffffff', // Explicitly set to white
+},
   userInfoText: {
     fontSize: 16,
     marginBottom: 4,
+    color: '#4A1D96', // Deep purple for text
   },
   separator: {
     height: 1,
-    backgroundColor: '#eee',
+    backgroundColor: '#4A1D96', // Deep purple separator
     marginVertical: 20,
+    opacity: 0.3,
   },
   cartsHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+    backgroundColor: '#ffffff', // White background
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#4A1D96', // Deep purple for section title
   },
   compareButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -475,21 +742,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 100,
+    backgroundColor: '#ffffff', // White background
   },
   noCartsText: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#666',
+    color: '#4A1D96', // Deep purple for text
   },
   noCartsSubText: {
     fontSize: 16,
-    color: '#999',
+    color: '#6B46C1', // Lighter purple
     marginBottom: 24,
     textAlign: 'center',
   },
   scanNowButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 25,
@@ -504,13 +772,19 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 16,
     right: 16,
+    backgroundColor: 'transparent', // Transparent background
   },
   actionButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     padding: 14,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   actionButtonText: {
     color: 'white',
@@ -520,4 +794,21 @@ const styles = StyleSheet.create({
   disabledButtonText: {
     opacity: 0.7,
   },
+  profileButton: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 10,
+    backgroundColor: '#F59E0B', // Yellow/orange for button
+    borderRadius: 25,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  }
 });

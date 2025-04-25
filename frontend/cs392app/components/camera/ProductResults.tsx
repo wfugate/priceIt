@@ -1,6 +1,7 @@
 // components/camera/ProductResults.tsx
 import React, { useState, useEffect } from 'react';
 import { 
+  Share,
   View, 
   Text, 
   TouchableOpacity, 
@@ -14,6 +15,8 @@ import {
   Platform,
   TextInput
 } from 'react-native';
+
+
 import { CartSelectionModal } from './CartSelectionModal';
 import { CartNameInputModal } from './CartNameInputModal';
 import { getUserCarts, createNewUserCart } from '../../app/services/scanService';
@@ -32,7 +35,7 @@ interface Cart {
 interface ProductResultsProps {
   products: Product[];
   onAddToCart: (selectedProducts: Product[], cartId: string) => Promise<void>;
-  userId: string;
+  userId: string | undefined;
   onClose: () => void;
   searchQuery?: string; // The original search query
 }
@@ -155,6 +158,11 @@ export default function ProductResultsScreen({
     // 1. Get user carts
     setIsLoading(true);
     try {
+      if (!userId) {
+        setIsLoading(false);
+        return;
+      }
+
       const carts = await getUserCarts(userId);
       setUserCarts(carts);
       
@@ -204,6 +212,10 @@ export default function ProductResultsScreen({
 
     setIsSaving(true);
     try {
+      if (!userId) {
+        setIsSaving(false);
+        return;
+      }
       // Create new cart
       const newCart = await createNewUserCart(userId, name);
       

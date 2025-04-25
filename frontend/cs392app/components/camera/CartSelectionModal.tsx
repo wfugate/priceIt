@@ -298,6 +298,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
     textAlign: 'center',
+    color: '#4A1D96', // Deep purple for text
   },
   backButton: {
     padding: 8,
@@ -311,25 +312,26 @@ const styles = StyleSheet.create({
   cartButton: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#E9D8FD', // Light purple border
     flexDirection: 'row',
     alignItems: 'center',
   },
   cartIcon: {
     marginRight: 10,
+    color: '#4A1D96', // Deep purple for icon
   },
   cartName: {
     fontSize: 16,
-    color: '#333',
+    color: '#4A1D96', // Deep purple for text
   },
   noCarts: {
     textAlign: 'center',
-    color: '#666',
+    color: '#6B46C1', // Lighter purple
     fontStyle: 'italic',
     marginVertical: 15,
   },
   createNewCartButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B', // Yellow/orange button
     padding: 15,
     borderRadius: 8,
     flexDirection: 'row',
@@ -348,10 +350,10 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#E9D8FD', // Light purple border
     borderRadius: 5,
   },
   closeButtonText: {
-    color: '#666',
+    color: '#4A1D96', // Deep purple for text
   },
 });
