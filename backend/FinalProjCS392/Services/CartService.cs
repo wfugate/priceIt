@@ -67,6 +67,7 @@ namespace FinalProjCS392.Services
 
             return result;
         }
+
         // Update cart products (replaces existing products)
         public async Task<Cart> UpdateCartProducts(string userId, string cartId, List<CartProduct> products)
         {
@@ -78,6 +79,70 @@ namespace FinalProjCS392.Services
             // Replace the products array instead of pushing
             var update = Builders<Cart>.Update
                 .Set(c => c.Products, products);
+
+            var result = await _carts.FindOneAndUpdateAsync(
+                filter,
+                update,
+                new FindOneAndUpdateOptions<Cart> { ReturnDocument = ReturnDocument.After }
+            );
+
+            if (result == null)
+            {
+                throw new Exception("Cart not found or user doesn't have access");
+            }
+
+            return result;
+        }
+
+        // Delete a cart
+        public async Task<bool> DeleteCart(string userId, string cartId)
+        {
+            var filter = Builders<Cart>.Filter.And(
+                Builders<Cart>.Filter.Eq(c => c.UserId, userId),
+                Builders<Cart>.Filter.Eq(c => c.Id, cartId)
+            );
+
+            var result = await _carts.DeleteOneAsync(filter);
+            return result.DeletedCount > 0;
+        }
+
+        // Remove product from cart
+        public async Task<Cart> RemoveProductFromCart(string userId, string cartId, string productId)
+        {
+            var filter = Builders<Cart>.Filter.And(
+                Builders<Cart>.Filter.Eq(c => c.UserId, userId),
+                Builders<Cart>.Filter.Eq(c => c.Id, cartId)
+            );
+
+            // Remove the product from the cart's products array
+            // This will match products with either id or productId field matching the provided productId
+            var update = Builders<Cart>.Update
+                .PullFilter(c => c.Products, p => p.ProductId == productId || p.ProductId == productId);
+
+            var result = await _carts.FindOneAndUpdateAsync(
+                filter,
+                update,
+                new FindOneAndUpdateOptions<Cart> { ReturnDocument = ReturnDocument.After }
+            );
+
+            if (result == null)
+            {
+                throw new Exception("Cart not found or user doesn't have access");
+            }
+
+            return result;
+        }
+
+        public async Task<Cart> UpdateCart(Cart cart)
+        {
+            var filter = Builders<Cart>.Filter.And(
+                Builders<Cart>.Filter.Eq(c => c.UserId, cart.UserId),
+                Builders<Cart>.Filter.Eq(c => c.Id, cart.Id)
+            );
+
+            var update = Builders<Cart>.Update
+                .Set(c => c.Products, cart.Products)
+                .Set(c => c.Name, cart.Name);
 
             var result = await _carts.FindOneAndUpdateAsync(
                 filter,
