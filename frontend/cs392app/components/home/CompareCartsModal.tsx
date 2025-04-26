@@ -13,7 +13,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { updateCart} from '../../app/services/scanService';
+import { updateCart } from '../../app/services/scanService';
 import { Cart } from '../../app/types';
 
 // Update the prop interface to include the callback
@@ -260,9 +260,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
           <Text style={styles.title}>COMPARE CARTS</Text>
-          <TouchableOpacity style={styles.deleteButton}>
-            <FontAwesome name="trash" size={20} color="#333" />
-          </TouchableOpacity>
+          <View style={styles.spacer} />
         </View>
 
         {/* Cart titles */}
@@ -423,6 +421,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+    justifyContent: 'center'
+  },
+  spacer: {
+    width: 60, // Match the width of the back button for proper alignment
   },
   deleteButton: {
     padding: 10,

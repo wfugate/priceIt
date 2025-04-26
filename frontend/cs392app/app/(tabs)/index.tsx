@@ -1,33 +1,30 @@
 // app/(tabs)/index.tsx
-import React, { useState, useEffect, useRef, useContext  } from 'react';
-import { Image, Platform, StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, Share, RefreshControl, Image } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
-import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
+import { API_ENDPOINTS, COMMON_HEADERS, API_BASE_URL } from '../config/apiConfig';
 import { Cart, Product } from '../types';
 import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
 import { router } from 'expo-router';
-import { useAuth } from '../context/AuthContext'; 
-import { API_BASE_URL } from '../config/apiConfig';
+import CartInspectionModal from '../../components/home/CartInspectionModal';
+import { deleteCart, removeProductFromCart } from '../services/scanService';
+import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../context/AuthContext';
 
 // Extended Cart interface with selection state
 interface CartWithSelection extends Cart {
   selected: boolean;
 }
 
-
 export default function HomeScreen() {
-  const { user, logout } = useAuth(); 
+  const { user, logout } = useAuth();
+  const userId = user?.UserId;
   
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [profileImageKey, setProfileImageKey] = useState<number>(0); 
-  const userId = user?.UserId;
+  const [profileImageKey, setProfileImageKey] = useState<number>(0);
   
   const [carts, setCarts] = useState<CartWithSelection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,27 +34,27 @@ export default function HomeScreen() {
   const [emailingCart, setEmailingCart] = useState(false);
 
   const [imageLoading, setImageLoading] = useState(false);
+  const [deletingCartId, setDeletingCartId] = useState<string | null>(null);
+  const [inspectModalVisible, setInspectModalVisible] = useState(false);
+  const [currentCart, setCurrentCart] = useState<CartWithSelection | null>(null);
 
-  // For cleanup of object URLs on web
-  const objectUrlRef = useRef<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchUserCarts(false); // false means don't show the separate loading indicator
+    setRefreshing(false);
+  }, []);
+  
   // Fetch carts when component mounts
   useEffect(() => {
     fetchProfilePic();
     fetchUserCarts();
-
-    // Cleanup function to revoke object URLs when component unmounts
-    return () => {
-      if (Platform.OS === 'web' && objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
-        objectUrlRef.current = null;
-      }
-    };
   }, [userId]);
 
-  //Function to fetch user profile picture
+  // Fetch profile picture
   const fetchProfilePic = async () => {
-    console.log("UserID:", userId)
     if (!userId) {
       console.log("No user ID available for fetching profile image");
       return;
@@ -87,164 +84,30 @@ export default function HomeScreen() {
 
       const blob = await response.blob();
       
-      if (Platform.OS === 'web') {
+      // Create a URL object from the blob
+      const imageUrl = URL.createObjectURL(blob);
+      console.log("Created web image URL:", imageUrl);
+      
+      // Set the image URI
+      setImageUri(imageUrl);
 
-        // Cleanup previous URL if exists
-        if (objectUrlRef.current) {
-          URL.revokeObjectURL(objectUrlRef.current);
-        }
-        
-  
-        //Create a new URL object from the blob for web
-        const imageUrl = URL.createObjectURL(blob);
-        objectUrlRef.current = imageUrl;
-        console.log("Created web image URL:", imageUrl);
-        
-        // Set the image URI
-        setImageUri(imageUrl);
-
-        // Force re-render of the image by updating key
-        setProfileImageKey(prevKey => prevKey + 1);
-      } else {
-        // For mobile: Use FileSystem to store image
-        const fileReader = new FileReader();
-        fileReader.onload = async () => {
-          try {
-            const result = fileReader.result;
-            
-            if (typeof result === 'string') {
-              const base64data = result.split(',')[1];
-              if (base64data) {
-                const path = `${FileSystem.cacheDirectory}profile-${timestamp}.jpg`;
-                await FileSystem.writeAsStringAsync(path, base64data, {
-                  encoding: FileSystem.EncodingType.Base64,
-                });
-                
-                console.log("Saved mobile image to:", path);
-                setImageUri(path);
-              }
-            }
-          } catch (error) {
-            console.error("Error in FileReader processing:", error);
-          }
-        };
-        
-        fileReader.onerror = (error) => {
-          console.error("FileReader error:", error);
-        };
-        
-        fileReader.readAsDataURL(blob);
-      }
+      // Force re-render of the image by updating key
+      setProfileImageKey(prevKey => prevKey + 1);
     } catch (error) {
       console.error('Error fetching profile image:', error);
     } finally {
       setImageLoading(false);
     }
-
   };
 
-  //Pick and upload new image
-  const handleImagePick = async () => {
-    if (!userId) {
-      Alert.alert('Error', 'User ID not available. Please log in again.');
-      return;
+  // Update the fetchUserCarts function to include a success callback
+  const fetchUserCarts = async (showLoadingIndicator = true) => {
+    if (!userId) return false;
+    
+    if (showLoadingIndicator) {
+      setIsRefreshing(true);
     }
-
-    try {
-      // Request permissions first
-      if (Platform.OS !== 'web') {
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) {
-          Alert.alert('Permission denied', 'Permission to access gallery is required!');
-          return;
-        }
-      }
-
-      // Launch image picker
-      const pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.7,
-      });
-      
-      if (pickerResult.canceled || !pickerResult.assets || pickerResult.assets.length === 0) {
-        return;
-      }
-
-      const selectedAsset = pickerResult.assets[0];
-      console.log("Selected image:", selectedAsset.uri);
-      
-      // Upload to backend
-      const formData = new FormData();
-      formData.append('userId', userId);
-      
-      // Handle the image differently for web and mobile
-      if (Platform.OS === 'web') {
-        try {
-          // For web, we need to fetch the file first
-          const response = await fetch(selectedAsset.uri);
-          const blob = await response.blob();
-
-          formData.append("image", blob, "profile.jpg");
-          console.log("Web: Prepared image blob for upload");
-        } catch (error) {
-          console.error("Error preparing web image:", error);
-          Alert.alert('Error', 'Failed to prepare image for upload.');
-          return;
-        }
-      } else {
-        // For mobile, use the asset directly
-        formData.append('image', {
-          uri: selectedAsset.uri,
-          name: 'profile.jpg',
-          type: 'image/jpeg',
-        } as any);
-        console.log('📱 Mobile: Added image to FormData');
-      }
-      
-      // Show loading indicator
-      setImageLoading(true);
-
-
-      try {
-        // Upload the image
-        console.log("Uploading image to:", `${API_BASE_URL}/api/images/upload`);
-
-        const uploadResponse  = await fetch(`${API_BASE_URL}/api/images/upload`, {
-          method: 'POST',
-          body: formData,
-          headers: Platform.OS === 'web' ? undefined : {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        if (!uploadResponse .ok) {
-          const errorText = await uploadResponse .text();
-          console.error('XXXXX Upload failed:', errorText);
-          throw new Error(`Upload failed with status ${uploadResponse.status}: ${errorText}`);
-        } 
-        
-        // After successful upload, fetch the updated profile image
-        await fetchProfilePic();
-        
-        Alert.alert('Success', 'Profile image updated successfully!');
-        
-      } catch (uploadError) {
-        console.error('Upload error:', uploadError);
-        Alert.alert('Upload Failed', 'There was a problem uploading your image. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error in image picking process:', error);
-      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
-      setImageLoading(false);
-    }
-  };
-
-  // Function to fetch user carts
-  const fetchUserCarts = async () => {
-    console.log("FETCHING USER CARTS");
-    setLoading(true);
+    
     try {
       const response = await fetch(`${API_ENDPOINTS.cart.getAll}?userId=${userId}`, {
         method: 'GET',
@@ -256,7 +119,7 @@ export default function HomeScreen() {
       }
 
       const data = await response.json();
-
+      
       // Add selected property to each cart
       const cartsWithSelection = data.map((cart: Cart) => ({
         ...cart,
@@ -264,14 +127,31 @@ export default function HomeScreen() {
       }));
       
       setCarts(cartsWithSelection);
+      
+      // Return success
+      return true;
     } catch (error) {
       console.error('Error fetching carts:', error);
       Alert.alert('Error', 'Failed to load your carts. Please try again.');
+      return false;
     } finally {
+      setIsRefreshing(false);
       setLoading(false);
     }
   };
-
+  
+  // Use the useFocusEffect hook to refresh carts when the screen becomes focused
+  useFocusEffect(
+    useCallback(() => {
+      // Refresh carts when the screen comes into focus, without showing loading indicator
+      fetchUserCarts(false);
+      
+      return () => {
+        // Cleanup function (optional)
+      };
+    }, [userId])
+  );
+  
   // Toggle selection of a cart
   const toggleCartSelection = (cartId: string) => {
     setCarts(prevCarts => 
@@ -307,23 +187,22 @@ export default function HomeScreen() {
       setCompareModalVisible(true);
     }, 100);
   };
+
+  // Handle Inspect Cart
+  const handleInspectCart = (cartId: string) => {
+    const cart = carts.find(c => c.id === cartId);
+    if (cart) {
+      setCurrentCart(cart);
+      setInspectModalVisible(true);
+    }
+  };
   
-  // Handle updates when carts are modified in the compare modal
-  const handleCartsUpdated = (updatedCartA: Cart, updatedCartB: Cart) => {
+  // Update the compareCartsModal onCartsUpdated callback to refresh the cart list
+  const handleCartsUpdated = async (updatedCartA: Cart, updatedCartB: Cart) => {
     console.log('Received updated carts from modal');
     
-    // Update the carts list with the updated carts
-    setCarts(prevCarts => 
-      prevCarts.map(cart => {
-        if (cart.id === updatedCartA.id) {
-          return {...updatedCartA, selected: cart.selected};
-        }
-        if (cart.id === updatedCartB.id) {
-          return {...updatedCartB, selected: cart.selected};
-        }
-        return cart;
-      })
-    );
+    // Refresh the entire cart list instead of manually updating
+    await fetchUserCarts(false);
   };
 
   // Handle share cart button press
@@ -382,7 +261,7 @@ export default function HomeScreen() {
       
       Alert.alert(
         'Cart emailed',
-        'A pdf of your selected cart has been sent to your email: xxxxxx',
+        'A pdf of your selected cart has been sent to your email: ' + user?.email,
         [{ text: 'Okay' }]
       );
     } catch (error) {
@@ -393,92 +272,96 @@ export default function HomeScreen() {
     }
   };
 
-  // Handle delete cart press
-  const handleDeleteCart = async (cartId: string) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this cart?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setLoading(true);
-              // In a real app, call API to delete the cart
-              // Simulate API call
-              await new Promise(resolve => setTimeout(resolve, 800));
-              
-              // Update state to remove the cart
-              setCarts(prevCarts => prevCarts.filter(cart => cart.id !== cartId));
-            } catch (error) {
-              console.error('Error deleting cart:', error);
-              Alert.alert('Error', 'Failed to delete cart. Please try again.');
-            } finally {
-              setLoading(false);
-            }
-          }
-        }
-      ]
-    );
+  // Handle inspect selected cart
+  const handleInspectSelectedCart = () => {
+    const selected = getSelectedCarts();
+    
+    if (selected.length !== 1) {
+      Alert.alert('Selection Error', 'Please select exactly 1 cart to inspect.');
+      return;
+    }
+    
+    handleInspectCart(selected[0].id);
   };
 
-  // Handle inspect cart press
-  const handleInspectCart = (cartId: string) => {
-    // In a real app, navigate to cart detail screen
-    // For now, just show an alert
-    const cart = carts.find(c => c.id === cartId);
-    if (cart) {
-      Alert.alert(
-        `${cart.name} Details`,
-        `This cart contains ${cart.products.length} items with a total value of $${
-          cart.products.reduce((sum, product) => sum + product.price, 0).toFixed(2)
-        }`
-      );
+  // Update the handleDeleteCart function to refresh the list after successful deletion
+  const handleDeleteCart = async () => {
+    if (!currentCart || !userId) return;
+    
+    try {
+      // Call the backend API to delete the cart
+      await deleteCart(currentCart.id, userId);
+      
+      // Refresh the cart list instead of manually updating the state
+      await fetchUserCarts(false);
+      
+      // Close the modal
+      setInspectModalVisible(false);
+      setCurrentCart(null);
+      
+      // Show a success message
+      Alert.alert('Success', 'Cart deleted successfully');
+    } catch (error) {
+      console.error('Error deleting cart:', error);
+      throw error; // Re-throw to be handled by the modal
     }
+  };
+
+  const handleDeleteItem = async (productId: string) => {
+    if (!currentCart || !userId) return;
+    
+    try {
+      // Call the backend API to remove the product
+      const updatedCart = await removeProductFromCart(currentCart.id, productId, userId);
+      
+      // Update the current cart in the modal
+      setCurrentCart({
+        ...updatedCart,
+        selected: currentCart.selected
+      });
+      
+      // Update the cart in the carts list
+      setCarts(prevCarts => 
+        prevCarts.map(cart => 
+          cart.id === updatedCart.id ? { ...updatedCart, selected: cart.selected } : cart
+        )
+      );
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      throw error; // Re-throw to be handled by the modal
+    }
+  };
+
+  // Handle image pick
+  const handleImagePick = async () => {
+    Alert.alert('Profile Image', 'Long press on your profile image to change it.');
   };
 
   // Render cart item
   const renderCartItem = ({ item }: { item: CartWithSelection }) => {
-    // Calculate total price
-    const totalPrice = item.products.reduce((sum, product) => sum + product.price, 0);
-    
     return (
       <CartItemCard
         cart={item}
         onSelect={() => toggleCartSelection(item.id)}
-        onDelete={() => handleDeleteCart(item.id)}
+        onDelete={() => handleDeleteCart()}
         onInspect={() => handleInspectCart(item.id)}
       />
     );
   };
-
-  // Loading state
-  if (loading && carts.length === 0) {
-    return (
-      <View style={[styles.container, styles.centered]}>
-        <ActivityIndicator size="large" color="#e63b60" />
-        <Text style={styles.loadingText}>Loading your carts...</Text>
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Account Information</Text>
-        <TouchableOpacity style={styles.logoutButton} 
-          onPress={() => {logout()}}>
-
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
           <Text style={styles.logoutButtonText}>Log out</Text>
         </TouchableOpacity>
       </View>
 
       {/* User info */}
       <View style={styles.userInfoContainer}>
-      <TouchableOpacity
+        <TouchableOpacity
           style={styles.avatarContainer}
           onLongPress={handleImagePick}
           disabled={imageLoading}
@@ -494,7 +377,6 @@ export default function HomeScreen() {
           ) : (
             <FontAwesome name="user" size={40} color="#333" />
           )}
-
         </TouchableOpacity>
         <View style={styles.userInfo}>
           <Text style={styles.userInfoText}>Username: {user?.name ?? 'xxxxx'} </Text>
@@ -527,22 +409,67 @@ export default function HomeScreen() {
 
       {/* Carts list */}
       {carts.length > 0 ? (
-        <FlatList
-          data={carts}
-          renderItem={renderCartItem}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.cartsList}
-        />
+        <>
+          <FlatList
+            data={carts}
+            renderItem={renderCartItem}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.cartsList}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={['#e63b60']}
+                tintColor={'#e63b60'}
+              />
+            }
+          />
+          
+          {/* Refresh button at bottom of list */}
+          <View style={styles.refreshButtonContainer}>
+            <TouchableOpacity 
+              style={[styles.refreshButton, isRefreshing && styles.disabledButton]}
+              onPress={() => fetchUserCarts()}
+              disabled={isRefreshing}
+            >
+              {isRefreshing ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <>
+                  <FontAwesome name="refresh" size={16} color="white" style={styles.refreshIcon} />
+                  <Text style={styles.refreshButtonText}>Refresh Carts</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+        </>
       ) : (
         <View style={styles.noCartsContainer}>
           <Text style={styles.noCartsText}>You don't have any carts yet.</Text>
           <Text style={styles.noCartsSubText}>Go to the Scan tab to create your first cart!</Text>
-          <TouchableOpacity 
-            style={styles.scanNowButton}
-            onPress={() => router.push('/scan')}
-          >
-            <Text style={styles.scanNowButtonText}>Scan now</Text>
-          </TouchableOpacity>
+          <View style={styles.noCartsButtonsContainer}>
+            <TouchableOpacity 
+              style={styles.scanNowButton}
+              onPress={() => router.push('/scan')}
+            >
+              <Text style={styles.scanNowButtonText}>Scan now</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[styles.refreshButtonSmall, isRefreshing && styles.disabledButton]}
+              onPress={() => fetchUserCarts()}
+              disabled={isRefreshing}
+            >
+              {isRefreshing ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <>
+                  <FontAwesome name="refresh" size={16} color="white" style={styles.refreshIcon} />
+                  <Text style={styles.refreshButtonTextSmall}>Refresh</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       )}
 
@@ -551,7 +478,7 @@ export default function HomeScreen() {
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity 
             style={styles.actionButton}
-            onPress={() => handleInspectCart(getSelectedCarts()[0]?.id)}
+            onPress={handleInspectSelectedCart}
             disabled={getSelectedCarts().length !== 1}
           >
             <Text style={[
@@ -614,6 +541,15 @@ export default function HomeScreen() {
         onClose={() => setShareModalVisible(false)}
         carts={selectedCarts}
       />
+
+      {/* Cart Inspection Modal */}
+      <CartInspectionModal
+        visible={inspectModalVisible}
+        cart={currentCart}
+        onClose={() => setInspectModalVisible(false)}
+        onDeleteItem={handleDeleteItem}
+        onDeleteCart={handleDeleteCart}
+      />
     </View>
   );
 }
@@ -633,6 +569,12 @@ const styles = StyleSheet.create({
   centered: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  noCartsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 100,
   },
   loadingText: {
     marginTop: 10,
@@ -654,53 +596,53 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
-// Fix for the userInfoContainer in index.tsx
-userInfoContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginBottom: 20,
-  backgroundColor: '#ffffff', // White background
-  padding: 10,
-  borderRadius: 8,
-  borderWidth: 1,
-  borderColor: '#E9D8FD', // Light purple border
-},
-avatarContainerTwo: {
-  width: 60,
-  height: 60, 
-  alignItems: 'center',
-  marginRight: 16,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  // Fix for the userInfoContainer in index.tsx
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    backgroundColor: '#ffffff', // White background
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E9D8FD', // Light purple border
+  },
+  avatarContainerTwo: {
+    width: 60,
+    height: 60, 
+    alignItems: 'center',
+    marginRight: 16,
+    backgroundColor: '#ffffff', // Explicitly set to white
+  },
 
-// Fix for the avatarContainer to ensure white background
-avatarContainer: {
-  width: 60,
-  height: 60,
-  borderWidth: 1,
-  borderColor: '#4A1D96', // Purple border
-  borderRadius: 30, // Make it round
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginRight: 16,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  // Fix for the avatarContainer to ensure white background
+  avatarContainer: {
+    width: 60,
+    height: 60,
+    borderWidth: 1,
+    borderColor: '#4A1D96', // Purple border
+    borderRadius: 30, // Make it round
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+    backgroundColor: '#ffffff', // Explicitly set to white
+  },
 
-// Fix for the userInfo section
-userInfo: {
-  flex: 1,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  // Fix for the userInfo section
+  userInfo: {
+    flex: 1,
+    backgroundColor: '#ffffff', // Explicitly set to white
+  },
 
-// Fix for the header to ensure white background
-header: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: 40,
-  marginBottom: 20,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  // Fix for the header to ensure white background
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 40,
+    marginBottom: 20,
+    backgroundColor: '#ffffff', // Explicitly set to white
+  },
   userInfoText: {
     fontSize: 16,
     marginBottom: 4,
@@ -736,13 +678,6 @@ header: {
   },
   cartsList: {
     paddingBottom: 160, // Add padding for buttons at bottom
-  },
-  noCartsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 100,
-    backgroundColor: '#ffffff', // White background
   },
   noCartsText: {
     fontSize: 18,
@@ -792,6 +727,52 @@ header: {
     fontSize: 16,
   },
   disabledButtonText: {
+    opacity: 0.7,
+  },
+  // Add these style definitions to the StyleSheet
+  refreshButtonContainer: {
+    paddingBottom: 20,
+    marginBottom: 145, // Add space for the action buttons at the bottom
+    alignItems: 'center',
+  },
+  refreshButton: {
+    backgroundColor: '#151a7b',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+  },
+  refreshButtonSmall: {
+    backgroundColor: '#151a7b',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginLeft: 10,
+  },
+  refreshIcon: {
+    marginRight: 8,
+  },
+  refreshButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  refreshButtonTextSmall: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  noCartsButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  disabledButton: {
     opacity: 0.7,
   },
   profileButton: {
