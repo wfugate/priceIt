@@ -70,15 +70,11 @@ namespace FinalProjCS392.Models
     public class CartProduct
     {
         public string ProductId { get; set; }
-
         public string Thumbnail { get; set; }
-
         public double Price { get; set; }
-
         public string Name { get; set; }
-
         public string Brand { get; set; }
-
+        public string Store { get; set; } // Add this property
         public int Quantity { get; set; } = 1;
     }
 

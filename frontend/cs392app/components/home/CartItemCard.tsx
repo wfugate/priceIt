@@ -37,6 +37,10 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   // Calculate total price of all products in the cart
   const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
   
+  // Ensure cart name is always a string
+  const cartName = typeof cart.name === 'string' ? cart.name : 
+                  (cart.name ? String(cart.name) : 'My Cart');
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity 
@@ -58,7 +62,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         onPress={onInspect}
       >
         <Text style={styles.cartName} numberOfLines={1}>
-          {cart.name}
+          {cartName}
         </Text>
         <Text style={styles.cartPrice}>
           Price: ${totalPrice.toFixed(2)}

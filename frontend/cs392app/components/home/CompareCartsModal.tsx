@@ -52,10 +52,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
     return {
       ...cart,
       products: cart.products ? cart.products.map(product => {
-        // Examine each product for structure issues
-        console.log("EXAMINING PRODUCT:", JSON.stringify(product, null, 2));
-        
-        // Return a fixed product object with both id and productId for compatibility
+        // Return a fixed product object with correct store info
         return {
           id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
@@ -63,7 +60,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
           price: typeof product.price === 'number' ? product.price : 0,
           name: product.name || 'Product',
           brand: product.brand || 'Brand',
-          quantity: product.quantity || 1
+          store: product.store || 'Unknown Store' // Ensure store is always included
         };
       }) : []
     };
@@ -101,28 +98,21 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
   
   // Handle moving an item from left to right cart
   const moveItemLeftToRight = (productId: string) => {
-    console.log("MOVING LEFT TO RIGHT:", { productId });
+    if (!leftCart || !rightCart) return;
     
-    if (!leftCart || !rightCart) {
-      console.log("MOVE FAILED: Carts undefined");
-      return;
-    }
-    
-    // Find the product in the left cart - try both id and productId
+    // Find the product in the left cart
     let productIndex = leftCart.products.findIndex(p => p.id === productId);
     if (productIndex === -1) {
       productIndex = leftCart.products.findIndex(p => p.productId === productId);
     }
     
-    if (productIndex === -1) {
-      console.log("MOVE FAILED: Product not found with id", productId);
-      console.log("Available product IDs:", leftCart.products.map(p => ({id: p.id, productId: p.productId})));
-      return;
-    }
+    if (productIndex === -1) return;
     
-    // Get a deep clone of the product
-    const productToMove = {...leftCart.products[productIndex]};
-    console.log("PRODUCT TO MOVE:", JSON.stringify(productToMove, null, 2));
+    // Get a deep clone of the product and ensure it has store info
+    const productToMove = {
+      ...leftCart.products[productIndex],
+      store: leftCart.products[productIndex].store || 'Unknown Store'
+    };
     
     // Create completely new cart objects with new product arrays
     const updatedLeftProducts = leftCart.products.filter(p => 
@@ -149,6 +139,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       }, 50);
     }, 50);
   };
+  
   
   // Handle moving an item from right to left cart
   const moveItemRightToLeft = (productId: string) => {
@@ -202,42 +193,67 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
   };
 
   // Save changes to both carts
-  const saveChanges = async () => {
-    if (!leftCart || !rightCart || !hasChanges) return;
+  // 1. First, let's fix the CompareCartsModal.tsx to handle cart updates correctly
+// components/home/CompareCartsModal.tsx (key parts to update)
+
+// Update the saveChanges function to handle product property consistency
+const saveChanges = async () => {
+  if (!leftCart || !rightCart || !hasChanges) return;
+  
+  setSaving(true);
+  try {
+    // Ensure products have consistent property names before updating
+    const leftProducts = leftCart.products.map(product => ({
+      id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
+      price: typeof product.price === 'number' ? product.price : 0,
+      name: product.name || 'Product',
+      brand: product.brand || 'Brand',
+      store: product.store || 'Unknown Store' // Ensure store is always included
+    }));
     
-    setSaving(true);
-    try {
-      // We need to send updates for both carts to the backend
-      const updates = [
-        updateCart(leftCart.id, leftCart.userId, leftCart.products, leftCart.name),
-        updateCart(rightCart.id, rightCart.userId, rightCart.products, rightCart.name)
-      ];
-      
-      const [updatedLeftCart, updatedRightCart] = await Promise.all(updates);
-      
-      Alert.alert(
-        'Success',
-        'Changes to both carts have been saved.',
-        [{ text: 'OK', onPress: () => {
-          // Notify the parent component about the updates before closing
-          if (onCartsUpdated) {
-            onCartsUpdated(updatedLeftCart, updatedRightCart);
-          }
-          onClose();
-        }}]
-      );
-      
-      setHasChanges(false);
-    } catch (error) {
-      console.error('Error saving cart changes:', error);
-      Alert.alert(
-        'Error',
-        'Failed to save changes. Please try again.'
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
+    const rightProducts = rightCart.products.map(product => ({
+      id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
+      price: typeof product.price === 'number' ? product.price : 0,
+      name: product.name || 'Product',
+      brand: product.brand || 'Brand',
+      store: product.store || 'Unknown Store' // Ensure store is always included
+    }));
+    
+    // Send standardized products to the backend
+    const updates = [
+      updateCart(leftCart.id, leftCart.userId, leftProducts, leftCart.name),
+      updateCart(rightCart.id, rightCart.userId, rightProducts, rightCart.name)
+    ];
+    
+    const [updatedLeftCart, updatedRightCart] = await Promise.all(updates);
+    
+    Alert.alert(
+      'Success',
+      'Changes to both carts have been saved.',
+      [{ text: 'OK', onPress: () => {
+        // Notify the parent component about the updates before closing
+        if (onCartsUpdated) {
+          onCartsUpdated(updatedLeftCart, updatedRightCart);
+        }
+        onClose();
+      }}]
+    );
+    
+    setHasChanges(false);
+  } catch (error) {
+    console.error('Error saving cart changes:', error);
+    Alert.alert(
+      'Error',
+      'Failed to save changes. Please try again.'
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   // Calculate totals
   const leftTotal = leftCart.products.reduce((sum, product) => sum + product.price, 0);
@@ -283,8 +299,10 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
               leftCart.products.map((product, index) => (
                 <View key={`left-${product.id || product.productId}-${index}`} style={styles.productCard}>
                   <View style={[styles.storeLabel, styles.leftStoreLabel]}>
-                    <Text style={styles.storeLabelText}>Target</Text>
-                  </View>
+      <Text style={styles.storeLabelText}>
+        {product.store || 'Unknown Store'}
+      </Text>
+    </View>
                   
                   <Image 
                     source={{ uri: product.thumbnail || 'https://via.placeholder.com/80' }}
@@ -324,9 +342,12 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
             {rightCart.products.length > 0 ? (
               rightCart.products.map((product, index) => (
                 <View key={`right-${product.id || product.productId}-${index}`} style={styles.productCard}>
-                  <View style={[styles.storeLabel, styles.rightStoreLabel]}>
-                    <Text style={styles.storeLabelText}>Walmart</Text>
-                  </View>
+                  <View style={[styles.storeLabel, styles.leftStoreLabel]}>
+      <Text style={styles.storeLabelText}>
+        {product.store || 'Unknown Store'}
+      </Text>
+    </View>
+                  
                   
                   <TouchableOpacity 
                     style={[styles.moveButton, styles.leftMoveButton]}

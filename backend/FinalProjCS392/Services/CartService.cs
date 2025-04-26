@@ -50,6 +50,15 @@ namespace FinalProjCS392.Services
                 Builders<Cart>.Filter.Eq(c => c.Id, cartId)
             );
 
+            // Ensure all products have store information
+            foreach (var product in products)
+            {
+                if (string.IsNullOrEmpty(product.Store))
+                {
+                    product.Store = "Unknown Store";
+                }
+            }
+
             // Add each product to the cart's products array
             var update = Builders<Cart>.Update
                 .PushEach(c => c.Products, products);

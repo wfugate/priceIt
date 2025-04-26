@@ -476,18 +476,6 @@ export default function HomeScreen() {
       {/* Action buttons */}
       {carts.length > 0 && (
         <View style={styles.actionButtonsContainer}>
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={handleInspectSelectedCart}
-            disabled={getSelectedCarts().length !== 1}
-          >
-            <Text style={[
-              styles.actionButtonText,
-              getSelectedCarts().length !== 1 && styles.disabledButtonText
-            ]}>
-              Inspect selected cart
-            </Text>
-          </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.actionButton}
@@ -736,7 +724,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   refreshButton: {
-    backgroundColor: '#151a7b',
+    backgroundColor: '#F59E0B', // Changed from '#151a7b' to match other button colors
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -745,7 +733,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   refreshButtonSmall: {
-    backgroundColor: '#151a7b',
+    backgroundColor: '#F59E0B', // Changed from '#151a7b' to match other button colors
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

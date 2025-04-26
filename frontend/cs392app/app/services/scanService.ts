@@ -286,7 +286,7 @@ export const saveToCart = async (
       price: p.price,
       name: p.name,
       brand: p.brand,
-      store: p.store,
+      store: p.store || 'Unknown Store', // Ensure store info is included
       quantity: 1
     }));
 
@@ -300,8 +300,8 @@ export const saveToCart = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to save to cart');
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || 'Failed to save to cart');
     }
 
     return await response.json();
@@ -312,21 +312,32 @@ export const saveToCart = async (
   }
 };
 
-// Update an existing cart
+// 3. Update the updateCart function in scanService.ts to ensure store is included
 export const updateCart = async (
   cartId: string,
   userId: string,
-  products: Product[],
+  products: any[],
   name?: string
 ): Promise<Cart> => {
   try {
-    const response = await fetch(API_ENDPOINTS.cart.addProducts(cartId), {
+    // Standardize product properties to ensure consistency
+    const standardizedProducts = products.map(product => ({
+      id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
+      price: typeof product.price === 'number' ? product.price : 0,
+      name: product.name || 'Product',
+      brand: product.brand || 'Brand',
+      store: product.store || 'Unknown Store' // Ensure store is always included
+    }));
+
+    const response = await fetch(API_ENDPOINTS.cart.update(cartId), {
       method: 'PUT',
       headers: COMMON_HEADERS,
       body: JSON.stringify({
         userId,
-        products,
-        name
+        products: standardizedProducts,
+        name: name || 'My Cart'
       })
     });
 
@@ -396,14 +407,41 @@ export const removeProductFromCart = async (
   userId: string
 ): Promise<Cart> => {
   try {
+    // This matches the backend controller endpoint format in the compareCarts branch
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/${cartId}/products/${productId}?userId=${userId}`, {
       method: 'DELETE',
       headers: COMMON_HEADERS
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || `Failed to remove product from cart: ${response.status}`);
+      // If the backend API is not ready, handle it gracefully
+      // Implement client-side product removal to maintain app functionality
+      console.warn('Backend product removal API returned an error. Implementing client-side fallback.');
+      
+      // Fetch the current cart
+      const cartResponse = await fetch(`${API_ENDPOINTS.cart.getAll}?userId=${userId}`, {
+        method: 'GET',
+        headers: COMMON_HEADERS
+      });
+      
+      if (!cartResponse.ok) {
+        throw new Error('Failed to fetch cart for client-side product removal');
+      }
+      
+      const carts = await cartResponse.json();
+      const cart = carts.find((c: any) => c.id === cartId);
+      
+      if (!cart) {
+        throw new Error('Cart not found');
+      }
+      
+      // Filter out the product to be removed
+      const updatedProducts = cart.products.filter((p: any) => 
+        p.id !== productId && p.productId !== productId
+      );
+      
+      // Update the cart with the filtered products
+      return await updateCart(cartId, userId, updatedProducts, cart.name);
     }
 
     return await response.json();
@@ -412,5 +450,4 @@ export const removeProductFromCart = async (
     throw error;
   }
 };
-
 export default function removeWarning(){}
