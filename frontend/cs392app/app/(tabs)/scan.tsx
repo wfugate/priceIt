@@ -17,6 +17,7 @@ export default function ScanScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showStoreSettings, setShowStoreSettings] = useState(false);
+  const [realItem, setRealItem] = useState<string |'No Item'>();
   const [stores, setStores] = useState<Stores>({
     walmart: true,
     target: true,
@@ -63,116 +64,126 @@ export default function ScanScreen() {
   }, [scanMode]);
 
   // Watch for barcode results and search for products
-  useEffect(() => {
-    // Skip the effect entirely if we're not in barcode mode
-    if (scanMode !== 'barcode') return;
+  // In the useEffect block that handles barcode scanning in scan.tsx, 
+// we need to update how the products and relevance keywords are set
+
+useEffect(() => {
+  // Skip the effect entirely if we're not in barcode mode
+  if (scanMode !== 'barcode') return;
+  
+  // Skip if no item, or already searching/showing results
+  if (!item || isSearching || showResults) return;
+  
+  console.log('Barcode detected, triggering search for:', item);
+  
+  // Store these values for the async function
+  const currentItem = item;
+  const currentMode = scanMode;
+  
+  // Use a flag to track if this effect instance is still the most recent
+  let isCurrentEffect = true;
+  
+  // Define an async function to search for products
+  const searchForBarcodeProducts = async () => {
+    console.log('Processing barcode:', currentItem);
     
-    // Skip if no item, or already searching/showing results
-    if (!item || isSearching || showResults) return;
-    
-    console.log('Barcode detected, triggering search for:', item);
-    
-    // Store these values for the async function
-    const currentItem = item;
-    const currentMode = scanMode;
-    
-    // Use a flag to track if this effect instance is still the most recent
-    let isCurrentEffect = true;
-    
-    // Define an async function to search for products
-    const searchForBarcodeProducts = async () => {
-      console.log('Processing barcode:', currentItem);
-      
-      setIsSearching(true);
-      try {
-        // First validate that the item looks like a barcode
-        if (!isBarcode(currentItem)) {
-          console.warn(`Scanned value "${currentItem}" doesn't look like a valid barcode`);
-          Alert.alert(
-            'Invalid Barcode',
-            `"${currentItem}" doesn't appear to be a valid barcode.`,
-            [{ 
-              text: 'OK',
-              onPress: () => {
-                if (isCurrentEffect && scanMode === 'barcode') {
-                  resetBarcodeScanner();
-                }
+    setIsSearching(true);
+    try {
+      // First validate that the item looks like a barcode
+      if (!isBarcode(currentItem)) {
+        console.warn(`Scanned value "${currentItem}" doesn't look like a valid barcode`);
+        Alert.alert(
+          'Invalid Barcode',
+          `"${currentItem}" doesn't appear to be a valid barcode.`,
+          [{ 
+            text: 'OK',
+            onPress: () => {
+              if (isCurrentEffect && scanMode === 'barcode') {
+                resetBarcodeScanner();
               }
-            }]
-          );
-          return;
-        }
-        
-        console.log("Searching for products with barcode:", currentItem);
-        
-        // Use our enhanced barcode service with the full barcode lookup flow
-        const foundProducts = await getProductByBarcode(currentItem, stores);
-        
-        // Debug log to see what's happening
-        console.log(`Found ${foundProducts.length} products for barcode ${currentItem}`);
-        
-        // Only update state if this is still the current effect and we're still in barcode mode
-        if (!isCurrentEffect || scanMode !== currentMode) {
-          console.log('Effect no longer relevant, cancelling product display');
-          return;
-        }
-        
-        // Handle the search results
-        if (foundProducts.length > 0) {
-          console.log('Setting products and showing results');
-          setProducts(foundProducts);
-          setShowResults(true);
-        } else {
-          console.log('No products found for barcode, showing alert');
-          Alert.alert(
-            'No Products Found',
-            `No products found for barcode ${currentItem}.`,
-            [{ 
-              text: 'OK',
-              onPress: () => {
-                // Only reset if we're still relevant
-                if (isCurrentEffect && scanMode === 'barcode') {
-                  console.log('Resetting scanner after no products found');
-                  resetBarcodeScanner();
-                }
-              }
-            }]
-          );
-        }
-      } catch (error) {
-        if (isCurrentEffect && scanMode === currentMode) {
-          console.error('Barcode lookup failed:', error);
-          Alert.alert(
-            'Error',
-            'Failed to look up barcode information.',
-            [{ 
-              text: 'OK',
-              onPress: () => {
-                if (scanMode === 'barcode') {
-                  resetBarcodeScanner();
-                }
-              }
-            }]
-          );
-        }
-      } finally {
-        if (isCurrentEffect) {
-          setIsSearching(false);
-        }
+            }
+          }]
+        );
+        return;
       }
-    };
-    
-    // Run the search with a small delay to ensure UI updates first
-    const searchTimeout = setTimeout(() => {
-      searchForBarcodeProducts();
-    }, 300);
-    
-    // Cleanup - mark this effect as no longer current if it unmounts
-    return () => {
-      isCurrentEffect = false;
-      clearTimeout(searchTimeout);
-    };
-  }, [item, scanMode]);
+      
+      console.log("Searching for products with barcode:", currentItem);
+      
+      // Use our enhanced barcode service with the full barcode lookup flow
+      const foundProducts = await getProductByBarcode(currentItem, stores);
+      
+      // Debug log to see what's happening
+      console.log(`Found ${foundProducts.length} products for barcode ${currentItem}`);
+      
+      // Only update state if this is still the current effect and we're still in barcode mode
+      if (!isCurrentEffect || scanMode !== currentMode) {
+        console.log('Effect no longer relevant, cancelling product display');
+        return;
+      }
+      
+      // Handle the search results
+      if (foundProducts.length > 0) {
+        console.log('Setting products and showing results');
+        setProducts(foundProducts);
+        
+        // FIX: Use the actual product name for the search query instead of the barcode
+        // Get the first product name to use as search query for relevance
+        const productName = foundProducts[0].name || currentItem;
+        setShowResults(true);
+        
+        // Pass the product name as the searchQuery to ProductResultsScreen
+        // This will be handled when rendering the modal with ProductResultsScreen
+      } else {
+        console.log('No products found for barcode, showing alert');
+        Alert.alert(
+          'No Products Found',
+          `No products found for barcode ${currentItem}.`,
+          [{ 
+            text: 'OK',
+            onPress: () => {
+              // Only reset if we're still relevant
+              if (isCurrentEffect && scanMode === 'barcode') {
+                console.log('Resetting scanner after no products found');
+                resetBarcodeScanner();
+              }
+            }
+          }]
+        );
+      }
+    } catch (error) {
+      if (isCurrentEffect && scanMode === currentMode) {
+        console.error('Barcode lookup failed:', error);
+        Alert.alert(
+          'Error',
+          'Failed to look up barcode information.',
+          [{ 
+            text: 'OK',
+            onPress: () => {
+              if (scanMode === 'barcode') {
+                resetBarcodeScanner();
+              }
+            }
+          }]
+        );
+      }
+    } finally {
+      if (isCurrentEffect) {
+        setIsSearching(false);
+      }
+    }
+  };
+  
+  // Run the search with a small delay to ensure UI updates first
+  const searchTimeout = setTimeout(() => {
+    searchForBarcodeProducts();
+  }, 300);
+  
+  // Cleanup - mark this effect as no longer current if it unmounts
+  return () => {
+    isCurrentEffect = false;
+    clearTimeout(searchTimeout);
+  };
+}, [item, scanMode]);
   
   // Also update the handleSubmit function to use our enhanced barcode service for image scans
   const handleSubmit = async () => {
@@ -286,7 +297,7 @@ export default function ScanScreen() {
           </Text>
           {item && scanMode === 'barcode' && (
             <Text style={[styles.barcodeScanText, {marginTop: 5}]}>
-              Code: {item}
+              Code: {realItem}
             </Text>
           )}
         </View>
@@ -366,22 +377,22 @@ export default function ScanScreen() {
       </Modal>
 
       {/* Product results modal */}
-      <Modal
-        visible={showResults}
-        animationType="slide"
-        transparent={false}
-        onRequestClose={closeResultsModal}
-      >
-        <View style={{ flex: 1 }}>
-          <ProductResultsScreen 
-            products={products}
-            onAddToCart={handleAddToCart}
-            userId={userId}
-            onClose={closeResultsModal}
-            searchQuery={item || ""}
-          />
-        </View>
-      </Modal>
+<Modal
+  visible={showResults}
+  animationType="slide"
+  transparent={false}
+  onRequestClose={closeResultsModal}
+>
+  <View style={{ flex: 1 }}>
+    <ProductResultsScreen 
+      products={products}
+      onAddToCart={handleAddToCart}
+      userId={userId}
+      onClose={closeResultsModal}
+      searchQuery={scanMode === 'barcode' && products.length > 0 ? products[0].name : item || ""}
+    />
+  </View>
+</Modal>
     </SafeAreaView>
   );
 }

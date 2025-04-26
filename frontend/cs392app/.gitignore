@@ -46,8 +46,12 @@ yarn-error.*
 *.sln.docstates
 
 # Build results
-[Bb]in/
-[Oo]bj/
+# Build artifacts
+**/[Oo]bj/
+**/[Bb]in/
+
+# Visual Studio working directory
+**/.vs/
 *.dll
 *.exe
 *.app
