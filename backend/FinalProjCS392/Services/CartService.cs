@@ -77,7 +77,7 @@ namespace FinalProjCS392.Services
             return result;
         }
 
-        // Update cart products (replaces existing products)
+        // Update the UpdateCartProducts method to ensure store property is preserved
         public async Task<Cart> UpdateCartProducts(string userId, string cartId, List<CartProduct> products)
         {
             var filter = Builders<Cart>.Filter.And(
@@ -85,7 +85,16 @@ namespace FinalProjCS392.Services
                 Builders<Cart>.Filter.Eq(c => c.Id, cartId)
             );
 
-            // Replace the products array instead of pushing
+            // Ensure all products have store information
+            foreach (var product in products)
+            {
+                if (string.IsNullOrEmpty(product.Store))
+                {
+                    product.Store = "Unknown Store";
+                }
+            }
+
+            // Replace the products array
             var update = Builders<Cart>.Update
                 .Set(c => c.Products, products);
 
@@ -102,6 +111,42 @@ namespace FinalProjCS392.Services
 
             return result;
         }
+
+        // Update the UpdateCart method to ensure store property is preserved
+        public async Task<Cart> UpdateCart(Cart cart)
+        {
+            var filter = Builders<Cart>.Filter.And(
+                Builders<Cart>.Filter.Eq(c => c.UserId, cart.UserId),
+                Builders<Cart>.Filter.Eq(c => c.Id, cart.Id)
+            );
+
+            // Ensure all products have store information
+            foreach (var product in cart.Products)
+            {
+                if (string.IsNullOrEmpty(product.Store))
+                {
+                    product.Store = "Unknown Store";
+                }
+            }
+
+            var update = Builders<Cart>.Update
+                .Set(c => c.Products, cart.Products)
+                .Set(c => c.Name, cart.Name);
+
+            var result = await _carts.FindOneAndUpdateAsync(
+                filter,
+                update,
+                new FindOneAndUpdateOptions<Cart> { ReturnDocument = ReturnDocument.After }
+            );
+
+            if (result == null)
+            {
+                throw new Exception("Cart not found or user doesn't have access");
+            }
+
+            return result;
+        }
+        // Update cart products (replaces existing products)
 
         // Delete a cart
         public async Task<bool> DeleteCart(string userId, string cartId)
@@ -142,29 +187,5 @@ namespace FinalProjCS392.Services
             return result;
         }
 
-        public async Task<Cart> UpdateCart(Cart cart)
-        {
-            var filter = Builders<Cart>.Filter.And(
-                Builders<Cart>.Filter.Eq(c => c.UserId, cart.UserId),
-                Builders<Cart>.Filter.Eq(c => c.Id, cart.Id)
-            );
-
-            var update = Builders<Cart>.Update
-                .Set(c => c.Products, cart.Products)
-                .Set(c => c.Name, cart.Name);
-
-            var result = await _carts.FindOneAndUpdateAsync(
-                filter,
-                update,
-                new FindOneAndUpdateOptions<Cart> { ReturnDocument = ReturnDocument.After }
-            );
-
-            if (result == null)
-            {
-                throw new Exception("Cart not found or user doesn't have access");
-            }
-
-            return result;
-        }
     }
 }

@@ -722,15 +722,26 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     marginBottom: 145, // Add space for the action buttons at the bottom
     alignItems: 'center',
+    backgroundColor: '#ffffff', // Explicitly set white background
   },
+  
+  // Replace the refreshButton style definition with:
   refreshButton: {
-    backgroundColor: '#F59E0B', // Changed from '#151a7b' to match other button colors
+    backgroundColor: '#F59E0B', // Yellow/orange for button
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 25,
+  },
+  
+  // Make sure the noCartsButtonsContainer also has a white background:
+  noCartsButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    backgroundColor: '#ffffff', // Add white background
   },
   refreshButtonSmall: {
     backgroundColor: '#F59E0B', // Changed from '#151a7b' to match other button colors
@@ -754,11 +765,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 12,
-  },
-  noCartsButtonsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
   },
   disabledButton: {
     opacity: 0.7,

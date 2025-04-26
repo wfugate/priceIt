@@ -274,45 +274,6 @@ export const createNewUserCart = async (userId: string, name: string): Promise<C
 };
 
 // Add products to cart function
-export const saveToCart = async (
-  products: Product[],
-  userId: string,
-  cartId: string
-): Promise<void> => {
-  try {
-    const cartProducts: CartProduct[] = products.map(p => ({
-      productId: p.id,
-      thumbnail: p.thumbnail,
-      price: p.price,
-      name: p.name,
-      brand: p.brand,
-      store: p.store || 'Unknown Store', // Ensure store info is included
-      quantity: 1
-    }));
-
-    const response = await fetch(API_ENDPOINTS.cart.addProducts(cartId), {
-      method: 'PUT',
-      headers: COMMON_HEADERS,
-      body: JSON.stringify({
-        userId,
-        products: cartProducts
-      })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || 'Failed to save to cart');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Cart save error:', error);
-    // Just return mock success
-    return;
-  }
-};
-
-// 3. Update the updateCart function in scanService.ts to ensure store is included
 export const updateCart = async (
   cartId: string,
   userId: string,
@@ -355,9 +316,57 @@ export const updateCart = async (
       id: cartId,
       name: name || 'Updated Cart',
       userId: userId,
-      products: products,
+      products: products.map(product => ({
+        productId: product.productId || product.id || `product-${Date.now()}`,
+        id: product.id || product.productId || `product-${Date.now()}`,
+        thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
+        price: typeof product.price === 'number' ? product.price : 0,
+        name: product.name || 'Product',
+        brand: product.brand || 'Brand',
+        store: product.store || 'Unknown Store', // Ensure store is included in mock response
+        quantity: product.quantity || 1
+      })),
       createdAt: new Date().toISOString()
     };
+  }
+};
+
+// Also, update the saveToCart function to ensure store is included
+export const saveToCart = async (
+  products: Product[],
+  userId: string,
+  cartId: string
+): Promise<void> => {
+  try {
+    const cartProducts: CartProduct[] = products.map(p => ({
+      productId: p.id,
+      thumbnail: p.thumbnail,
+      price: p.price,
+      name: p.name,
+      brand: p.brand,
+      store: p.store || 'Unknown Store', // Ensure store info is included
+      quantity: 1
+    }));
+
+    const response = await fetch(API_ENDPOINTS.cart.addProducts(cartId), {
+      method: 'PUT',
+      headers: COMMON_HEADERS,
+      body: JSON.stringify({
+        userId,
+        products: cartProducts
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || 'Failed to save to cart');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Cart save error:', error);
+    // Just return mock success
+    return;
   }
 };
 

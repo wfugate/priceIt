@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { updateCart } from '../../app/services/scanService';
-import { Cart } from '../../app/types';
+import { Product, CartProduct, Cart } from '../../app/types'; 
 
 // Update the prop interface to include the callback
 interface CompareCartsModalProps {
@@ -23,6 +23,16 @@ interface CompareCartsModalProps {
   cartB: Cart | undefined;
   onClose: () => void;
   onCartsUpdated?: (updatedCartA: Cart, updatedCartB: Cart) => void;
+}
+interface StandardizedProduct {
+  id: string;
+  productId: string;
+  thumbnail: string;
+  price: number;
+  name: string;
+  brand: string;
+  store: string;
+  quantity?: number;
 }
 
 const { width } = Dimensions.get('window');
@@ -108,11 +118,8 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
     
     if (productIndex === -1) return;
     
-    // Get a deep clone of the product and ensure it has store info
-    const productToMove = {
-      ...leftCart.products[productIndex],
-      store: leftCart.products[productIndex].store || 'Unknown Store'
-    };
+    // Get a deep clone of the product and ensure it has ALL required properties
+    const productToMove = ensureProductProperties(leftCart.products[productIndex]);
     
     // Create completely new cart objects with new product arrays
     const updatedLeftProducts = leftCart.products.filter(p => 
@@ -130,14 +137,10 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       products: updatedRightProducts
     };
     
-    // Set the new cart states with a slight delay to ensure React processes them correctly
-    setTimeout(() => {
-      setLeftCart(newLeftCart);
-      setTimeout(() => {
-        setRightCart(newRightCart);
-        setHasChanges(true);
-      }, 50);
-    }, 50);
+    // Set the new cart states
+    setLeftCart(newLeftCart);
+    setRightCart(newRightCart);
+    setHasChanges(true);
   };
   
   
@@ -150,7 +153,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       return;
     }
     
-    // Find the product in the right cart - try both id and productId
+    // Find the product in the right cart
     let productIndex = rightCart.products.findIndex(p => p.id === productId);
     if (productIndex === -1) {
       productIndex = rightCart.products.findIndex(p => p.productId === productId);
@@ -162,8 +165,8 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       return;
     }
     
-    // Get a deep clone of the product
-    const productToMove = {...rightCart.products[productIndex]};
+    // Get a deep clone of the product with all required properties
+    const productToMove = ensureProductProperties(rightCart.products[productIndex]);
     console.log("PRODUCT TO MOVE:", JSON.stringify(productToMove, null, 2));
     
     // Create completely new cart objects with new product arrays
@@ -182,14 +185,10 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       products: updatedLeftProducts
     };
     
-    // Set the new cart states with a slight delay to ensure React processes them correctly
-    setTimeout(() => {
-      setRightCart(newRightCart);
-      setTimeout(() => {
-        setLeftCart(newLeftCart);
-        setHasChanges(true);
-      }, 50);
-    }, 50);
+    // Set the new cart states
+    setRightCart(newRightCart);
+    setLeftCart(newLeftCart);
+    setHasChanges(true);
   };
 
   // Save changes to both carts
@@ -203,25 +202,8 @@ const saveChanges = async () => {
   setSaving(true);
   try {
     // Ensure products have consistent property names before updating
-    const leftProducts = leftCart.products.map(product => ({
-      id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
-      price: typeof product.price === 'number' ? product.price : 0,
-      name: product.name || 'Product',
-      brand: product.brand || 'Brand',
-      store: product.store || 'Unknown Store' // Ensure store is always included
-    }));
-    
-    const rightProducts = rightCart.products.map(product => ({
-      id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
-      price: typeof product.price === 'number' ? product.price : 0,
-      name: product.name || 'Product',
-      brand: product.brand || 'Brand',
-      store: product.store || 'Unknown Store' // Ensure store is always included
-    }));
+    const leftProducts = leftCart.products.map(product => ensureProductProperties(product));
+    const rightProducts = rightCart.products.map(product => ensureProductProperties(product));
     
     // Send standardized products to the backend
     const updates = [
@@ -254,6 +236,17 @@ const saveChanges = async () => {
     setSaving(false);
   }
 };
+
+const ensureProductProperties = (product: any): StandardizedProduct => ({
+  id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+  productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+  thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
+  price: typeof product.price === 'number' ? product.price : 0,
+  name: product.name || 'Product',
+  brand: product.brand || 'Brand',
+  store: product.store || 'Unknown Store', // Ensure store is always included
+  quantity: product.quantity || 1
+});
 
   // Calculate totals
   const leftTotal = leftCart.products.reduce((sum, product) => sum + product.price, 0);
