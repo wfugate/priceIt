@@ -1,0 +1,125 @@
+{
+  "Version": 1,
+  "Hash": "ml4JSq8KP7Y0WPBxHCWUvEt7VSLUy6gBLbwPV/WcbIU=",
+  "Source": "priceItBackend",
+  "BasePath": "_content/priceItBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "priceItBackend\\wwwroot",
+      "Source": "priceItBackend",
+      "ContentRoot": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\wwwroot\\",
+      "BasePath": "_content/priceItBackend",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
+      "SourceId": "priceItBackend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\wwwroot\\",
+      "BasePath": "_content/priceItBackend",
+      "RelativePath": "logo/priceIt#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "vklfkuobon",
+      "Integrity": "/yYFPmikT9xwJ0xJMk1g8CtHShJaOEzNHyvSbCtFL4k=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\logo\\priceIt.jpg"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "logo/priceIt.jpg",
+      "AssetFile": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "20606"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/yYFPmikT9xwJ0xJMk1g8CtHShJaOEzNHyvSbCtFL4k=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Apr 2025 14:44:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-/yYFPmikT9xwJ0xJMk1g8CtHShJaOEzNHyvSbCtFL4k="
+        }
+      ]
+    },
+    {
+      "Route": "logo/priceIt.vklfkuobon.jpg",
+      "AssetFile": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "20606"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/yYFPmikT9xwJ0xJMk1g8CtHShJaOEzNHyvSbCtFL4k=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Apr 2025 14:44:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "vklfkuobon"
+        },
+        {
+          "Name": "label",
+          "Value": "logo/priceIt.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-/yYFPmikT9xwJ0xJMk1g8CtHShJaOEzNHyvSbCtFL4k="
+        }
+      ]
+    }
+  ]
+}

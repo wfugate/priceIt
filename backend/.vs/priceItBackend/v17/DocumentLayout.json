@@ -1,0 +1,155 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-integration-ash\\backend\\finalprojcs392\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-integration-ash\\backend\\finalprojcs392\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-integration-ash\\backend\\finalprojcs392\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-integration-ash\\backend\\finalprojcs392\\services\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-integration-ash\\backend\\finalprojcs392\\services\\targetscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\targetscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-integration-ash\\backend\\finalprojcs392\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-integration-ash\\backend\\finalprojcs392\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 283,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\appsettings.json",
+              "RelativeDocumentMoniker": "FinalProjCS392\\appsettings.json",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\appsettings.json",
+              "RelativeToolTip": "FinalProjCS392\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-27T02:56:17.039Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TargetScraperService.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Services\\TargetScraperService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\TargetScraperService.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Services\\TargetScraperService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\TargetScraperService.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAwB4AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-26T01:33:55.939Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\UserService.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Services\\UserService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\UserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-26T01:10:37.96Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAgwF0AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T20:33:48.702Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CartService.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Services\\CartService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\CartService.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Services\\CartService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\CartService.cs",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAowBEAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T18:35:47.276Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CartController.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Controllers\\CartController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\CartController.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Controllers\\CartController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\CartController.cs",
+              "ViewState": "AgIAAOQAAAAAAAAAAAAtwAoBAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T18:33:04.032Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Models\\Product.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\Models\\Product.cs",
+              "RelativeToolTip": "FinalProjCS392\\Models\\Product.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAiwEUAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T18:33:13.814Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 117,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
