@@ -36,7 +36,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
 }) => {
   // Calculate total price of all products in the cart
   const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
-  
+  console.log("Cart Name:", cart.name);  
   return (
     <View style={styles.container}>
       <TouchableOpacity 
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 4,
+    color: '#4A1D96'
   },
   cartPrice: {
     fontSize: 14,

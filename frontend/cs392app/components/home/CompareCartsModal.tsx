@@ -57,13 +57,14 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
         
         // Return a fixed product object with both id and productId for compatibility
         return {
-          id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          //id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
           price: typeof product.price === 'number' ? product.price : 0,
           name: product.name || 'Product',
           brand: product.brand || 'Brand',
           quantity: product.quantity || 1,
+          store: product.store || product.Store,
           productUrl: product.productUrl
         };
       }) : []

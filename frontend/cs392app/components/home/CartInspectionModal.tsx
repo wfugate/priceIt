@@ -9,10 +9,11 @@ import {
   Image, 
   ScrollView,
   Alert,
+  Linking,
   ActivityIndicator
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { Cart, Product } from '../../app/types';
+import { Cart, CartProduct, Product } from '../../app/types';
 
 interface CartInspectionModalProps {
   visible: boolean;
@@ -31,6 +32,9 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeletingCart, setIsDeletingCart] = useState(false);
+
+  const [isStoreModalVisible, setIsStoreModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<CartProduct | null>(null);
 
   if (!cart) return null;
 
@@ -94,20 +98,30 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
     );
   };
 
+
+  const handleLongPress = (product: CartProduct) => {
+
+    setSelectedProduct(product);
+    setIsStoreModalVisible(true);
+  };
+
+  const handleRedirectToStore = () => {
+    console.log("here")
+    console.log(selectedProduct)
+    if (selectedProduct && selectedProduct.productUrl) {
+      console.log(selectedProduct.productUrl)
+      Linking.openURL(selectedProduct.productUrl);
+      setIsStoreModalVisible(false);
+    }
+  };
+
+
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={false}
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={onClose}
-          >
+          <TouchableOpacity style={styles.backButton} onPress={onClose}>
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
           <Text style={styles.title}>{cart.name}</Text>
@@ -131,26 +145,22 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
           <ScrollView style={styles.productList}>
             {cart.products.length > 0 ? (
               cart.products.map((product, index) => {
-                // Ensure we have valid product ID
                 const productId = product.id || product.productId || `product-${index}`;
                 return (
-                  <View key={`${productId}-${index}`} style={styles.productCard}>
+                  <TouchableOpacity
+                    key={`${productId}-${index}`}
+                    style={styles.productCard}
+                    onLongPress={() => handleLongPress(product)} // Use TouchableOpacity here for long press
+                  >
                     <Image 
                       source={{ uri: product.thumbnail || 'https://via.placeholder.com/80' }}
                       style={styles.productImage}
                       resizeMode="contain"
                     />
-                    
                     <View style={styles.productInfo}>
-                      <Text style={styles.storeLabel}>
-                        {product.store || "Store"}
-                      </Text>
-                      <Text style={styles.productBrand}>
-                        {product.brand || "Brand"}
-                      </Text>
-                      <Text style={styles.productName} numberOfLines={2}>
-                        {product.name}
-                      </Text>
+                      <Text style={styles.storeLabel}>{product.store || "Store"}</Text>
+                      <Text style={styles.productBrand}>{product.brand || "Brand"}</Text>
+                      <Text style={styles.productName} numberOfLines={2}>{product.name}</Text>
                       <Text style={styles.productPrice}>
                         ${typeof product.price === 'number' 
                           ? product.price.toFixed(2) 
@@ -159,14 +169,13 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
                               : '0.00')}
                       </Text>
                     </View>
-                    
                     <TouchableOpacity 
                       style={styles.deleteButton}
                       onPress={() => handleDeleteItem(productId)}
                     >
                       <FontAwesome name="times" size={20} color="#e63b60" />
                     </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
                 );
               })
             ) : (
@@ -178,11 +187,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
         )}
 
         {/* Delete cart button */}
-        <TouchableOpacity 
-          style={styles.deleteCartButton}
-          onPress={handleDeleteCart}
-          disabled={isDeletingCart}
-        >
+        <TouchableOpacity style={styles.deleteCartButton} onPress={handleDeleteCart} disabled={isDeletingCart}>
           {isDeletingCart ? (
             <ActivityIndicator color="white" size="small" />
           ) : (
@@ -190,6 +195,26 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
           )}
         </TouchableOpacity>
       </View>
+
+      {/* Store modal */}
+      {isStoreModalVisible && selectedProduct && (
+        <Modal visible={isStoreModalVisible} animationType="fade" transparent={true} onRequestClose={() => setIsStoreModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Visit Product Store</Text>
+              <Text style={styles.modalDescription}>
+                Would you like to visit the store for "{selectedProduct.name}"?
+              </Text>
+              <TouchableOpacity style={styles.modalButton} onPress={handleRedirectToStore}>
+                <Text style={styles.modalButtonText}>Yes, Go to Store</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalCancelButton} onPress={() => setIsStoreModalVisible(false)}>
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </Modal>
   );
 };
@@ -330,6 +355,45 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  modalOverlay: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)' 
+  },
+  modalContent: { 
+    backgroundColor: 'white', 
+    padding: 20, 
+    borderRadius: 10, 
+    width: '80%' },
+  modalTitle: { 
+    fontSize: 18, 
+    fontWeight: 'bold' 
+  },
+  modalDescription: { 
+    fontSize: 16, 
+    marginVertical: 10 
+  },
+  modalButton: { 
+    backgroundColor: '#e63b60', 
+    padding: 10, 
+    borderRadius: 5, 
+    alignItems: 'center' 
+  },
+  modalButtonText: { 
+    color: 'white', 
+    fontSize: 16 
+  },
+  modalCancelButton: { 
+    padding: 10, 
+    alignItems: 'center', 
+    marginTop: 10 
+  },
+  modalCancelText: { 
+    fontSize: 16, 
+    color: 'gray' 
+  },
+
 });
 
 export default CartInspectionModal;

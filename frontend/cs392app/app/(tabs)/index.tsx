@@ -415,24 +415,6 @@ export default function HomeScreen() {
               />
             }
           />
-          
-          {/* Refresh button at bottom of list */}
-          <View style={styles.refreshButtonContainer}>
-            <TouchableOpacity 
-              style={[styles.refreshButton, isRefreshing && styles.disabledButton]}
-              onPress={() => fetchUserCarts()}
-              disabled={isRefreshing}
-            >
-              {isRefreshing ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <>
-                  <FontAwesome name="refresh" size={16} color="white" style={styles.refreshIcon} />
-                  <Text style={styles.refreshButtonText}>Refresh Carts</Text>
-                </>
-              )}
-            </TouchableOpacity>
-          </View>
         </>
       ) : (
         <View style={styles.noCartsContainer}>

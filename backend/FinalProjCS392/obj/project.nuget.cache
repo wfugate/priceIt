@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZruIGEPV3pY=",
+  "dgSpecHash": "9nRX0DgRVFA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\priceItBackend.csproj",
+  "projectFilePath": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\priceItBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ashto\\.nuget\\packages\\bouncycastle.cryptography\\2.5.1\\bouncycastle.cryptography.2.5.1.nupkg.sha512",
     "C:\\Users\\ashto\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",

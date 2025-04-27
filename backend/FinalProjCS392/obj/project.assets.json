@@ -2429,11 +2429,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\priceItBackend.csproj",
+      "projectUniqueName": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\priceItBackend.csproj",
       "projectName": "priceItBackend",
-      "projectPath": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\priceItBackend.csproj",
+      "projectPath": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\priceItBackend.csproj",
       "packagesPath": "C:\\Users\\ashto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ashto\\Desktop\\priceIt-integration-ash\\backend\\FinalProjCS392\\obj\\",
+      "outputPath": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
