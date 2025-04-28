@@ -62,6 +62,7 @@ namespace FinalProjCS392.Services
         public async Task<DeleteResult> DeleteUser(string userId)
         {
             var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            
             return await _users.DeleteOneAsync(filter);
         }
 

@@ -1,5 +1,4 @@
 // components/home/CartItemCard.tsx
-import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
@@ -24,7 +23,7 @@ interface Cart {
 interface CartItemCardProps {
   cart: Cart;
   onSelect: () => void;
-  onDelete: () => void;
+  onDelete: (cartId: string) => void;
   onInspect: () => void;
 }
 
@@ -36,7 +35,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
 }) => {
   // Calculate total price of all products in the cart
   const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
-  console.log("Cart Name:", cart.name);  
+
   return (
     <View style={styles.container}>
       <TouchableOpacity 
@@ -67,7 +66,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       
       <TouchableOpacity
         style={styles.deleteButton}
-        onPress={onDelete}
+        onPress={() => onDelete(cart.id)}
       >
         <FontAwesome name="trash" size={18} color="#888" />
       </TouchableOpacity>

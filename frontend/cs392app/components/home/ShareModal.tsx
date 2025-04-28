@@ -75,29 +75,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
     >
       <View style={styles.container}>
         <View style={styles.modalContent}>
-          <TouchableOpacity 
-            style={styles.shareButton} 
-            onPress={() => shareToSocial('facebook')}
-          >
-            <FontAwesome name="facebook" size={20} color="white" style={styles.shareIcon} />
-            <Text style={styles.shareText}>Share on Facebook</Text>
-          </TouchableOpacity>
           
-          <TouchableOpacity 
-            style={[styles.shareButton, styles.twitterButton]} 
-            onPress={() => shareToSocial('twitter')}
-          >
-            <FontAwesome name="twitter" size={20} color="white" style={styles.shareIcon} />
-            <Text style={styles.shareText}>Share on Twitter</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[styles.shareButton, styles.pinterestButton]} 
-            onPress={() => shareToSocial('pinterest')}
-          >
-            <FontAwesome name="pinterest" size={20} color="white" style={styles.shareIcon} />
-            <Text style={styles.shareText}>Share on Pinterest</Text>
-          </TouchableOpacity>
           
           <TouchableOpacity 
             style={[styles.shareButton, styles.moreButton]} 

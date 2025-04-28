@@ -59,9 +59,9 @@ export const CartNameInputModal: React.FC<CartNameInputModalProps> = ({
             <View style={styles.spacer} />
           </View>
           
-          <Text style={styles.subtitle}>
-            You don't have any carts yet. Create your first cart!
-          </Text>
+            <Text style={styles.subtitle}>
+              Choose a name for this cart. All selected items will be added to it!
+            </Text>
           
           <TextInput
             style={[styles.input, error ? styles.inputError : null]}

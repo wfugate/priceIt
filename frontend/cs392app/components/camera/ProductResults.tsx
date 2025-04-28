@@ -1,5 +1,7 @@
 // components/camera/ProductResults.tsx
 import React, { useState, useEffect } from 'react';
+import { FontAwesome } from '@expo/vector-icons'
+
 import { 
   Share,
   View, 
@@ -325,12 +327,9 @@ export default function ProductResultsScreen({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={onClose}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.backButtonText}>← Back</Text>
+        <TouchableOpacity style={styles.backButton} onPress={onClose} activeOpacity={0.7}>
+          <FontAwesome style={styles.backIcon} name="arrow-left" size={15} color="#333" />
+          <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
         
         <Text style={styles.title}>Compare Prices</Text>
@@ -480,7 +479,8 @@ export default function ProductResultsScreen({
                 style={styles.filterBackButton} 
                 onPress={() => setShowFilterModal(false)}
                 activeOpacity={0.7}>
-                <Text style={styles.backButtonText}>← Back</Text>
+                <FontAwesome style={styles.backIcon} name="arrow-left" size={15} color="#333" />
+                <Text style={styles.backButtonText}>Back</Text>
               </TouchableOpacity>
 
               <Text style={styles.modalTitle}>Filter & Sort</Text>
@@ -626,7 +626,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     minWidth: 60,
     alignItems: 'center',
+    flexDirection: 'row', 
     marginBottom: 10,
+  },
+  backIcon:{
+    color: 'white',
+    marginRight: 8, 
   },
   backButtonText: {
     color: 'white',
@@ -651,6 +656,7 @@ const styles = StyleSheet.create({
     minWidth: 60,
     alignItems: 'center',
     position: 'absolute',
+    flexDirection: 'row',
     left: 0,
     top: 0,
   },

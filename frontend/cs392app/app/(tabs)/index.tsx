@@ -176,14 +176,14 @@ export default function HomeScreen() {
   // Handle share cart button press
   const handleSharePress = () => {
     const selected = getSelectedCarts();
-    
+
     if (selected.length === 0) {
       Alert.alert('Selection Error', 'Please select at least one cart to share.');
       return;
     }
-    
+
     setSelectedCarts(selected);
-    setShareModalVisible(true);
+    shareToSocial('share');
   };
 
   // Handle export cart button press (direct share)
@@ -209,6 +209,33 @@ export default function HomeScreen() {
     } catch (error) {
       console.error('Error sharing carts:', error);
       Alert.alert('Error', 'Failed to share carts. Please try again.');
+    }
+  };
+
+  const generateCartSummary = (): string => {
+    if (!carts || carts.length === 0) return '';
+    
+    return carts.map(cart => {
+      const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
+      const productList = cart.products.map(product => 
+        `- ${product.name} ($${product.price.toFixed(2)})`
+      ).join('\n');
+      
+      return `Cart: ${cart.name}\nTotal: $${totalPrice.toFixed(2)}\nItems: ${cart.products.length}\n\n${productList}`;
+    }).join('\n\n----------\n\n');
+  };
+
+  // Share to social platforms
+  const shareToSocial = async (platform: string) => {
+    const summary = generateCartSummary();
+    try {
+      await Share.share({
+        message: `My Shopping Cart Summary:\n\n${summary}`,
+        title: 'My Shopping Carts'
+      });
+      setShareModalVisible(false);
+    } catch (error) {
+      console.error(`Error sharing to ${platform}:`, error);
     }
   };
 
@@ -269,12 +296,29 @@ export default function HomeScreen() {
   };
 
   // Update the handleDeleteCart function to refresh the list after successful deletion
-  const handleDeleteCart = async () => {
-    if (!currentCart || !userId) return;
+  const handleDeleteCart = async (cartId:string | undefined) => {
+   
+    if (cartId && userId){
+      await deleteCart(cartId, userId);
+      await fetchUserCarts(false);
+      return
+    }
+
+    if (!currentCart || !userId) { 
+      return
+    };
+    console.log("Triggered")
     
     try {
-      // Call the backend API to delete the cart
-      await deleteCart(currentCart.id, userId);
+      console.log("currentUser ID", userId);
+      console.log("currentCart ID:",currentCart.id)
+      // // Call the backend API to delete the cart
+
+      if (cartId){
+        
+      }else{
+        await deleteCart(currentCart.id, userId);
+      }
       
       // Refresh the cart list instead of manually updating the state
       await fetchUserCarts(false);
@@ -324,7 +368,7 @@ export default function HomeScreen() {
       <CartItemCard
         cart={item}
         onSelect={() => toggleCartSelection(item.id)}
-        onDelete={() => handleDeleteCart()}
+        onDelete={() => handleDeleteCart(item.id)}
         onInspect={() => handleInspectCart(item.id)}
       />
     );
@@ -509,7 +553,7 @@ export default function HomeScreen() {
         cart={currentCart}
         onClose={() => setInspectModalVisible(false)}
         onDeleteItem={handleDeleteItem}
-        onDeleteCart={handleDeleteCart}
+        onDeleteCart={() => handleDeleteCart(currentCart?.id)}
       />
     </View>
   );

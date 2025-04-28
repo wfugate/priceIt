@@ -200,6 +200,11 @@ namespace FinalProjCS392.Services
             return result;
         }
 
+        public async Task DeleteAllUserCart(string userId) {
+            var allUserCarts = Builders<Cart>.Filter.Eq(c => c.UserId, userId);
+
+            await _carts.DeleteOneAsync(allUserCarts);
+        }
 
     }
 }

@@ -27,38 +27,6 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 
-// const SESSION_TIMEOUT_MS = 1 * 60 * 1000; // 30 minutes
-// let timeoutHandle: NodeJS.Timeout;
-
-// // Function to start the session timer
-// const resetSessionTimer = (logout: () => void) => {
-//     clearTimeout(timeoutHandle);
-//     timeoutHandle = setTimeout(() => {
-//       console.log('⏳ Session expired. Logging out...');
-//       logout();
-//     }, SESSION_TIMEOUT_MS);
-//   };
-  
-// Function to set up activity listeners
-// const setupActivityListeners = (logout: () => void) => {
-//     const resetTimer = () => resetSessionTimer(logout);
-
-//     // Listen for user activity (touch or keyboard events)
-//     const events = ['mousemove', 'touchstart', 'keydown'];
-//     events.forEach(event => {
-//         window.addEventListener(event, resetTimer);
-// });
-
-// return () => {
-//     // Cleanup event listeners on component unmount
-//     events.forEach(event => {
-//     window.removeEventListener(event, resetTimer);
-//     });
-// };
-// };
-  
-
-
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -74,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           console.log('Stored User:', parsed);
       
           setUser(parsed);
-          //resetSessionTimer(logout); // Start session timer when user is loaded
+
         } else {
 
           setUser(null);
@@ -91,19 +59,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     loadUser();
   }, []);
-
-  // Add activity listeners when the user is logged in
-//   useEffect(() => {
-//     if (user) {
-//       // Set up activity listeners and reset the session timer on activity
-//       const cleanupListeners = setupActivityListeners(logout);
-
-//       // Clean up listeners when the component is unmounted
-//       return () => {
-//         cleanupListeners();
-//       };
-//     }
-//   }, [user]);
 
   const updateProfile = async (name: string, age: string) => {
     try {
@@ -222,7 +177,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       console.log('Signup successful, redirecting to Main info page');
       
-      //resetSessionTimer(logout); // Start session timer on signup
 
       if (!tempData.name || !tempData.age) {
         router.replace('../infoMain'); // <-- Go to the info page
@@ -237,7 +191,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    //clearTimeout(timeoutHandle); 
     setUser(null);
     await AsyncStorage.removeItem('user')
     await AsyncStorage.removeItem(`@profileImageUri:${user?.UserId}`);;

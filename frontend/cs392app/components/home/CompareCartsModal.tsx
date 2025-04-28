@@ -218,16 +218,17 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
         updateCart(rightCart.id, rightCart.userId, rightCart.products, rightCart.name)
       ];
 
+      
       const [updatedLeftCart, updatedRightCart] = await Promise.all(updates);
       
+      if (onCartsUpdated) {
+        onCartsUpdated(updatedLeftCart, updatedRightCart);
+      }
+
       Alert.alert(
         'Success',
         'Changes to both carts have been saved.',
         [{ text: 'OK', onPress: () => {
-          // Notify the parent component about the updates before closing
-          if (onCartsUpdated) {
-            onCartsUpdated(updatedLeftCart, updatedRightCart);
-          }
           onClose();
         }}]
       );

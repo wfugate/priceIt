@@ -85,6 +85,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
             setIsDeletingCart(true);
             try {
               await onDeleteCart();
+              //console.log("here")
               onClose(); // Close modal after successful deletion
             } catch (error) {
               console.error('Error deleting cart:', error);

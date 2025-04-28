@@ -16,6 +16,23 @@ export default function SignupScreen() {
   const [loading, setLoading] = useState(false); // NEW
 
   const handleSignup = async () => {
+    if (email.length == 0){
+      Alert.alert("Email Error","Email field is empty")
+      return
+    }
+    else if (password.length ==0){
+      Alert.alert("Password Error", "Password field is empty")
+      return
+    }
+    else if (password.length < 6 ){
+      Alert.alert("Password Length", "The password length has to be more than 6 charachters long.")
+      return
+    }
+    else if(password.length >12){
+      Alert.alert("Password Length", "The password length cannot excede 12 characters.")
+      return
+    }
+    
     if (loading) return; // Prevent double taps
     setLoading(true); // Disable button
     try {

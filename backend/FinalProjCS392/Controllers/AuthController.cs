@@ -14,8 +14,9 @@ namespace FinalProjCS392.Controllers
     {
         private readonly UserService _userService;
         private readonly ImageService _imageService;
+        private readonly CartService _cartService;
 
-        public AuthController(UserService userService, ImageService imageService)
+        public AuthController(UserService userService, ImageService imageService, CartService cartService)
         {
             _userService = userService;
             _imageService = imageService;
@@ -71,7 +72,8 @@ namespace FinalProjCS392.Controllers
             if (user == null)
                 return NotFound("User not found");
 
-            var update = Builders<User>.Update
+
+             var update = Builders<User>.Update
                 .Set(u => u.Name, request.Name)
                 .Set(u => u.Age, request.Age);
 
@@ -83,16 +85,18 @@ namespace FinalProjCS392.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            await _imageService.DeleteImage(id);
+            
             
             var result = await _userService.DeleteUser(id);
             if (result.DeletedCount == 0)
             {
                 return NotFound("User not found");
             }
+            await _imageService.DeleteImage(id);
+            await _cartService.DeleteAllUserCart(id);
 
             return Ok("User deleted");
-
+                
         }
     }
 }

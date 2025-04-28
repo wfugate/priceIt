@@ -420,6 +420,7 @@ export const getProductByBarcode = async (barcode: string, stores: Stores = { wa
 // Delete a cart
 export const deleteCart = async (cartId: string, userId: string): Promise<boolean> => {
   try {
+    console.log("Here")
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/${cartId}?userId=${userId}`, {
       method: 'DELETE',
       headers: COMMON_HEADERS
