@@ -414,8 +414,8 @@ export default function HomeScreen() {
           )}
         </TouchableOpacity>
         <View style={styles.userInfo}>
-          <Text style={styles.userInfoText}>Username: {user?.name ?? 'xxxxx'} </Text>
-          <Text style={styles.userInfoText}>Email: {user?.email ?? 'xxxxx'}</Text>
+          <Text style={styles.userInfoText} numberOfLines={1} ellipsizeMode="tail">Username: {user?.name ?? 'xxxxx'} </Text>
+          <Text style={styles.userInfoText} numberOfLines={1} ellipsizeMode="tail">Email: {user?.email ?? 'xxxxx'}</Text>
         </View>
         
         <View style={styles.avatarContainerTwo}>
