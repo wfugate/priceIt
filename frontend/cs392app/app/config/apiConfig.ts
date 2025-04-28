@@ -2,7 +2,7 @@
 // Central configuration file for API endpoints
 
 // Base URL for all API requests - change this when your ngrok URL changes
-export const API_BASE_URL = 'https://9151-128-197-28-176.ngrok-free.app';
+export const API_BASE_URL = 'https://4a8c-2600-387-15-917-00-1.ngrok-free.app';
 
 // API endpoints derived from the base URL
 export const API_ENDPOINTS = {
