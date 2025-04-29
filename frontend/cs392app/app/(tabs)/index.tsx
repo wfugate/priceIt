@@ -570,7 +570,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: '#ffffff', // White background
+    backgroundColor: 'rgb(224, 216, 245) ', // White background
   },
   centered: {
     justifyContent: 'center',
@@ -596,61 +596,58 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
-// Fix for the userInfoContainer in index.tsx
-userInfoContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginBottom: 20,
-  backgroundColor: '#ffffff', // White background
-  padding: 10,
-  borderRadius: 8,
-  borderWidth: 1,
-  borderColor: '#E9D8FD', // Light purple border
-},
-avatarContainerTwo: {
-  width: 60,
-  height: 60, 
-  alignItems: 'center',
-  marginRight: 16,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  // Fix for the userInfoContainer in index.tsx
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    backgroundColor: '#4A1D96', // White background
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E9D8FD', // Light purple border
+  },
+  avatarContainerTwo: {
+    width: 60,
+    height: 60, 
+    alignItems: 'center',
+    marginRight: 16,
+    backgroundColor: '4A1D96', 
+  },
 
-// Fix for the avatarContainer to ensure white background
-avatarContainer: {
-  width: 60,
-  height: 60,
-  borderWidth: 1,
-  borderColor: '#4A1D96', // Purple border
-  borderRadius: 30, // Make it round
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginRight: 16,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  avatarContainer: {
+    width: 60,
+    height: 60,
+    borderWidth: 1,
+    borderColor: '#4A1D96', 
+    borderRadius: 30, 
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+    backgroundColor: '#ffffff', 
+  },
 
-// Fix for the userInfo section
-userInfo: {
-  flex: 1,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  userInfo: {
+    flex: 1,
+    backgroundColor: '#4A1D96',
+  },
 
-// Fix for the header to ensure white background
-header: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: 40,
-  marginBottom: 20,
-  backgroundColor: '#ffffff', // Explicitly set to white
-},
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 40,
+    marginBottom: 20,
+    backgroundColor: 'rgb(224, 216, 245) ',
+  },
   userInfoText: {
     fontSize: 16,
     marginBottom: 4,
-    color: '#4A1D96', // Deep purple for text
+    color: 'white', 
   },
   separator: {
     height: 1,
-    backgroundColor: '#4A1D96', // Deep purple separator
+    backgroundColor: '#4A1D96', 
     marginVertical: 20,
     opacity: 0.3,
   },
@@ -659,15 +656,15 @@ header: {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
-    backgroundColor: '#ffffff', // White background
+    backgroundColor: 'rgb(224, 216, 245) ', 
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#4A1D96', // Deep purple for section title
+    color: '#4A1D96', 
   },
   compareButton: {
-    backgroundColor: '#F59E0B', // Yellow/orange for button
+    backgroundColor: '#F59E0B', 
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -677,29 +674,29 @@ header: {
     fontWeight: '600',
   },
   cartsList: {
-    paddingBottom: 160, // Add padding for buttons at bottom
+    paddingBottom: 160, 
   },
   noCartsContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 100,
-    backgroundColor: '#ffffff', // White background
+    backgroundColor: 'rgb(224, 216, 245)', 
   },
   noCartsText: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#4A1D96', // Deep purple for text
+    color: '#4A1D96', 
   },
   noCartsSubText: {
     fontSize: 16,
-    color: '#6B46C1', // Lighter purple
+    color: '#6B46C1', 
     marginBottom: 24,
     textAlign: 'center',
   },
   scanNowButton: {
-    backgroundColor: '#F59E0B', // Yellow/orange for button
+    backgroundColor: '#F59E0B', 
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 25,
@@ -714,10 +711,10 @@ header: {
     bottom: 20,
     left: 16,
     right: 16,
-    backgroundColor: 'transparent', // Transparent background
+    backgroundColor: 'transparent', 
   },
   actionButton: {
-    backgroundColor: '#F59E0B', // Yellow/orange for button
+    backgroundColor: '#F59E0B', 
     padding: 14,
     borderRadius: 5,
     alignItems: 'center',
@@ -735,14 +732,13 @@ header: {
   },
   refreshButtonContainer: {
     paddingBottom: 20,
-    marginBottom: 145, // Add space for the action buttons at the bottom
+    marginBottom: 145, 
     alignItems: 'center',
-    backgroundColor: '#ffffff', // Explicitly set white background
+    backgroundColor: '#ffffff', 
   },
   
-  // Replace the refreshButton style definition with:
   refreshButton: {
-    backgroundColor: '#F59E0B', // Yellow/orange for button
+    backgroundColor: '#F59E0B', 
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -751,15 +747,14 @@ header: {
     borderRadius: 25,
   },
   
-  // Make sure the noCartsButtonsContainer also has a white background:
   noCartsButtonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    backgroundColor: '#ffffff', // Add white background
+    backgroundColor: 'rgb(224, 216, 245)', 
   },
   refreshButtonSmall: {
-    backgroundColor: '#F59E0B', // Changed from '#151a7b' to match other button colors
+    backgroundColor: '#F59E0B',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -792,7 +787,7 @@ header: {
     marginTop: 10,
     marginBottom: 10,
     marginRight: 10,
-    backgroundColor: '#F59E0B', // Yellow/orange for button
+    backgroundColor: '#F59E0B', 
     borderRadius: 25,
     width: 40,
     height: 40,

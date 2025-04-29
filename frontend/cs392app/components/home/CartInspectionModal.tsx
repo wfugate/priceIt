@@ -223,7 +223,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#2c3e50',
   },
   header: {
     flexDirection: 'row',
@@ -232,11 +232,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 16,
-    borderBottomWidth: 1,
+    //borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    backgroundColor: '#4A1D96',
+
   },
   backButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 15,
@@ -250,19 +252,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
     textAlign: 'center',
+    color: "white",
   },
   spacer: {
     width: 60, // Match the width of the back button for proper alignment
   },
   summary: {
     padding: 16,
-    backgroundColor: '#f9f9f9',
-    borderBottomWidth: 1,
+    backgroundColor: '#6B46C1',
+    //borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
   summaryText: {
     fontSize: 16,
-    color: '#333',
+    color: 'white',
     textAlign: 'center',
     fontWeight: '500',
   },
@@ -283,7 +286,7 @@ const styles = StyleSheet.create({
   productCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(224, 216, 245)',
     borderRadius: 10,
     marginBottom: 15,
     padding: 15,
@@ -345,7 +348,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   deleteCartButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B',
     padding: 16,
     alignItems: 'center',
     margin: 16,

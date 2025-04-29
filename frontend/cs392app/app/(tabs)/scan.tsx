@@ -1,6 +1,7 @@
 // app/(tabs)/scan.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, Alert, Switch, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, Modal, Alert, Switch, StyleSheet, SafeAreaView, Animated } from 'react-native';
+import { Video, ResizeMode } from 'expo-av';
 import { useCameraScan } from '../hooks/useCameraScan';
 import CameraView from '../../components/camera/CameraView';
 import CameraControls from '../../components/camera/CameraControls';
@@ -12,11 +13,14 @@ import { searchProducts, saveToCart } from '../services/scanService';
 import { Product, Stores } from '../types';
 import { getProductByBarcode, isBarcode } from '../services/barcodeService';
 import { useAuth } from '../context/AuthContext'; 
+
 export default function ScanScreen() {
   const [showResults, setShowResults] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showStoreSettings, setShowStoreSettings] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const [stores, setStores] = useState<Stores>({
     walmart: true,
     target: true,
@@ -31,16 +35,77 @@ export default function ScanScreen() {
   const {
     cameraRef,
     item,
-    loading,
+    loading: cameraLoading,
     permission,
     requestPermission,
-    captureImage,
+    captureImage: originalCaptureImage,
     scanMode,
     toggleScanMode,
-    handleBarCodeScanned,
+    handleBarCodeScanned: originalHandleBarCodeScanned,
     isBarcodeScanningActive,
     resetBarcodeScanner
   } = useCameraScan();
+
+  // Animation functions
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      setLoading(false);
+    });
+  };
+
+  // Function to handle video ready event
+  const handleVideoReady = async (callback: () => Promise<void>) => {
+    setTimeout(async () => {
+      try {
+        await callback();
+      } catch (error) {
+        console.error('Operation failed:', error);
+        Alert.alert('Error', 'An error occurred during the operation');
+      } finally {
+        fadeOut();
+      }
+    }, 900); // Minimum 0.9 seconds delay
+  };
+
+  // Wrapped handleBarCodeScanned with loading screen
+  const handleBarCodeScanned = (data: any) => {
+    if (loading) return; // Prevent processing while loading
+    
+    setLoading(true);
+    fadeIn();
+    
+    const barcodeCallback = async () => {
+      originalHandleBarCodeScanned(data);
+    };
+    
+    handleVideoReady(barcodeCallback);
+  };
+
+  // Wrapped captureImage with loading screen
+  const captureImage = async () => {
+    if (loading) return; // Prevent double taps
+    
+    setLoading(true);
+    fadeIn();
+    
+    const captureCallback = async () => {
+      await originalCaptureImage();
+    };
+    
+    handleVideoReady(captureCallback);
+  };
 
   // Ensure we reset the item in the parent component when toggling modes
   const handleScanModeToggle = (mode: 'image' | 'barcode') => {
@@ -68,7 +133,7 @@ export default function ScanScreen() {
     if (scanMode !== 'barcode') return;
     
     // Skip if no item, or already searching/showing results
-    if (!item || isSearching || showResults) return;
+    if (!item || isSearching || showResults || loading) return;
     
     console.log('Barcode detected, triggering search for:', item);
     
@@ -78,6 +143,10 @@ export default function ScanScreen() {
     
     // Use a flag to track if this effect instance is still the most recent
     let isCurrentEffect = true;
+    
+    // Set loading state and start animation
+    setLoading(true);
+    fadeIn();
     
     // Define an async function to search for products
     const searchForBarcodeProducts = async () => {
@@ -158,14 +227,15 @@ export default function ScanScreen() {
       } finally {
         if (isCurrentEffect) {
           setIsSearching(false);
+          fadeOut();
         }
       }
     };
     
-    // Run the search with a small delay to ensure UI updates first
+    // Run the search with a delay to ensure minimum display time
     const searchTimeout = setTimeout(() => {
       searchForBarcodeProducts();
-    }, 300);
+    }, 900);
     
     // Cleanup - mark this effect as no longer current if it unmounts
     return () => {
@@ -174,38 +244,47 @@ export default function ScanScreen() {
     };
   }, [item, scanMode]);
   
-  // Also update the handleSubmit function to use our enhanced barcode service for image scans
+  // Updated handleSubmit function with loading screen
   const handleSubmit = async () => {
     if (!item) {
       Alert.alert('Error', 'No item scanned yet');
       return;
     }
     
-    setIsSearching(true);
-    try {
-      let foundProducts;
-      
-      // If the scanned item appears to be a barcode, use the special barcode handling
-      if (isBarcode(item)) {
-        console.log('Detected barcode in image scan, using barcode service');
-        foundProducts = await getProductByBarcode(item, stores);
-      } else {
-        // Otherwise use regular search
-        foundProducts = await searchProducts(item, stores);
+    if (loading) return; // Prevent double taps
+    
+    setLoading(true);
+    fadeIn();
+    
+    const submitCallback = async () => {
+      setIsSearching(true);
+      try {
+        let foundProducts;
+        
+        // If the scanned item appears to be a barcode, use the special barcode handling
+        if (isBarcode(item)) {
+          console.log('Detected barcode in image scan, using barcode service');
+          foundProducts = await getProductByBarcode(item, stores);
+        } else {
+          // Otherwise use regular search
+          foundProducts = await searchProducts(item, stores);
+        }
+        
+        if (foundProducts.length > 0) {
+          setProducts(foundProducts);
+          setShowResults(true);
+        } else {
+          Alert.alert('No Products Found', 'No products found for this item.');
+        }
+      } catch (error) {
+        console.error('Search failed:', error);
+        Alert.alert('Error', 'Failed to search products');
+      } finally {
+        setIsSearching(false);
       }
-      
-      if (foundProducts.length > 0) {
-        setProducts(foundProducts);
-        setShowResults(true);
-      } else {
-        Alert.alert('No Products Found', 'No products found for this item.');
-      }
-    } catch (error) {
-      console.error('Search failed:', error);
-      Alert.alert('Error', 'Failed to search products');
-    } finally {
-      setIsSearching(false);
-    }
+    };
+    
+    handleVideoReady(submitCallback);
   };
 
   const handleAddToCart = async (selectedProducts: Product[], cartId: string) => {
@@ -271,7 +350,8 @@ export default function ScanScreen() {
       
       {/* Settings button */}
       <TouchableOpacity 
-        style={styles.settingsButton}
+        style={[styles.settingsButton,
+          scanMode === 'image' && item ? { marginBottom: 8 } : {}]} 
         onPress={toggleStoreSettings}
         activeOpacity={0.7}
       >
@@ -282,9 +362,9 @@ export default function ScanScreen() {
       {scanMode === 'barcode' && (
         <View style={styles.barcodeScanOverlay}>
           <Text style={styles.barcodeScanText}>
-            {loading ? 'Processing...' : 'Position barcode here'}
+            {cameraLoading || loading ? 'Processing...' : 'Position barcode here'}
           </Text>
-          {item && scanMode === 'barcode' && (
+          {item && scanMode === 'barcode' && !loading && (
             <Text style={[styles.barcodeScanText, {marginTop: 5}]}>
               Code: {item}
             </Text>
@@ -299,8 +379,8 @@ export default function ScanScreen() {
       <CameraControls 
         onCapture={captureImage}
         onSubmit={handleSubmit}
-        loadingCapture={loading}
-        loadingSubmit={isSearching}
+        loadingCapture={loading || cameraLoading}
+        loadingSubmit={loading || isSearching}
         scanMode={scanMode}
       />
 
@@ -311,7 +391,7 @@ export default function ScanScreen() {
         animationType="slide"
         onRequestClose={toggleStoreSettings}
       >
-        <SafeAreaView style={styles.modalOverlay}>
+        <SafeAreaView style = {styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Stores</Text>
             
@@ -382,6 +462,21 @@ export default function ScanScreen() {
           />
         </View>
       </Modal>
+
+      {/* Loading video overlay */}
+      {loading && (
+        <Animated.View style={[styles.loadingOverlay, { opacity: fadeAnim }]}>
+          <Video
+                source={require('../logo/priceIt_test2.mp4')}
+                style={styles.loadingVideo}
+            shouldPlay
+            isLooping={true} 
+            resizeMode={ResizeMode.STRETCH}
+            isMuted
+            onReadyForDisplay={() => {}}
+          />
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 }
@@ -496,5 +591,16 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#7851A9', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
+  },
+  loadingVideo: {
+    width: '100%',
+    height: '100%',
   },
 });

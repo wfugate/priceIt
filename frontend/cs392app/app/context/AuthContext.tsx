@@ -62,6 +62,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateProfile = async (name: string, age: string) => {
     try {
+
+        if (name.length > 30){
+          Alert.alert("Name Too Long", "Name can only be 30 characters long.")
+          return;
+        }
+
+        // if (age. > 3){
+        //   Alert.alert("Not Valid Age", "Please put in a valid age")
+        // }
+
         const res = await fetch(`${API_BASE_URL}/auth/update-profile`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

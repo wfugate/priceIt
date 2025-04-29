@@ -58,7 +58,7 @@ namespace UnwrangleTargetDemo
                 throw new Exception($"Request failed (HTTP {response.StatusCode}).");
             }
 
-            string jsonResponse = await response.Content.ReadAsStringAsync();
+            string jsonResponse = await response.Content.ReadAsStringAsync();   
             Console.WriteLine(jsonResponse);
             TargetSearchResponse data = JsonSerializer.Deserialize<TargetSearchResponse>(jsonResponse);
             var results = data?.Results ?? new List<SearchResult>();

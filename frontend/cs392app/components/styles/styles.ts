@@ -65,5 +65,7 @@ export const cameraStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
+    textAlign: 'center',
+    marginTop: 5,
   },
 });

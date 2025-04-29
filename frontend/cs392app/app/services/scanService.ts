@@ -50,7 +50,7 @@ export const searchProducts = async function(query: string, stores: Stores = { w
           name: item.name,
           brand: item.brand || 'Target',
           store: 'Target', // Always set store to Target for these products
-          url: item.url,
+          url: item.productUrl || 'https://target.com',
         }));
         
         results.push(...targetProducts);

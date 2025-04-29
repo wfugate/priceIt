@@ -20,6 +20,7 @@ namespace FinalProjCS392.Controllers
         {
             _userService = userService;
             _imageService = imageService;
+            _cartService = cartService;
         }
 
         // POST: /auth/signup
@@ -35,6 +36,11 @@ namespace FinalProjCS392.Controllers
 
             if (request.Password.Length < 6) {
                 return BadRequest(new { message = "Password length is Too Small.\nPlease use at least 6 charaters" });
+
+            }
+
+            if (request.Password.Length > 12) {
+                return BadRequest(new { message = "Password length is Too Long.\nPlease use less than 12 charaters" });
 
             }
 
@@ -85,15 +91,16 @@ namespace FinalProjCS392.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            
-            
+
+            await _cartService.DeleteAllUserCart(id);
+            await _imageService.DeleteImage(id);
+
+
             var result = await _userService.DeleteUser(id);
             if (result.DeletedCount == 0)
             {
                 return NotFound("User not found");
             }
-            await _imageService.DeleteImage(id);
-            await _cartService.DeleteAllUserCart(id);
 
             return Ok("User deleted");
                 

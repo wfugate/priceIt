@@ -1,11 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Platform,View, SafeAreaView, TextInput, Text, Image, TouchableWithoutFeedback, Keyboard,TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
 
 import { useAuth } from './context/AuthContext';  
 import { useRouter } from 'expo-router';
-import { API_BASE_URL } from './config/apiConfig';
 import { useProfile } from './context/ProfileContxt';
 
 
@@ -14,7 +11,7 @@ const Wrapper = Platform.OS === 'web' ? React.Fragment : TouchableWithoutFeedbac
 
 export default function SetInfoScreenMain() {
   const { user, updateProfile } = useAuth();
-  const { imageUri, imageLoading, profileImageKey, fetchProfilePic, handleImagePick } = useProfile();
+  const { handleImagePick } = useProfile();
 
   const [name, setName] = useState(user?.name || '');
   const [age, setAge] = useState(user?.age || '');
@@ -27,6 +24,11 @@ export default function SetInfoScreenMain() {
         Alert.alert('Error', 'Please fill in both fields');
         return;
       }
+
+      if (age.includes('.')) {
+        Alert.alert('Invalid Input', 'The period (.) is not allowed.');
+        return;
+      } 
 
       await updateProfile(name, age);
       Alert.alert('Success', 'Profile setting up successfully!');

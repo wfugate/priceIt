@@ -68,7 +68,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         style={styles.deleteButton}
         onPress={() => onDelete(cart.id)}
       >
-        <FontAwesome name="trash" size={18} color="#888" />
+        <FontAwesome name="trash" size={18} color="#cad3e0" />
       </TouchableOpacity>
     </View>
   );
@@ -84,10 +84,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 5,
-    backgroundColor: 'white',
+    backgroundColor: '#4A1D96',
   },
   checkboxContainer: {
     marginRight: 10,
+
   },
   checkbox: {
     width: 22,
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white'
   },
   checkboxSelected: {
     backgroundColor: '#e63b60',
@@ -109,11 +111,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 4,
-    color: '#4A1D96'
+    color: 'white'
   },
   cartPrice: {
     fontSize: 14,
-    color: '#666',
+    color: 'white',
   },
   deleteButton: {
     padding: 10,

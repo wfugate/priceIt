@@ -267,7 +267,6 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
           </TouchableOpacity>
           <Text style={styles.title}>COMPARE CARTS</Text>
           <TouchableOpacity style={styles.deleteButton}>
-            <FontAwesome name="trash" size={20} color="#333" />
           </TouchableOpacity>
         </View>
 
@@ -413,11 +412,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 16,
+    backgroundColor: '#4A1D96',
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#4A1D96',
   },
   backButton: {
-    backgroundColor: '#e63b60',
+    backgroundColor: '#F59E0B',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 15,
@@ -429,6 +429,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'white',
   },
   deleteButton: {
     padding: 10,
@@ -437,7 +438,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#6B46C1',
   },
   cartTitleLeft: {
     flex: 1,
@@ -452,15 +453,17 @@ const styles = StyleSheet.create({
   cartTitleText: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'white'
   },
   cartItemCount: {
     fontSize: 12,
-    color: '#666',
+    color: '#cad3e0',
     marginTop: 2,
   },
   cartsContainer: {
     flex: 1,
     flexDirection: 'row',
+    backgroundColor: '#2c3e50'
   },
   cartColumn: {
     flex: 1,
@@ -469,7 +472,7 @@ const styles = StyleSheet.create({
   productCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(224, 216, 245)',
     borderRadius: 8,
     marginVertical: 5,
     padding: 8,
@@ -482,7 +485,7 @@ const styles = StyleSheet.create({
   storeLabel: {
     position: 'absolute',
     top: 0,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: '#151a7b',
     borderBottomRightRadius: 8,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -490,7 +493,7 @@ const styles = StyleSheet.create({
   },
   leftStoreLabel: {
     left: 0,
-    borderTopLeftRadius: 8,
+    borderTopLeftRadius: 8
   },
   rightStoreLabel: {
     left: 0,
@@ -513,10 +516,11 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 14,
     fontWeight: '500',
+    color:'#4A1D96'
   },
   productBrand: {
     fontSize: 12,
-    color: '#666',
+    color: '#7191bf',
     marginVertical: 2,
   },
   productPrice: {
@@ -545,7 +549,7 @@ const styles = StyleSheet.create({
   totalContainer: {
     flexDirection: 'row',
     padding: 16,
-    backgroundColor: '#e63b60',
+    backgroundColor: '#4A1D96',
   },
   totalLeft: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, SafeAreaView, Keyboard, TouchableWithoutFeedback, TextInput, Platform, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from './context/AuthContext';  
@@ -16,6 +16,14 @@ export default function SetInfoScreen() {
 
   const router = useRouter();
 
+  // Converting age to a string for TextInput field
+  useEffect(() => {
+    if (user?.age) {
+      setAge(user.age.toString()); 
+    }
+  }, [user?.age]);
+  
+
   const handleSave = async () => {
     try {
       // Ensure name and age are set
@@ -23,6 +31,12 @@ export default function SetInfoScreen() {
         Alert.alert('Error', 'Please fill in both fields');
         return;
       }
+
+      if (age.includes('.')) {
+        Alert.alert('Invalid Input', 'The period (.) is not allowed.');
+        return;
+      } 
+      
 
       // Send the data to the backend to update the profile
       await updateProfile(name, age);

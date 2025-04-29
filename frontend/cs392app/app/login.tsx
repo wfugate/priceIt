@@ -1,17 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Platform, 
-  View, 
-  TouchableWithoutFeedback, 
-  Image, 
-  TextInput, 
-  Text, 
-  StyleSheet, 
-  TouchableOpacity, 
-  Keyboard, 
-  Animated, 
-  Alert 
-} from 'react-native';
+import { Platform, View, TouchableWithoutFeedback, Image, TextInput, Text, StyleSheet, TouchableOpacity, Keyboard, Animated, Alert } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from './context/AuthContext';
@@ -36,6 +24,9 @@ export default function LoginScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const handleLoginPress = () => {
+
+    if (loading) return;
+
     if (email.length == 0){
       Alert.alert("Email Error","Email field is empty")
       return
@@ -45,7 +36,6 @@ export default function LoginScreen() {
       return
     }
 
-    if (loading) return;
     setLoading(true);
     fadeIn(); // Start the fade-in animation
   };
@@ -81,7 +71,7 @@ export default function LoginScreen() {
       } finally {
         fadeOut(); // Start fade-out after login attempt
       }
-  }, 1000); 
+    }, 900); 
   };
 
   return (
@@ -138,11 +128,11 @@ export default function LoginScreen() {
           {loading && (
             <Animated.View style={[styles.loadingOverlay, { opacity: fadeAnim }]}>
               <Video
-                source={require('./logo/priceIt_loadingScreen.mp4')}
-                style={styles.loadingVideo}
+                source={require('./logo/priceIt_test2.mp4')}
+                style={[styles.loadingVideo]}
                 shouldPlay
                 isLooping={true} 
-                resizeMode={ResizeMode.CONTAIN}
+                resizeMode={ResizeMode.COVER}
                 isMuted
                 onReadyForDisplay={handleVideoReady}
               />

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { Platform, View, Image, SafeAreaView, TextInput, Keyboard, KeyboardAvoidingView, Text, StyleSheet, Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { Video, ResizeMode } from 'expo-av';
+import { Platform, View, Image, SafeAreaView, TextInput, Keyboard, KeyboardAvoidingView, Text, StyleSheet, Animated, Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { useAuth } from './context/AuthContext';
 import { router } from 'expo-router';
 
@@ -13,9 +13,15 @@ export default function SignupScreen() {
   const { signup } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false); // NEW
+  const [loading, setLoading] = useState(false); 
+
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+  
 
   const handleSignup = async () => {
+
+    if (loading) return; // Prevent double taps
+
     if (email.length == 0){
       Alert.alert("Email Error","Email field is empty")
       return
@@ -33,69 +39,124 @@ export default function SignupScreen() {
       return
     }
     
-    if (loading) return; // Prevent double taps
     setLoading(true); // Disable button
-    try {
+    fadeIn(); // Start the fade-in animation
+
+    // try {
       
-      await signup(email, password);
-      await AsyncStorage.setItem('@justLoggedIn', 'true');
+    //   await signup(email, password);
+    //   await AsyncStorage.setItem('@justLoggedIn', 'true');
     
-    } catch (err: any) {
+    // } catch (err: any) {
     
-      Alert.alert('Error', err.message || 'Signup failed');
-    } finally {
-      setLoading(false); // Re-enable button
-    }
+    //   Alert.alert('Error', err.message || 'Signup failed');
+    // } finally {
+    //   setLoading(false); // Re-enable button
+    //   fadeIn(); // Start the fade-in animation
+    // }
+  };
+
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      setLoading(false);
+    });
+  };
+
+  const handleVideoReady = async () => {
+    //setVideoReady(true);
+    setTimeout(async () => {
+      try {
+        
+          await signup(email, password);
+          await AsyncStorage.setItem('@justLoggedIn', 'true');
+        
+      } catch (err: any) {
+        Alert.alert('Error', err.message || 'Signup failed');
+      } finally {
+        fadeOut(); 
+      }
+  }, 900); 
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Wrapper {...(Platform.OS === 'web' ? {} : { onPress: Keyboard.dismiss, accessible: false })}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              <Image 
-                source={require('./logo/priceIt_signup.png')} 
-                style={styles.logo}
-                resizeMode="contain"
-              />
+        <View style={{ flex: 1 }}>
+        
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <View style={styles.logoContainer}>
+                <Image 
+                  source={require('./logo/priceIt_signup.png')} 
+                  style={styles.logo}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+
+            <Text style={styles.title}>Sign Up</Text>
+
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor="#ddd"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor="#ddd"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              style={styles.input}
+            />
+
+            <TouchableOpacity 
+              style={[styles.button, loading && { opacity: 0.6 }]} 
+              onPress={handleSignup} 
+              disabled={loading} // Disable when loading
+            >
+              <Text style={styles.buttonText}>{loading ? 'Signing Up...' : 'Sign Up'}</Text>
+            </TouchableOpacity>
+
+            <View style={styles.bottomLink}>
+              <TouchableOpacity onPress={() => router.push('./login')}>
+                <Text style={styles.link}>Already have an account? Login Here</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
-          <Text style={styles.title}>Sign Up</Text>
-
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="#ddd"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor="#ddd"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
-          />
-
-          <TouchableOpacity 
-            style={[styles.button, loading && { opacity: 0.6 }]} 
-            onPress={handleSignup} 
-            disabled={loading} // Disable when loading
-          >
-            <Text style={styles.buttonText}>{loading ? 'Signing Up...' : 'Sign Up'}</Text>
-          </TouchableOpacity>
-
-          <View style={styles.bottomLink}>
-            <TouchableOpacity onPress={() => router.push('./login')}>
-              <Text style={styles.link}>Already have an account? Login Here</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          {/* Loading video overlay */}
+          {loading && (
+            <Animated.View style={[styles.loadingOverlay, { opacity: fadeAnim }]}>
+              <Video
+                source={require('./logo/priceIt_test2.mp4')}
+                style={styles.loadingVideo}
+                shouldPlay
+                isLooping={true} 
+                resizeMode={ResizeMode.STRETCH}
+                isMuted
+                onReadyForDisplay={handleVideoReady}
+              />
+            </Animated.View>
+          )}
+          
+        </View>  
       </Wrapper>
     </SafeAreaView>
   );
@@ -176,4 +237,16 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
   },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#7851A9', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
+  },
+  loadingVideo: {
+    width: '100%',
+    height: '100%',
+  },
+  
 });

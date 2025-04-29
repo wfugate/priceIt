@@ -29,7 +29,17 @@ namespace UnwrangleTargetDemo.Controllers
                 if (results.Count == 0)
                     return NotFound($"No products found for \"{ query}\".");
 
-                return Ok(results);
+                // Transform the results to match the expected format
+                var formattedResults = results.Select(r => new
+                {
+                    name = r.Name,
+                    brand = r.Brand,
+                    price = r.Price,
+                    thumbnail = r.Thumbnail,
+                    productUrl = r.ProductUrl
+                });
+
+                return Ok(formattedResults);
             }
             catch (Exception ex)
             {

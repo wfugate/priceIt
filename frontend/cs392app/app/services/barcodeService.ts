@@ -119,33 +119,7 @@ async function lookupBarcodeInfo(barcode: string): Promise<{name: string, brand?
         brand: item.brand || ''
       };
     }
-    
-    // Option 2: Alternative API - Barcode Lookup (requires API key)
-    // Uncomment and configure if you have an API key
-    /*
-    const API_KEY = 'YOUR_BARCODE_LOOKUP_API_KEY';
-    const altResponse = await fetch(`https://api.barcodelookup.com/v2/products?barcode=${barcode}&formatted=y&key=${API_KEY}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    
-    if (!altResponse.ok) {
-      throw new Error(`Barcode Lookup API returned status ${altResponse.status}`);
-    }
-    
-    const altData = await altResponse.json();
-    
-    if (altData && altData.products && altData.products.length > 0) {
-      const product = altData.products[0];
-      return {
-        name: product.product_name || '',
-        brand: product.brand || ''
-      };
-    }
-    */
-    
+        
     // No valid results from any API
     console.warn(`No product info found for barcode: ${barcode}`);
     return null;

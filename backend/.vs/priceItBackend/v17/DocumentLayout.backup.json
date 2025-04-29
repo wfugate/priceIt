@@ -7,28 +7,72 @@
       "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\models\\authrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\models\\authrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\imageservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\imageservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\controllers\\imagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\imagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\controllers\\emailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\emailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\controllers\\costcocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\costcocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\helpermethods\\passwordhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\helpermethods\\passwordhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\targetscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\targetscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\walmartscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\walmartscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\helpermethods\\pdfhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\helpermethods\\pdfhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\targetscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\targetscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\models\\authrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\models\\authrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\controllers\\targetcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\targetcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\controllers\\walmartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\controllers\\walmartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|solutionrelative:finalprojcs392\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5947D2D4-C4EF-4168-BCE8-34EE33302C6B}|FinalProjCS392\\priceItBackend.csproj|c:\\users\\ashto\\desktop\\priceit-sonder\\backend\\finalprojcs392\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,7 +86,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 283,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 16,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,12 +98,155 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CostcoController.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\CostcoController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\CostcoController.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\CostcoController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\CostcoController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T19:54:34.946Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "WalmartScraperService.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\WalmartScraperService.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T18:52:27.744Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ImageController.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\ImageController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\ImageController.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\ImageController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\ImageController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwB4AAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T18:47:46.738Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PasswordHelper.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\HelperMethods\\PasswordHelper.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\HelperMethods\\PasswordHelper.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\HelperMethods\\PasswordHelper.cs",
+              "RelativeToolTip": "FinalProjCS392\\HelperMethods\\PasswordHelper.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAUAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T17:42:42.647Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ImageServices.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\ImageServices.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\ImageServices.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\ImageServices.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\ImageServices.cs",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAowBoAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T16:39:25.565Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "WalmartController.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\WalmartController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\WalmartController.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\WalmartController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\WalmartController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwC0AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T11:27:12.097Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "TargetController.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\TargetController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\TargetController.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\TargetController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\TargetController.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAYwBoAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T11:26:53.856Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PDFHelper.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\HelperMethods\\PDFHelper.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\HelperMethods\\PDFHelper.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\HelperMethods\\PDFHelper.cs",
+              "RelativeToolTip": "FinalProjCS392\\HelperMethods\\PDFHelper.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAQwAEAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T02:06:31.675Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Program.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Program.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Program.cs",
+              "RelativeToolTip": "FinalProjCS392\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T02:06:07.63Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "EmailService.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\EmailService.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Services\\EmailService.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\EmailService.cs",
+              "RelativeToolTip": "FinalProjCS392\\Services\\EmailService.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAAAFUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T02:05:19.378Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EmailController.cs",
+              "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\EmailController.cs",
+              "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\EmailController.cs",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\EmailController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\EmailController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-28T02:05:13.377Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "AuthRequest.cs",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Models\\AuthRequest.cs",
               "RelativeDocumentMoniker": "FinalProjCS392\\Models\\AuthRequest.cs",
-              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Models\\AuthRequest.cs*",
-              "RelativeToolTip": "FinalProjCS392\\Models\\AuthRequest.cs*",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Models\\AuthRequest.cs",
+              "RelativeToolTip": "FinalProjCS392\\Models\\AuthRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-28T01:18:46.012Z",
@@ -67,28 +254,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 12,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\appsettings.json",
               "RelativeDocumentMoniker": "FinalProjCS392\\appsettings.json",
               "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\appsettings.json",
               "RelativeToolTip": "FinalProjCS392\\appsettings.json",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-04-27T02:56:17.039Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "TargetScraperService.cs",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\TargetScraperService.cs",
               "RelativeDocumentMoniker": "FinalProjCS392\\Services\\TargetScraperService.cs",
               "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\TargetScraperService.cs",
               "RelativeToolTip": "FinalProjCS392\\Services\\TargetScraperService.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAAwB4AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAkwEYAAABGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T01:33:55.939Z"
+              "WhenOpened": "2025-04-26T01:33:55.939Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -96,55 +284,55 @@
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\AuthController.cs*",
-              "RelativeToolTip": "FinalProjCS392\\Controllers\\AuthController.cs*",
-              "ViewState": "AgIAAGYAAAAAAAAAAAAAAEkAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "FinalProjCS392\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAgwDoAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-25T20:33:48.702Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "FinalProjCS392\\Services\\UserService.cs",
               "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\UserService.cs",
               "RelativeToolTip": "FinalProjCS392\\Services\\UserService.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAYwDgAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAD4vxoAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-26T01:10:37.96Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "CartService.cs",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\CartService.cs",
               "RelativeDocumentMoniker": "FinalProjCS392\\Services\\CartService.cs",
               "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Services\\CartService.cs",
               "RelativeToolTip": "FinalProjCS392\\Services\\CartService.cs",
-              "ViewState": "AgIAAMkAAAAAAAAAAAAIwM4AAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAKkAAAAAAAAAAADwv84AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-25T18:35:47.276Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "CartController.cs",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\CartController.cs",
               "RelativeDocumentMoniker": "FinalProjCS392\\Controllers\\CartController.cs",
               "ToolTip": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Controllers\\CartController.cs",
               "RelativeToolTip": "FinalProjCS392\\Controllers\\CartController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHcAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAuwHcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-25T18:33:04.032Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 18,
               "Title": "Product.cs",
               "DocumentMoniker": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\Models\\Product.cs",
               "RelativeDocumentMoniker": "FinalProjCS392\\Models\\Product.cs",
