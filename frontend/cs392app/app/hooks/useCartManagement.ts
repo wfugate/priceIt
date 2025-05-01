@@ -1,5 +1,5 @@
 // app/hooks/useCartManagement.ts
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Cart } from '../types';
 import { deleteCart, removeProductFromCart, getUserCarts } from '../services/cartService';
 import { Alert } from 'react-native';
@@ -10,9 +10,19 @@ export function useCartManagement(userId: string | undefined) {
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentCart, setCurrentCart] = useState<Cart | null>(null);
+  
+  // Add a ref to track last fetch time to prevent excessive fetching
+  const lastFetchTimeRef = useRef<number>(0);
 
   const fetchUserCarts = async (showLoadingIndicator = true) => {
     if (!userId) return false;
+    
+    // Add debounce logic to prevent frequent refetches
+    const now = Date.now();
+    const timeSinceLastFetch = now - lastFetchTimeRef.current;
+    if (timeSinceLastFetch < 2000) { // 2 seconds debounce
+      return true; // Return true to indicate "success" without actual fetch
+    }
     
     if (showLoadingIndicator) {
       setIsRefreshing(true);
@@ -20,7 +30,14 @@ export function useCartManagement(userId: string | undefined) {
     
     try {
       const response = await getUserCarts(userId);
-      setCarts(response);
+      lastFetchTimeRef.current = Date.now(); // Update last fetch time
+      
+      // Only update state if the data has actually changed
+      // This helps prevent unnecessary re-renders
+      if (JSON.stringify(response) !== JSON.stringify(carts)) {
+        setCarts(response);
+      }
+      
       return true;
     } catch (error) {
       console.error('Error fetching carts:', error);
@@ -66,7 +83,8 @@ export function useCartManagement(userId: string | undefined) {
     
     try {
       await deleteCart(cartId, userId);
-      await fetchUserCarts(false);
+      // Update local state to remove deleted cart
+      setCarts(prevCarts => prevCarts.filter(c => c.id !== cartId));
       return true;
     } catch (error) {
       console.error('Error deleting cart:', error);
