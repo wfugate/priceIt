@@ -58,14 +58,9 @@ export const searchProducts = async function(query: string, stores: Stores = { w
         console.error('Target search error:', error);
       }
     }
-    
-    // For other stores, we'll just add fake placeholder results for now
-    // since the backend APIs aren't active yet
-    
-    // Add Walmart placeholder results if selected
+
     if (stores.walmart) {
       try {
-        // Try the API first in case it comes back online
         const walmartUrl = `${API_ENDPOINTS.products.walmart}?query=${encodeURIComponent(query)}`;
         const walmartResponse = await fetch(walmartUrl, {
           method: 'GET',
@@ -86,30 +81,9 @@ export const searchProducts = async function(query: string, stores: Stores = { w
           }));
           
           results.push(...walmartProducts);
-        } else {
-          // Add placeholder result
-          results.push({
-            id: `walmart-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-            thumbnail: 'https://via.placeholder.com/150',
-            price: 29.99,
-            name: `${query} - Walmart Product`,
-            brand: 'Walmart',
-            store: 'Walmart',
-            url: 'https://walmart.com'
-          });
-        }
+        } 
       } catch (error) {
         console.error('Walmart search error:', error);
-        // Add placeholder result on error
-        results.push({
-          id: `walmart-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-          thumbnail: 'https://via.placeholder.com/150',
-          price: 29.99,
-          name: `${query} - Walmart Product`,
-          brand: 'Walmart',
-          store: 'Walmart',
-          url: 'https://walmart.com'
-        });
       }
     }
     
@@ -137,34 +111,12 @@ export const searchProducts = async function(query: string, stores: Stores = { w
           }));
           
           results.push(...costcoProducts);
-        } else {
-          // Add placeholder result
-          results.push({
-            id: `costco-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-            thumbnail: 'https://via.placeholder.com/150',
-            price: 34.99,
-            name: `${query} - Costco Product`,
-            brand: 'Costco',
-            store: 'Costco',
-            url: 'https://costco.com'
-          });
         }
       } catch (error) {
         console.error('Costco search error:', error);
-        // Add placeholder result on error
-        results.push({
-          id: `costco-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-          thumbnail: 'https://via.placeholder.com/150',
-          price: 34.99,
-          name: `${query} - Costco Product`,
-          brand: 'Costco',
-          store: 'Costco',
-          url: 'https://costco.com'
-        });
       }
     }
     
-    // Add Sam's Club placeholder results if selected
     if (stores.samsClub) {
       try {
         // Try the API first in case it comes back online
@@ -191,30 +143,9 @@ export const searchProducts = async function(query: string, stores: Stores = { w
           
           console.log(`samsClubResponse mapped: ${samsClubProducts[0].name} ${samsClubProducts[0].url}`);
           results.push(...samsClubProducts);
-        } else {
-          // Add placeholder result
-          results.push({
-            id: `samsclub-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-            thumbnail: 'https://via.placeholder.com/150',
-            price: 32.99,
-            name: `${query} - Sam's Club Product`,
-            brand: "Sam's Club",
-            store: "Sam's Club",
-            url: 'https://samsclub.com'
-          });
-        }
+        } 
       } catch (error) {
         console.error("Sam's Club search error:", error);
-        // Add placeholder result on error
-        results.push({
-          id: `samsclub-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-          thumbnail: 'https://via.placeholder.com/150',
-          price: 32.99,
-          name: `${query} - Sam's Club Product`,
-          brand: "Sam's Club",
-          store: "Sam's Club",
-          url: 'https://samsclub.com'
-        });
       }
     }
     

@@ -318,8 +318,12 @@ export default function ProductResultsScreen({
 
   if (products.length === 0) {
     return (
-      <SafeAreaView style={[styles.container, { justifyContent: 'center' }]}>
+      <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <Text style={styles.title}>No products found</Text>
+        <Text style={styles.noResultsText}>We couldn't find any products matching your scan.</Text>
+        <TouchableOpacity style={styles.backButton} onPress={onClose}>
+          <Text style={styles.backButtonText}>Back to Scanner</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -749,8 +753,11 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: 16,
-    color: '#4A1D96',
-    marginBottom: 10,
+    color: '#fff',
+    marginTop: 10,
+    marginBottom: 20,
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   resetButton: {
     backgroundColor: '#151a7b',

@@ -68,23 +68,15 @@ export const getProductByBarcode = async (
       }
     }
     
-    // If barcode lookup failed or returned no results, try direct search with the barcode
-    console.log('Barcode lookup failed or returned no results, trying direct search with barcode');
-    const directResults = await searchProducts(cleanedBarcode, stores);
-    
-    if (directResults && directResults.length > 0) {
-      console.log(`Found ${directResults.length} results using direct barcode search`);
-      return directResults;
-    }
-    
-    // If all else fails, return placeholder results
-    console.log('All search attempts failed, generating placeholder results');
-    return generatePlaceholderResults(cleanedBarcode, stores);
+    // If barcode lookup failed or returned no results, return empty array
+    // DO NOT search directly with barcode or generate placeholder results
+    console.log('Barcode lookup failed or returned no results');
+    return [];
     
   } catch (error) {
     console.error('Error in getProductByBarcode:', error);
-    // Return fallback products on error
-    return generatePlaceholderResults(cleanedBarcode, stores);
+    // Return empty array on error
+    return [];
   }
 };
 
@@ -130,62 +122,7 @@ async function lookupBarcodeInfo(barcode: string): Promise<{name: string, brand?
   }
 }
 
-/**
- * Generate placeholder results when all lookup methods fail
- */
-function generatePlaceholderResults(barcode: string, stores: Stores): Product[] {
-  const results: Product[] = [];
-  
-  if (stores.walmart) {
-    results.push({
-      id: `walmart-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      thumbnail: 'https://via.placeholder.com/150?text=Walmart',
-      price: 19.99,
-      name: `Scanned Item (Barcode: ${barcode})`,
-      brand: 'Walmart',
-      store: 'Walmart',
-      url: 'https://walmart.com'
-    });
-  }
-  
-  if (stores.target) {
-    results.push({
-      id: `target-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      thumbnail: 'https://via.placeholder.com/150?text=Target',
-      price: 21.99,
-      name: `Scanned Item (Barcode: ${barcode})`,
-      brand: 'Target',
-      store: 'Target',
-      url: 'https://target.com'
-    });
-  }
-  
-  if (stores.costco) {
-    results.push({
-      id: `costco-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      thumbnail: 'https://via.placeholder.com/150?text=Costco',
-      price: 18.99,
-      name: `Scanned Item (Barcode: ${barcode})`,
-      brand: 'Costco',
-      store: 'Costco',
-      url: 'https://costco.com'
-    });
-  }
-  
-  if (stores.samsClub) {
-    results.push({
-      id: `samsclub-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      thumbnail: 'https://via.placeholder.com/150?text=SamsClub',
-      price: 17.99,
-      name: `Scanned Item (Barcode: ${barcode})`,
-      brand: "Sam's Club",
-      store: "Sam's Club",
-      url: 'https://samsclub.com'
-    });
-  }
-  
-  return results.sort((a, b) => a.price - b.price);
-}
+
 
 export default {
   getProductByBarcode,

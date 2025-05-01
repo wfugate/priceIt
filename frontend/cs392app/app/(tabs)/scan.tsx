@@ -194,14 +194,14 @@ export default function ScanScreen() {
         } else {
           console.log('No products found for barcode, showing alert');
           Alert.alert(
-            'No Products Found',
-            `No products found for barcode ${currentItem}.`,
+            'Invalid Barcode',
+            `Couldn't identify a product with barcode ${currentItem}. Please try scanning a different product.`,
             [{ 
               text: 'OK',
               onPress: () => {
                 // Only reset if we're still relevant
                 if (isCurrentEffect && scanMode === 'barcode') {
-                  console.log('Resetting scanner after no products found');
+                  console.log('Resetting scanner after invalid barcode');
                   resetBarcodeScanner();
                 }
               }
