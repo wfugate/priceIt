@@ -1,7 +1,7 @@
 // app/hooks/useCameraScan.ts
 import { useState, useRef, useEffect } from 'react';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
-import { scanImage } from '../services/scanService';
+import { scanImage } from '../services/imageProcessingService';
 
 export function useCameraScan() {
   const [permission, requestPermission] = useCameraPermissions();

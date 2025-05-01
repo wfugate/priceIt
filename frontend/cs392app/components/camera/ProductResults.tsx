@@ -22,7 +22,7 @@ import {
 
 import { CartSelectionModal } from './CartSelectionModal';
 import { CartNameInputModal } from './CartNameInputModal';
-import { getUserCarts, createNewUserCart } from '../../app/services/scanService';
+import { getUserCarts, createNewUserCart } from '../../app/services/cartService';
 import { Product } from '../../app/types'; // Import Product from types.ts
 
 // Extended product interface with guaranteed relevanceScore

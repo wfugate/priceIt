@@ -7,7 +7,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
 import { Cart, Product } from '../types';
 import CartInspectionModal from '../../components/home/CartInspectionModal';
-import { deleteCart, removeProductFromCart } from '../services/scanService';
+import { deleteCart, removeProductFromCart } from '../services/cartService';
 import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
