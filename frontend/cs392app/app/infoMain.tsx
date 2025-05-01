@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Platform,View, SafeAreaView, TextInput, Text, Image, TouchableWithoutFeedback, Keyboard,TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
-import { useAuth } from './context/AuthContext';  
+import { useAuth } from '../context/AuthContext';  
 import { useRouter } from 'expo-router';
-import { useProfile } from './context/ProfileContxt';
+import { useProfile } from '../context/ProfileContxt';
 
 
 const Wrapper = Platform.OS === 'web' ? React.Fragment : TouchableWithoutFeedback;

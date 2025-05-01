@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, SafeAreaView, Keyboard, TouchableWithoutFeedback, TextInput, Platform, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from './context/AuthContext';  
+import { useAuth } from '../context/AuthContext';  
 import { useRouter } from 'expo-router';
-import { API_BASE_URL } from './config/apiConfig'; 
+import { API_BASE_URL } from '../config/apiConfig'; 
 
 
 const Wrapper = Platform.OS === 'web' ? React.Fragment : TouchableWithoutFeedback;

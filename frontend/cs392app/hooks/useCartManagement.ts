@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Cart } from '../types';
+import { Cart } from '../app/types';
 import { deleteCart, removeProductFromCart, getUserCarts } from '../services/cartService';
 import { Alert } from 'react-native';
 

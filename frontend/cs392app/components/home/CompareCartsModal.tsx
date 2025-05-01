@@ -12,7 +12,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { updateCart} from '../../app/services/cartService';
+import { updateCart} from '../../services/cartService';
 import { Cart } from '../../app/types';
 
 // interface for compare carts modal props

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { searchProducts } from '../services/productService'; 
 import { getProductByBarcode, isBarcode } from '../services/barcodeService';
-import { Product, Stores } from '../types';
+import { Product, Stores } from '../app/types';
 import { Alert } from 'react-native';
 
 // hook for managing product search functionality

@@ -20,9 +20,9 @@ import {
 import { CartSelectionModal } from './CartSelectionModal';
 import { CartNameInputModal } from './CartNameInputModal';
 import { Product } from '../../app/types';
-import { getUserCarts } from '../../app/services/cartService';
-import { useEnhancedProductSearch } from '../../app/hooks/useEnhancedProductSearch';
-import { API_BASE_URL } from '../../app/config/apiConfig';
+import { getUserCarts } from '../../services/cartService';
+import { useEnhancedProductSearch } from '../../hooks/useEnhancedProductSearch';
+import { API_BASE_URL } from '../../config/apiConfig';
 
 // interface for product results props
 interface ProductResultsProps {

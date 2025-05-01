@@ -1,5 +1,5 @@
 import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
-import { Product, Cart, CartProduct } from '../types';
+import { Product, Cart, CartProduct } from '../app/types';
 
 // get user carts from backend
 export const getUserCarts = async (userId: string): Promise<Cart[]> => {

@@ -2,7 +2,7 @@ import React, { useState, useRef} from 'react';
 import { Platform, View, TouchableWithoutFeedback, Image, TextInput, Text, StyleSheet, TouchableOpacity, Keyboard, Animated, Alert } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { router } from 'expo-router'; 
 import { SafeAreaView } from 'react-native-safe-area-context';
 

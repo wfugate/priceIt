@@ -1,5 +1,5 @@
 import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
-import { Product, Stores } from '../types';
+import { Product, Stores } from '../app/types';
 
 // search for products across multiple store APIs based on query text and selected stores
 export const searchProducts = async function(query: string, stores: Stores = { walmart: true, target: true, costco: true, samsClub: true }): Promise<Product[]> { 

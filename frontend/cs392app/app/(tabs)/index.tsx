@@ -9,10 +9,10 @@ import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
 import { router } from 'expo-router';
-import { useAuth } from '../context/AuthContext'; 
-import { API_BASE_URL } from '../config/apiConfig';
-import { useProfile } from '../context/ProfileContxt';
-import { useCartManagement } from '../hooks/useCartManagement';
+import { useAuth } from '../../context/AuthContext'; 
+import { API_BASE_URL } from '../../config/apiConfig';
+import { useProfile } from '../../context/ProfileContxt';
+import { useCartManagement } from '../../hooks/useCartManagement';
 
 
 // main home screen component that displays user information and carts

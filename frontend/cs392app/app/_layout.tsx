@@ -6,8 +6,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { ActivityIndicator, View } from 'react-native';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { ProfileProvider } from './context/ProfileContxt';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import { ProfileProvider } from '../context/ProfileContxt';
 
 import { useColorScheme } from '@/components/useColorScheme';
 

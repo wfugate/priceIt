@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Cart, CartProduct } from '../../app/types';
-import { useCartManagement } from '../../app/hooks/useCartManagement';
+import { useCartManagement } from '../../hooks/useCartManagement';
 
 // interface for cart inspection modal props
 interface CartInspectionModalProps {

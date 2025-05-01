@@ -1,6 +1,6 @@
 // app/services/barcodeService.ts
 import { searchProducts } from './productService'
-import { Product, Stores } from '../types';
+import { Product, Stores } from '../app/types';
 
 /**
  * check if a string appears to be a barcode

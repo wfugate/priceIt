@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Modal, Alert, Switch, StyleSheet, SafeAreaView, Animated } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
-import { useCameraScan } from '../hooks/useCameraScan';
+import { useCameraScan } from '../../hooks/useCameraScan';
 import CameraView from '../../components/camera/CameraView';
 import CameraControls from '../../components/camera/CameraControls';
 import ScanResults from '../../components/camera/ScanResults';
 import { ScanModeToggle } from '../../components/camera/ScanModeToggle';
 import ProductResultsScreen from '../../components/camera/ProductResults';
-import { saveToCart } from '../services/cartService';
+import { saveToCart } from '../../services/cartService';
 import { Product } from '../types';
-import { isBarcode } from '../services/barcodeService';
-import { useAuth } from '../context/AuthContext'; 
-import { useStoreSettings } from '../hooks/useStoreSettings';
-import { useProductSearch } from '../hooks/useProductSearch';
+import { isBarcode } from '../../services/barcodeService';
+import { useAuth } from '../../context/AuthContext'; 
+import { useStoreSettings } from '../../hooks/useStoreSettings';
+import { useProductSearch } from '../../hooks/useProductSearch';
 import { useIsFocused } from '@react-navigation/native';
 
 // main scanning screen component for both image and barcode scanning

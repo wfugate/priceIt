@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Stores } from '../types';
+import { Stores } from '../app/types';
 
 // hook for managing store selection settings
 export function useStoreSettings(initialStores?: Stores) {

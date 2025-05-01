@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Product } from '../types';
+import { Product } from '../app/types';
 import { searchProducts, getProductByBarcode } from '../services/productService';
 import { Alert } from 'react-native';
 
