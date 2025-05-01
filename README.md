@@ -1,5 +1,5 @@
 # priceIt
-
+If there are any weird missing imports in files restart vscode as it is sometimes dumb and gets confused.
 ## Dependencies
 ### Backend
 - Go to: https://ngrok.com/downloads/windows
