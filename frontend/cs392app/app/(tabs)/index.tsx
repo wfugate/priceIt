@@ -15,6 +15,7 @@ import { router } from 'expo-router';
 import { useAuth } from '../context/AuthContext'; 
 import { API_BASE_URL } from '../config/apiConfig';
 import { useProfile } from '../context/ProfileContxt';
+import { useCartManagement } from '../hooks/useCartManagement';
 
 // Extended Cart interface with selection state
 interface CartWithSelection extends Cart {
@@ -28,36 +29,37 @@ export default function HomeScreen() {
 
   const userId = user?.UserId;
   
-  const [carts, setCarts] = useState<CartWithSelection[]>([]);
-  const [loading, setLoading] = useState(true);
   const [compareModalVisible, setCompareModalVisible] = useState(false);
   const [shareModalVisible, setShareModalVisible] = useState(false);
-  const [selectedCarts, setSelectedCarts] = useState<CartWithSelection[]>([]);
+  const [selectedCarts, setSelectedCarts] = useState<Cart[]>([]);
   const [emailingCart, setEmailingCart] = useState(false);
-
-  const [deletingCartId, setDeletingCartId] = useState<string | null>(null);
   const [inspectModalVisible, setInspectModalVisible] = useState(false);
-  const [currentCart, setCurrentCart] = useState<CartWithSelection | null>(null);
-
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
+  const cartManagement = useCartManagement(userId);
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchUserCarts(false); // false means don't show the separate loading indicator
-    setRefreshing(false);
-  }, [])
+  const {
+    carts,
+    loading,
+    isRefreshing,
+    currentCart,
+    setCurrentCart,
+    fetchUserCarts,
+    toggleCartSelection,
+    isCartSelected,
+    getSelectedCarts,
+    handleInspectCart,
+    deleteCartById,
+    deleteCartItem
+  } = useCartManagement(userId);
 
   // For cleanup of object URLs on web
   const objectUrlRef = useRef<string | null>(null);
-
-  // Fetch carts when component mounts
+  
   useEffect(() => {
-    fetchUserCarts();
+    fetchUserCarts(); // Now using the hook's method
     fetchProfilePic();
-
-    // Cleanup function to revoke object URLs when component unmounts
+  
     return () => {
       if (Platform.OS === 'web' && objectUrlRef.current) {
         URL.revokeObjectURL(objectUrlRef.current);
@@ -65,108 +67,38 @@ export default function HomeScreen() {
       }
     };
   }, [userId]);
-
   
-
-    // Update the fetchUserCarts function to include a success callback
-    const fetchUserCarts = async (showLoadingIndicator = true) => {
-      if (!userId) return false;
-      
-      if (showLoadingIndicator) {
-        setIsRefreshing(true);
-      }
-      
-      try {
-        const response = await fetch(`${API_ENDPOINTS.cart.getAll}?userId=${userId}`, {
-          method: 'GET',
-          headers: COMMON_HEADERS,
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to fetch user carts');
-        }
-  
-        const data = await response.json();
-        
-        // Add selected property to each cart
-        const cartsWithSelection = data.map((cart: Cart) => ({
-          ...cart,
-          selected: false
-        }));
-        
-        setCarts(cartsWithSelection);
-        
-        // Return success
-        return true;
-      } catch (error) {
-        console.error('Error fetching carts:', error);
-        Alert.alert('Error', 'Failed to load your carts. Please try again.');
-        return false;
-      } finally {
-        setIsRefreshing(false);
-        setLoading(false);
-      }
-    };
-
-    // Use the useFocusEffect hook to refresh carts when the screen becomes focused
+  // Update your useFocusEffect
   useFocusEffect(
     useCallback(() => {
-      // Refresh carts when the screen comes into focus, without showing loading indicator
-      fetchUserCarts(false);
-      
-      return () => {
-        // Cleanup function (optional)
-      };
+      fetchUserCarts(false); // Using the hook's method
+      return () => {};
     }, [userId])
   );
-
-  // Toggle selection of a cart
-  const toggleCartSelection = (cartId: string) => {
-    setCarts(prevCarts => 
-      prevCarts.map(cart => 
-        cart.id === cartId ? { ...cart, selected: !cart.selected } : cart
-      )
-    );
+  
+  // Update your onRefresh callback
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchUserCarts(false); // Using the hook's method
+    setRefreshing(false);
+  }, []);
+  
+  const handleToggleCartSelection = (cartId: string) => {
+    toggleCartSelection(cartId); // Using the hook's method
   };
 
-  // Get selected carts
-  const getSelectedCarts = () => {
-    return carts.filter(cart => cart.selected);
-  };
 
-  // Handle compare carts button press
-  const handleComparePress = () => {
-    const selected = getSelectedCarts();
-    
-    if (selected.length !== 2) {
-      Alert.alert('Selection Error', 'Please select exactly 2 carts to compare.');
-      return;
-    }
-    
-    // Debug logs to verify what's happening
-    console.log('Selected carts for comparison:', selected);
-    
-    // Set the selected carts first
-    setSelectedCarts(selected);
-    
-    // Then show the modal with a slight delay to ensure state is updated
-    setTimeout(() => {
-      console.log('Opening compare modal');
-      setCompareModalVisible(true);
-    }, 100);
-  };
 
   // Handle Inspect Cart
-  const handleInspectCart = (cartId: string) => {
-    const cart = carts.find(c => c.id === cartId);
+  const handleInspectCartUI = (cartId: string) => {
+    const cart = handleInspectCart(cartId); // Using the hook's method
     if (cart) {
-      setCurrentCart(cart);
       setInspectModalVisible(true);
     }
   };
   
   // Update the compareCartsModal onCartsUpdated callback to refresh the cart list
-  const handleCartsUpdated = async (updatedCartA: Cart, updatedCartB: Cart) => {
+  const handleCartsUpdated = async () => {
     console.log('Received updated carts from modal');
     
     // Refresh the entire cart list instead of manually updating
@@ -175,41 +107,15 @@ export default function HomeScreen() {
 
   // Handle share cart button press
   const handleSharePress = () => {
-    const selected = getSelectedCarts();
-
+    const selected = getSelectedCarts(); // Using the hook's method
+  
     if (selected.length === 0) {
       Alert.alert('Selection Error', 'Please select at least one cart to share.');
       return;
     }
-
+  
     setSelectedCarts(selected);
     shareToSocial('share');
-  };
-
-  // Handle export cart button press (direct share)
-  const handleExportPress = async () => {
-    const selected = getSelectedCarts();
-    
-    if (selected.length === 0) {
-      Alert.alert('Selection Error', 'Please select at least one cart to export.');
-      return;
-    }
-    
-    try {
-      // Generate cart data for sharing
-      const cartData = selected.map(cart => {
-        const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
-        return `${cart.name}: $${totalPrice.toFixed(2)} (${cart.products.length} items)`;
-      }).join('\n\n');
-      
-      await Share.share({
-        message: `My Shopping Carts:\n\n${cartData}`,
-        title: 'My Shopping Carts'
-      });
-    } catch (error) {
-      console.error('Error sharing carts:', error);
-      Alert.alert('Error', 'Failed to share carts. Please try again.');
-    }
   };
 
   const generateCartSummary = (): string => {
@@ -239,19 +145,31 @@ export default function HomeScreen() {
     }
   };
 
-  // Handle email cart button press
+  const handleComparePress = () => {
+    const selected = getSelectedCarts(); // Using the hook's method
+    
+    if (selected.length !== 2) {
+      Alert.alert('Selection Error', 'Please select exactly 2 carts to compare.');
+      return;
+    }
+    
+    setSelectedCarts(selected);
+    setCompareModalVisible(true);
+  };
+
   const handleEmailPress = async () => {
-    const selected = getSelectedCarts();
+    const selected = getSelectedCarts(); // Using the hook's method
     
     if (selected.length === 0) {
       Alert.alert('Selection Error', 'Please select at least one cart to email.');
       return;
     }
-
+  
     const cartIds = selected.map(cart => cart.id);
     
     setEmailingCart(true);
     try {
+      // Your existing email logic
       const response = await fetch(`${API_BASE_URL}/api/email/send`, {
         method: "POST",
         headers: {
@@ -263,7 +181,6 @@ export default function HomeScreen() {
           cartIds,
         }),
       });
-      
       const data = await response.json();
 
       if (!response.ok) {
@@ -275,6 +192,7 @@ export default function HomeScreen() {
         `A pdf of your selected cart has been sent to your email: ${user?.email}`,
         [{ text: 'Okay' }]
       );
+
     } catch (error) {
       console.error('Error emailing cart:', error);
       Alert.alert('Failed to email cart. Please try again.');
@@ -295,84 +213,36 @@ export default function HomeScreen() {
     handleInspectCart(selected[0].id);
   };
 
-  // Update the handleDeleteCart function to refresh the list after successful deletion
-  const handleDeleteCart = async (cartId:string | undefined) => {
-   
-    if (cartId && userId){
-      await deleteCart(cartId, userId);
-      await fetchUserCarts(false);
-      return
-    }
-
-    if (!currentCart || !userId) { 
-      return
-    };
-    console.log("Triggered")
+  const handleDeleteCart = async (cartId: string | undefined) => {
+    if (!cartId) return;
     
-    try {
-      console.log("currentUser ID", userId);
-      console.log("currentCart ID:",currentCart.id)
-      // // Call the backend API to delete the cart
-
-      if (cartId){
-        
-      }else{
-        await deleteCart(currentCart.id, userId);
-      }
-      
-      // Refresh the cart list instead of manually updating the state
-      await fetchUserCarts(false);
-      
-      // Close the modal
+    const success = await deleteCartById(cartId); // Using the hook's method
+    if (success) {
       setInspectModalVisible(false);
-      setCurrentCart(null);
-      
-      // Show a success message
-      Alert.alert('Success', 'Cart deleted successfully');
-    } catch (error) {
-      console.error('Error deleting cart:', error);
-      throw error; // Re-throw to be handled by the modal
     }
   };
 
   const handleDeleteItem = async (productId: string) => {
-    if (!currentCart || !userId) return;
+    if (!currentCart) return;
     
-    try {
-      // Call the backend API to remove the product
-      const updatedCart = await removeProductFromCart(currentCart.id, productId, userId);
-      
-      // Update the current cart in the modal
-      setCurrentCart({
-        ...updatedCart,
-        selected: currentCart.selected
-      });
-      
-      // Update the cart in the carts list
-      setCarts(prevCarts => 
-        prevCarts.map(cart => 
-          cart.id === updatedCart.id ? { ...updatedCart, selected: cart.selected } : cart
-        )
-      );
-    } catch (error) {
-      console.error('Error deleting item:', error);
-      throw error; // Re-throw to be handled by the modal
-    }
+    await deleteCartItem(currentCart.id, productId); // Using the hook's method
   };
 
 
   // Render cart item
-  const renderCartItem = ({ item }: { item: CartWithSelection }) => {
-    
-    return (
-      <CartItemCard
-        cart={item}
-        onSelect={() => toggleCartSelection(item.id)}
-        onDelete={() => handleDeleteCart(item.id)}
-        onInspect={() => handleInspectCart(item.id)}
-      />
-    );
-  };
+const renderCartItem = ({ item }: { item: Cart }) => {
+  return (
+    <CartItemCard
+      cart={{
+        ...item,
+        selected: isCartSelected(item.id) // Using the hook's method
+      }}
+      onSelect={() => handleToggleCartSelection(item.id)}
+      onDelete={() => handleDeleteCart(item.id)}
+      onInspect={() => handleInspectCartUI(item.id)}
+    />
+  );
+};
 
   // // Loading state
   // if (loading && carts.length === 0) {
