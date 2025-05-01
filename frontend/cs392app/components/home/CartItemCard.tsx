@@ -1,37 +1,24 @@
 // components/home/CartItemCard.tsx
+import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
-
-interface Product {
-  productId: string;
-  thumbnail: string;
-  price: number;
-  name: string;
-  brand: string;
-  quantity?: number;
-}
-
-interface Cart {
-  id: string;
-  name: string;
-  userId: string;
-  products: Product[];
-  selected: boolean;
-}
+import { Cart } from '../../app/types';
 
 interface CartItemCardProps {
   cart: Cart;
   onSelect: () => void;
   onDelete: (cartId: string) => void;
   onInspect: () => void;
+  isSelected: boolean;
 }
 
 const CartItemCard: React.FC<CartItemCardProps> = ({
   cart,
   onSelect,
   onDelete,
-  onInspect
+  onInspect,
+  isSelected
 }) => {
   // Calculate total price of all products in the cart
   const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
@@ -44,9 +31,9 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       >
         <View style={[
           styles.checkbox,
-          cart.selected && styles.checkboxSelected
+          isSelected && styles.checkboxSelected
         ]}>
-          {cart.selected && (
+          {isSelected && (
             <FontAwesome name="check" size={14} color="white" />
           )}
         </View>
@@ -88,7 +75,6 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     marginRight: 10,
-
   },
   checkbox: {
     width: 22,

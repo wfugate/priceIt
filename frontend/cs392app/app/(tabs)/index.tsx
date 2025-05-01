@@ -206,19 +206,17 @@ export default function HomeScreen() {
 
 
   // Render cart item
-const renderCartItem = ({ item }: { item: Cart }) => {
-  return (
-    <CartItemCard
-      cart={{
-        ...item,
-        selected: isCartSelected(item.id) // Using the hook's method
-      }}
-      onSelect={() => handleToggleCartSelection(item.id)}
-      onDelete={() => handleDeleteCart(item.id)}
-      onInspect={() => handleInspectCartUI(item.id)}
-    />
-  );
-};
+  const renderCartItem = ({ item }: { item: Cart }) => {
+    return (
+      <CartItemCard
+        cart={item}
+        isSelected={isCartSelected(item.id)}
+        onSelect={() => toggleCartSelection(item.id)}
+        onDelete={() => handleDeleteCart(item.id)}
+        onInspect={() => handleInspectCartUI(item.id)}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -385,12 +383,11 @@ const renderCartItem = ({ item }: { item: Cart }) => {
 
       {/* Cart Inspection Modal */}
       <CartInspectionModal
-        visible={inspectModalVisible}
-        cart={currentCart}
-        onClose={() => setInspectModalVisible(false)}
-        onDeleteItem={handleDeleteItem}
-        onDeleteCart={() => handleDeleteCart(currentCart?.id)}
-      />
+  visible={inspectModalVisible}
+  cart={currentCart}
+  onClose={() => setInspectModalVisible(false)}
+  userId={userId}
+/>
     </View>
   );
 }

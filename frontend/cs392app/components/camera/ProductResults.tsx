@@ -1,9 +1,8 @@
 // components/camera/ProductResults.tsx
-import React, { useState, useEffect } from 'react';
-import { FontAwesome } from '@expo/vector-icons'
-
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 import { 
-  Share,
   View, 
   Text, 
   TouchableOpacity, 
@@ -19,32 +18,20 @@ import {
   Linking
 } from 'react-native';
 
-
 import { CartSelectionModal } from './CartSelectionModal';
 import { CartNameInputModal } from './CartNameInputModal';
-import { getUserCarts, createNewUserCart } from '../../app/services/cartService';
-import { Product } from '../../app/types'; // Import Product from types.ts
-
-// Extended product interface with guaranteed relevanceScore
-interface ProductWithRelevance extends Product {
-  relevanceScore: number;
-}
-
-interface Cart {
-  id: string;
-  name: string;
-}
+import { Product } from '../../app/types';
+import { getUserCarts } from '../../app/services/cartService';
+import { useEnhancedProductSearch } from '../../app/hooks/useEnhancedProductSearch';
+import { API_BASE_URL } from '../../app/config/apiConfig';
 
 interface ProductResultsProps {
   products: Product[];
   onAddToCart: (selectedProducts: Product[], cartId: string) => Promise<void>;
   userId: string | undefined;
   onClose: () => void;
-  searchQuery?: string; // The original search query
+  searchQuery?: string;
 }
-
-type SortOption = 'relevance' | 'price-asc' | 'price-desc' | 'name-asc' | 'name-desc';
-type FilterOption = 'all' | 'walmart' | 'target' | 'costco' | 'samsClub';
 
 export default function ProductResultsScreen({ 
   products = [], 
@@ -53,56 +40,43 @@ export default function ProductResultsScreen({
   onClose,
   searchQuery = ''
 }: ProductResultsProps) {
-  // Initialize products with relevance scores
-  const [localProducts, setLocalProducts] = useState<ProductWithRelevance[]>(
-    products.map(p => ({ 
-      ...p, 
-      selected: p.selected || false, 
-      relevanceScore: p.relevanceScore || 0 
-    }))
-  );
-  
-  const [displayedProducts, setDisplayedProducts] = useState<ProductWithRelevance[]>(localProducts);
+  // Use the enhanced product search hook
+  const {
+    displayedProducts,
+    isSearching,
+    showResults,
+    currentSort,
+    currentFilter,
+    showSuccessMessage,
+    successMessage,
+    relevanceKeywords,
+    selectedProduct,
+    showProductModal,
+    
+    setCurrentSort,
+    setCurrentFilter,
+    toggleProductSelection,
+    getSelectedProducts,
+    clearSelections,
+    closeResults,
+    showSuccess,
+    getSortLabel,
+    getFilterLabel,
+    handleRelevanceKeywordsChange,
+    viewProductDetails,
+    closeProductModal
+  } = useEnhancedProductSearch(products, searchQuery);
+
+  // Local state for modals and loading
+  const [userCarts, setUserCarts] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [userCarts, setUserCarts] = useState<Cart[]>([]);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showCartNameModal, setShowCartNameModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [currentSort, setCurrentSort] = useState<SortOption>('relevance');
-  const [currentFilter, setCurrentFilter] = useState<FilterOption>('all');
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [relevanceKeywords, setRelevanceKeywords] = useState<string>(searchQuery);
-
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<ProductWithRelevance | null>(null);
 
-
-  useEffect(() => {
-    // Load user carts when component mounts
-    fetchUserCarts();
-    
-    // Calculate initial relevance scores based on the search query
-    calculateRelevanceScores(searchQuery);
-  }, []);
-
-  useEffect(() => {
-    // Apply sorting and filtering whenever they change
-    applyFiltersAndSort();
-  }, [localProducts, currentSort, currentFilter, relevanceKeywords]);
-
-  // Auto-hide success message after 3 seconds
-  useEffect(() => {
-    if (showSuccessMessage) {
-      const timer = setTimeout(() => {
-        setShowSuccessMessage(false);
-      }, 3000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [showSuccessMessage]);
-
+  // Fetch user carts
   const fetchUserCarts = async () => {
     if (!userId) return;
     
@@ -117,68 +91,32 @@ export default function ProductResultsScreen({
     }
   };
 
-  const calculateRelevanceScores = (query: string) => {
-    if (!query) return;
-
-    const keywords = query.toLowerCase().split(/\s+/);
-    
-    // Update local products with relevance scores
-    setLocalProducts(prev => 
-      prev.map(product => {
-        // Calculate relevance score based on how many keywords match the product name and brand
-        let score = 0;
-        const productText = (product.name + ' ' + product.brand).toLowerCase();
-        
-        keywords.forEach(keyword => {
-          if (productText.includes(keyword)) {
-            // More weight for exact matches
-            if (productText.includes(` ${keyword} `)) {
-              score += 3;
-            } else {
-              score += 1;
-            }
-          }
-        });
-        
-        return { ...product, relevanceScore: score };
-      })
-    );
-  };
-
-  const toggleProductSelection = (productId: string) => {
-    setLocalProducts(prev =>
-      prev.map(p =>
-        p.id === productId ? { ...p, selected: !p.selected } : p
-      )
-    );
-  };
+  useEffect(() => {
+    fetchUserCarts();
+  }, []);
 
   const handleAddToCartPress = async () => {
-    const selectedProducts = localProducts.filter(p => p.selected);
+    const selectedProducts = getSelectedProducts();
     
     if (selectedProducts.length === 0) {
       Alert.alert('No Products Selected', 'Please select at least one product to add to your cart.');
       return;
     }
     
-    // Follow the flowchart logic:
-    // 1. Get user carts
     setIsLoading(true);
     try {
       if (!userId) {
         setIsLoading(false);
         return;
       }
-
-      const carts = await getUserCarts(userId);
-      setUserCarts(carts);
+  
+      // Fetch the latest carts
+      await fetchUserCarts();
       
-      // 2. Check if user has carts
-      if (carts && carts.length > 0) {
-        // User has carts - show cart selection modal
+      // Now decide which modal to show
+      if (userCarts && userCarts.length > 0) {
         setShowCartModal(true);
       } else {
-        // User has no carts - show cart name input modal
         setShowCartNameModal(true);
       }
     } catch (error) {
@@ -192,17 +130,16 @@ export default function ProductResultsScreen({
   const handleCartSelection = async (cartId: string) => {
     setIsSaving(true);
     try {
-      const selectedProducts = localProducts.filter(p => p.selected);
+      const selectedProducts = getSelectedProducts();
       await onAddToCart(selectedProducts, cartId);
       setShowCartModal(false);
       
-      // Instead of closing the page with an alert, show a success message
+      // Show success message
       const count = selectedProducts.length;
-      setSuccessMessage(`${count} ${count === 1 ? 'product' : 'products'} added to cart`);
-      setShowSuccessMessage(true);
+      showSuccess(`${count} ${count === 1 ? 'product' : 'products'} added to cart`);
       
       // Clear selections after adding to cart
-      setLocalProducts(prev => prev.map(p => ({ ...p, selected: false })));
+      clearSelections();
       
     } catch (error) {
       console.error('Failed to add to cart:', error);
@@ -223,91 +160,45 @@ export default function ProductResultsScreen({
         setIsSaving(false);
         return;
       }
+      
       // Create new cart
-      const newCart = await createNewUserCart(userId, name);
+      const response = await fetch(`${API_BASE_URL}/api/cart`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
+        body: JSON.stringify({
+          userId,
+          name
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create new cart');
+      }
+
+      const newCart = await response.json();
       
       // Add products to the new cart
-      const selectedProducts = localProducts.filter(p => p.selected);
+      const selectedProducts = getSelectedProducts();
       await onAddToCart(selectedProducts, newCart.id);
       
       // Close modal and show success message
       setShowCartNameModal(false);
       
-      // Instead of closing the page with an alert, show a success message
       const count = selectedProducts.length;
-      setSuccessMessage(`${count} ${count === 1 ? 'product' : 'products'} added to new cart: ${name}`);
-      setShowSuccessMessage(true);
+      showSuccess(`${count} ${count === 1 ? 'product' : 'products'} added to new cart: ${name}`);
       
       // Clear selections after adding to cart
-      setLocalProducts(prev => prev.map(p => ({ ...p, selected: false })));
+      clearSelections();
       
     } catch (error) {
       console.error('Failed to create cart:', error);
       Alert.alert('Error', 'Failed to create new cart. Please try again.');
     } finally {
       setIsSaving(false);
-    }
-  };
-
-  const handleRelevanceKeywordsChange = (text: string) => {
-    setRelevanceKeywords(text);
-    calculateRelevanceScores(text);
-  };
-
-  const applyFiltersAndSort = () => {
-    // First filter by store
-    let filtered = [...localProducts];
-    if (currentFilter !== 'all') {
-      filtered = filtered.filter(p => {
-        if (currentFilter === 'walmart') return p.store === 'Walmart';
-        if (currentFilter === 'target') return p.store === 'Target';
-        if (currentFilter === 'costco') return p.store === 'Costco';
-        if (currentFilter === 'samsClub') return p.store === "Sam's Club";
-        return true;
-      });
-    }
-
-    // Then sort
-    let sorted = [...filtered];
-    if (currentSort === 'relevance') {
-      sorted.sort((a, b) => {
-        // First sort by relevance score (descending)
-        const scoreCompare = b.relevanceScore - a.relevanceScore;
-        // If scores are equal, sort by price (ascending) as a tiebreaker
-        return scoreCompare !== 0 ? scoreCompare : a.price - b.price;
-      });
-    } else if (currentSort === 'price-asc') {
-      sorted.sort((a, b) => a.price - b.price);
-    } else if (currentSort === 'price-desc') {
-      sorted.sort((a, b) => b.price - a.price);
-    } else if (currentSort === 'name-asc') {
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (currentSort === 'name-desc') {
-      sorted.sort((a, b) => b.name.localeCompare(a.name));
-    }
-
-    setDisplayedProducts(sorted);
-  };
-
-  const getSortLabel = (sort: SortOption): string => {
-    switch (sort) {
-      case 'relevance': return 'Most Relevant';
-      case 'price-asc': return 'Price: Low to High';
-      case 'price-desc': return 'Price: High to Low';
-      case 'name-asc': return 'Name: A to Z';
-      case 'name-desc': return 'Name: Z to A';
-      default: return 'Sort';
-    }
-  };
-
-  const getFilterLabel = (filter: FilterOption): string => {
-    switch (filter) {
-      case 'all': return 'All Stores';
-      case 'walmart': return 'Walmart';
-      case 'target': return 'Target';
-      case 'costco': return 'Costco';
-      case 'samsClub': return "Sam's Club";
-      default: return 'Filter';
     }
   };
 
@@ -356,12 +247,12 @@ export default function ProductResultsScreen({
       {/* Success Message Banner */}
       {showSuccessMessage && (
         <View style={styles.successBanner}>
-          <Text style={styles.successText}> {successMessage}</Text>
+          <Text style={styles.successText}>{successMessage}</Text>
         </View>
       )}
       
       <ScrollView contentContainerStyle={styles.productsContainer}>
-        {displayedProducts.map((product) => (
+        {displayedProducts.map((product: Product) => (
           <TouchableOpacity
             key={product.id}
             style={[
@@ -370,8 +261,8 @@ export default function ProductResultsScreen({
             ]}
             onPress={() => toggleProductSelection(product.id)}
             onLongPress={() => {
-              setSelectedProduct(product);
               setModalVisible(true);
+              viewProductDetails(product);
             }}
           >
             <Image 
@@ -388,10 +279,10 @@ export default function ProductResultsScreen({
               </Text>
               
               {/* Show relevance indicator if sort is by relevance */}
-              {currentSort === 'relevance' && product.relevanceScore > 0 && (
+              {currentSort === 'relevance' && (product.relevanceScore || 0) > 0 && (
                 <View style={styles.relevanceContainer}>
                   <Text style={styles.relevanceText}>
-                    Relevance: {product.relevanceScore > 3 ? 'High' : 'Medium'}
+                    Relevance: {(product.relevanceScore || 0) > 3 ? 'High' : 'Medium'}
                   </Text>
                 </View>
               )}
@@ -418,16 +309,16 @@ export default function ProductResultsScreen({
       <TouchableOpacity
         style={[
           styles.addToCartButton,
-          { backgroundColor: localProducts.some(p => p.selected) ? '#F59E0B' : '#ccc' }
+          { backgroundColor: getSelectedProducts().length > 0 ? '#F59E0B' : '#ccc' }
         ]}
         onPress={handleAddToCartPress}
-        disabled={isLoading || isSaving || !localProducts.some(p => p.selected)}
+        disabled={isLoading || isSaving || getSelectedProducts().length === 0}
       >
         {isLoading || isSaving ? (
           <ActivityIndicator color="white" />
         ) : (
           <Text style={styles.buttonText}>
-            Add to Cart ({localProducts.filter(p => p.selected).length}) 
+            Add to Cart ({getSelectedProducts().length}) 
           </Text>
         )}
       </TouchableOpacity>
@@ -440,11 +331,8 @@ export default function ProductResultsScreen({
         onRequestClose={() => setModalVisible(false)}>
 
         <View style={styles.modalOverlay}>
-
           <View style={styles.modalContainer}>
-
-            <Text style={styles.modalTitle}> Would You Like To See The Product At Its Store ?</ Text>
-
+            <Text style={styles.modalTitle}>Would You Like To See The Product At Its Store?</Text>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => {
@@ -455,18 +343,14 @@ export default function ProductResultsScreen({
               }}>
               <Text style={styles.modalButtonText}>Go To Store</Text>
             </TouchableOpacity>
-
-
             <TouchableOpacity
               onPress={() => setModalVisible(false)}
               style={styles.modalCancel}>
               <Text style={styles.modalCancelText}>Cancel</Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </Modal>
-
 
       {/* Filter and Sort Modal */}
       <Modal
@@ -477,7 +361,6 @@ export default function ProductResultsScreen({
       >
         <SafeAreaView style={styles.modalOverlay}>
           <View style={styles.filterModalContent}>
-
             <View style={styles.modalHeader}>
               <TouchableOpacity 
                 style={styles.filterBackButton} 
@@ -486,10 +369,8 @@ export default function ProductResultsScreen({
                 <FontAwesome style={styles.backIcon} name="arrow-left" size={15} color="#333" />
                 <Text style={styles.backButtonText}>Back</Text>
               </TouchableOpacity>
-
               <Text style={styles.modalTitle}>Filter & Sort</Text>
             </View>
-
             
             {/* Main content in ScrollView to ensure everything is accessible */}
             <ScrollView style={styles.filterScrollView}>
@@ -508,7 +389,7 @@ export default function ProductResultsScreen({
                       styles.filterOption,
                       currentSort === option.value && styles.selectedOption
                     ]}
-                    onPress={() => setCurrentSort(option.value as SortOption)}
+                    onPress={() => setCurrentSort(option.value as any)}
                   >
                     <Text style={[
                       styles.filterOptionText,
@@ -552,7 +433,7 @@ export default function ProductResultsScreen({
                       styles.filterOption,
                       currentFilter === option.value && styles.selectedOption
                     ]}
-                    onPress={() => setCurrentFilter(option.value as FilterOption)}
+                    onPress={() => setCurrentFilter(option.value as any)}
                   >
                     <Text style={[
                       styles.filterOptionText,
@@ -602,10 +483,11 @@ export default function ProductResultsScreen({
   );
 }
 
+// Styles remain the same as the original component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4A1D96', //rgb(167, 143, 223)
+    backgroundColor: '#4A1D96',
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
@@ -676,7 +558,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   successBanner: {
-    backgroundColor: '#4CAF50', // Green color for success
+    backgroundColor: '#4CAF50',
     padding: 12,
     borderRadius: 4,
     marginBottom: 15,
@@ -690,7 +572,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   productCard: {
-    backgroundColor:'rgb(224, 216, 245)', //#4A1D96
+    backgroundColor:'rgb(224, 216, 245)',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -794,16 +676,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     maxHeight: '80%',
-    // Add flex to make the inner content more manageable
     flex: 0,
-    // Position the modal to leave space at top and bottom
     marginVertical: 40,
   },
   filterScrollView: {
-    maxHeight: Platform.OS === 'ios' ? 450 : 400, // Limit height for scrolling
+    maxHeight: Platform.OS === 'ios' ? 450 : 400,
   },
   scrollPadding: {
-    height: 20, // Add padding at the bottom of scroll content
+    height: 20,
   },
   modalTitle: {
     fontSize: 18,

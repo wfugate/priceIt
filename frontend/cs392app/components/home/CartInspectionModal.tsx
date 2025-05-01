@@ -13,28 +13,29 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { Cart, CartProduct, Product } from '../../app/types';
+import { Cart, CartProduct } from '../../app/types';
+import { useCartManagement } from '../../app/hooks/useCartManagement';
 
 interface CartInspectionModalProps {
   visible: boolean;
   cart: Cart | null;
   onClose: () => void;
-  onDeleteItem: (productId: string) => Promise<void>;
-  onDeleteCart: () => Promise<void>;
+  userId?: string;
 }
 
 const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
   visible,
   cart,
   onClose,
-  onDeleteItem,
-  onDeleteCart
+  userId = ''
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeletingCart, setIsDeletingCart] = useState(false);
-
   const [isStoreModalVisible, setIsStoreModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<CartProduct | null>(null);
+
+  // Use the cart management hook
+  const { deleteCartById, deleteCartItem } = useCartManagement(userId);
 
   if (!cart) return null;
 
@@ -58,7 +59,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
           onPress: async () => {
             setIsDeleting(true);
             try {
-              await onDeleteItem(productId);
+              await deleteCartItem(cart.id, productId);
             } catch (error) {
               console.error('Error deleting item:', error);
               Alert.alert('Error', 'Failed to delete item. Please try again.');
@@ -84,9 +85,10 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
           onPress: async () => {
             setIsDeletingCart(true);
             try {
-              await onDeleteCart();
-              //console.log("here")
-              onClose(); // Close modal after successful deletion
+              const success = await deleteCartById(cart.id);
+              if (success) {
+                onClose(); // Close modal after successful deletion
+              }
             } catch (error) {
               console.error('Error deleting cart:', error);
               Alert.alert('Error', 'Failed to delete cart. Please try again.');
@@ -99,23 +101,17 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
     );
   };
 
-
   const handleLongPress = (product: CartProduct) => {
-
     setSelectedProduct(product);
     setIsStoreModalVisible(true);
   };
 
   const handleRedirectToStore = () => {
-    console.log("here")
-    console.log(selectedProduct)
     if (selectedProduct && selectedProduct.productUrl) {
-      console.log(selectedProduct.productUrl)
       Linking.openURL(selectedProduct.productUrl);
       setIsStoreModalVisible(false);
     }
   };
-
 
   return (
     <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
@@ -232,10 +228,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 16,
-    //borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     backgroundColor: '#4A1D96',
-
   },
   backButton: {
     backgroundColor: '#F59E0B',
@@ -255,12 +249,11 @@ const styles = StyleSheet.create({
     color: "white",
   },
   spacer: {
-    width: 60, // Match the width of the back button for proper alignment
+    width: 60,
   },
   summary: {
     padding: 16,
     backgroundColor: '#6B46C1',
-    //borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
   summaryText: {
@@ -369,7 +362,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', 
     padding: 20, 
     borderRadius: 10, 
-    width: '80%' },
+    width: '80%' 
+  },
   modalTitle: { 
     fontSize: 18, 
     fontWeight: 'bold' 
@@ -397,7 +391,6 @@ const styles = StyleSheet.create({
     fontSize: 16, 
     color: 'gray' 
   },
-
 });
 
 export default CartInspectionModal;
