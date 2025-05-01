@@ -373,7 +373,7 @@ export default function ScanScreen() {
       {(loading || isSearching)  && (
         <Animated.View style={[styles.loadingOverlay, { opacity: fadeAnim }]}>
           <Video
-                source={require('../logo/priceIt_test2.mp4')}
+                source={require('../../logo/priceIt_test2.mp4')}
                 style={styles.loadingVideo}
             shouldPlay
             isLooping={true} 

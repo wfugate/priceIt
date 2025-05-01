@@ -4,9 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Env;
 
-// This is Anthony's code in ChatGpt
 
 namespace UnwrangleTargetDemo
 {
@@ -37,13 +35,16 @@ namespace UnwrangleTargetDemo
     public class TargetWebScraperService
     {
         private readonly HttpClient _httpClient;
-        string _apiKey = Env.EnvConfig.UnwrangleApiKey;
-
+        private readonly string _apiKey;
 
         public TargetWebScraperService()
         {
             //1. initialize http client
             _httpClient = new HttpClient();
+
+            //2. Get API key from environment variables
+            _apiKey = Environment.GetEnvironmentVariable("UNWRANGLE_KEY") ??
+                throw new InvalidOperationException("UNWRANGLE_KEY environment variable is not set");
         }
 
         public async Task<List<SearchResult>> SearchProductsAsync(string query)

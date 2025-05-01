@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Env;
 
 namespace FinalProjCS392.Services
 {
@@ -88,12 +87,16 @@ namespace FinalProjCS392.Services
     public class WalmartScraperService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey = EnvConfig.UnwrangleApiKey;
+        private readonly string _apiKey;
 
         public WalmartScraperService()
         {
             //1. initialize http client
             _httpClient = new HttpClient();
+
+            //2. Get API key from environment variables
+            _apiKey = Environment.GetEnvironmentVariable("UNWRANGLE_KEY") ??
+                throw new InvalidOperationException("UNWRANGLE_KEY environment variable is not set");
         }
 
         public async Task<List<WalmartSearchResult>> SearchProductsAsync(string query)

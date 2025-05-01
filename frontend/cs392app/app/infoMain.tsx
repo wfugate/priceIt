@@ -52,7 +52,7 @@ export default function SetInfoScreenMain() {
           <View style={styles.header}>
             <View style={styles.logoContainer}>  
               <Image 
-                source={require('./logo/priceIt_Welcome.png')} 
+                source={require('../logo/priceIt_Welcome.png')} 
                 style={styles.logo}
                 resizeMode="contain"
               />

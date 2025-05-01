@@ -91,7 +91,7 @@ export default function LoginScreen() {
             <View style={styles.header}>
               <View style={styles.logoContainer}>
                 <Image 
-                  source={require('./logo/priceIt_login.png')} 
+                  source={require('../logo/priceIt_login.png')} 
                   style={styles.logo}
                   resizeMode="contain"
                 />
@@ -137,7 +137,7 @@ export default function LoginScreen() {
           {loading && (
             <Animated.View style={[styles.loadingOverlay, { opacity: fadeAnim }]}>
               <Video
-                source={require('./logo/priceIt_test2.mp4')}
+                source={require('../logo/priceIt_test2.mp4')}
                 style={[styles.loadingVideo]}
                 shouldPlay
                 isLooping={true} 

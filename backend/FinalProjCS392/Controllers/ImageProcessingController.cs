@@ -75,7 +75,9 @@ namespace ImageProcessingAPI.Controllers
 
     public static class ImageLabelProcessor
     {
-        private static readonly string googleApiKey = "AIzaSyBggbNjNYjJEg7r8A-xL5f_5DH2e3nBpOE"; // just don't steal it :)
+        // Use environment variable for the Google API key
+        private static readonly string googleApiKey = Environment.GetEnvironmentVariable("GOOGLE_KEY") ??
+            throw new InvalidOperationException("GOOGLE_KEY environment variable is not set");
         private static readonly string geminiEndpoint = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-001:generateContent?key={googleApiKey}";
 
         public static async Task<string> ProcessImageFromStream(MemoryStream imageStream)
@@ -214,7 +216,6 @@ namespace ImageProcessingAPI.Controllers
                 {
                     return jsonResponse.candidates[0].content.parts[0].text;
                 }
-
             }
         }
     }

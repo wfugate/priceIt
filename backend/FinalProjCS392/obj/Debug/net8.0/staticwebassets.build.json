@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "shGgxxBtjVWftRg9plkSDWupW5u5L2hhW5hhqORitgM=",
+  "Hash": "mTsjkBKzmoL0PNpIfMPV1i+hYMzy35/XYFQeIDgztCg=",
   "Source": "priceItBackend",
   "BasePath": "_content/priceItBackend",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "priceItBackend\\wwwroot",
       "Source": "priceItBackend",
-      "ContentRoot": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\willi\\repos\\priceIt\\priceIt\\backend\\FinalProjCS392\\wwwroot\\",
       "BasePath": "_content/priceItBackend",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
+      "Identity": "C:\\Users\\willi\\repos\\priceIt\\priceIt\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
       "SourceId": "priceItBackend",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\willi\\repos\\priceIt\\priceIt\\backend\\FinalProjCS392\\wwwroot\\",
       "BasePath": "_content/priceItBackend",
       "RelativePath": "logo/priceIt#[.{fingerprint}]?.jpg",
       "AssetKind": "All",
@@ -41,7 +41,7 @@
   "Endpoints": [
     {
       "Route": "logo/priceIt.jpg",
-      "AssetFile": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
+      "AssetFile": "C:\\Users\\willi\\repos\\priceIt\\priceIt\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -62,7 +62,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 23 Apr 2025 14:44:14 GMT"
+          "Value": "Thu, 01 May 2025 05:30:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -78,7 +78,7 @@
     },
     {
       "Route": "logo/priceIt.vklfkuobon.jpg",
-      "AssetFile": "C:\\Users\\ashto\\Desktop\\priceIt-Sonder\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
+      "AssetFile": "C:\\Users\\willi\\repos\\priceIt\\priceIt\\backend\\FinalProjCS392\\wwwroot\\logo\\priceIt.jpg",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -99,7 +99,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 23 Apr 2025 14:44:14 GMT"
+          "Value": "Thu, 01 May 2025 05:30:04 GMT"
         },
         {
           "Name": "Cache-Control",

@@ -94,7 +94,7 @@ export default function SignupScreen() {
             <View style={styles.header}>
               <View style={styles.logoContainer}>
                 <Image 
-                  source={require('./logo/priceIt_signup.png')} 
+                  source={require('../logo/priceIt_signup.png')} 
                   style={styles.logo}
                   resizeMode="contain"
                 />
@@ -140,7 +140,7 @@ export default function SignupScreen() {
           {loading && (
             <Animated.View style={[styles.loadingOverlay, { opacity: fadeAnim }]}>
               <Video
-                source={require('./logo/priceIt_test2.mp4')}
+                source={require('../logo/priceIt_test2.mp4')}
                 style={styles.loadingVideo}
                 shouldPlay
                 isLooping={true} 

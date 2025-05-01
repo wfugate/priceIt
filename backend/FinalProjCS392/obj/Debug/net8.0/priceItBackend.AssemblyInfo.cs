@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("priceItBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+939992007c1100353c97a1840d76b3673842a3d7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09575013c831515fa2b4f1a4cc2676cd92631c78")]
 [assembly: System.Reflection.AssemblyProductAttribute("priceItBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("priceItBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

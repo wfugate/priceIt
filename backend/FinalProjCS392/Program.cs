@@ -4,10 +4,11 @@ using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add to Program.cs
-//var mongoConnectionString = "mongodb+srv://williamfugate:rQNXj0wUb0GuzJwh@user-info.111hyzz.mongodb.net/?retryWrites=true&w=majority&appName=user-info";
-//var mongoClient = new MongoClient(mongoConnectionString);
-//var mongoDatabase = mongoClient.GetDatabase("priceItDB");
+var configuration = builder.Configuration;
 
+// access the keys
+string googleApiKey = configuration["GOOGLE_API_KEY"];
+string unwrangleApiKey = configuration["UNWRANGLE_API_KEY"];
 builder.Services.AddScoped<CartService>();
 builder.Services.AddSingleton<ImageService>();
 builder.Services.AddScoped<EmailService>();
@@ -36,6 +37,8 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient(); //register HttpClient
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 
 var app = builder.Build();
 
