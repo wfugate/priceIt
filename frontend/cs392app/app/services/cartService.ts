@@ -69,69 +69,81 @@ export const createNewUserCart = async (userId: string, name: string): Promise<C
 
 // Add products to cart function
 export const updateCart = async (
-  cartId: string,
-  userId: string,
-  products: any[],
-  name?: string
-): Promise<Cart> => {
-  try {
-    // Standardize product properties to ensure consistency
-    console.log("Got to updateCart......to do: standardizedProducts")
-    const standardizedProducts = products.map(product => ({
-      //id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      ProductId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      Thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
-      Price: typeof product.price === 'number' ? product.price : 0,
-      Name: product.name || 'Product',
-      Brand: product.brand || 'Brand',
-      Store: product.store || 'Unknown Store', // Ensure store is always included
-      ProductUrl: product.url || product.productUrl || `https://${product.store}.com`
-    }));
-
-    console.log("Got to updateCart......did: standardizedProducts", standardizedProducts[0].ProductUrl)
-    console.log(API_ENDPOINTS.cart.update(cartId))
-    const response = await fetch(API_ENDPOINTS.cart.update(cartId), {
-      method: 'PUT',
-      headers: COMMON_HEADERS,
-      body: JSON.stringify({
-        userId,
-        products: standardizedProducts,
-        name: name || 'My Cart'
-      })
-    });
-
-    
-    if (!response.ok) {
-      console.log("failed fetch for updateCart")
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || `Failed to update cart: ${response.status}`);
+    cartId: string,
+    userId: string,
+    products: any[],
+    name?: string
+  ): Promise<Cart> => {
+    try {
+      // Handle the case where products array is empty or undefined
+      const productsToProcess = Array.isArray(products) ? products : [];
+      
+      // Standardize product properties to ensure consistency
+      console.log("Got to updateCart......to do: standardizedProducts");
+      
+      // Only map products if there are any
+      const standardizedProducts = productsToProcess.length > 0 
+        ? productsToProcess.map(product => ({
+            ProductId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            Thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
+            Price: typeof product.price === 'number' ? product.price : 0,
+            Name: product.name || 'Product',
+            Brand: product.brand || 'Brand',
+            Store: product.store || 'Unknown Store', // Ensure store is always included
+            ProductUrl: product.url || product.productUrl || `https://${product.store || 'unknown'}.com`
+          }))
+        : []; // Use empty array when no products
+  
+      console.log("Got to updateCart......did: standardizedProducts", 
+        standardizedProducts.length > 0 
+          ? standardizedProducts[0].ProductUrl 
+          : "No products to standardize - sending empty array");
+          
+      console.log(API_ENDPOINTS.cart.update(cartId));
+      
+      const response = await fetch(API_ENDPOINTS.cart.update(cartId), {
+        method: 'PUT',
+        headers: COMMON_HEADERS,
+        body: JSON.stringify({
+          userId,
+          products: standardizedProducts,
+          name: name || 'My Cart'
+        })
+      });
+  
+      if (!response.ok) {
+        console.log("failed fetch for updateCart");
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || `Failed to update cart: ${response.status}`);
+      }
+      console.log("passed fetch for updateCart");
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Update cart error:', error);
+      
+      // Return mock cart on error to prevent crashes
+      // Handle the empty products case in the error handler too
+      return {
+        id: cartId,
+        name: name || 'Updated Cart',
+        userId: userId,
+        products: Array.isArray(products) && products.length > 0 
+          ? products.map(product => ({
+              ProductId: product.id || product.productId || `product-${Date.now()}`,
+              Thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
+              Price: typeof product.price === 'number' ? product.price : 0,
+              Name: product.name || 'Product',
+              Brand: product.brand || 'Brand',
+              Store: product.store || 'Unknown Store',
+              Quantity: product.quantity || 1,
+              ProductUrl: product.url || product.productUrl || `https://${product.store || 'unknown'}.com`
+            }))
+          : [], // Empty array for empty products
+        createdAt: new Date().toISOString()
+      };
     }
-    console.log("paseed fetch for updateCart")
-
-    return await response.json();
-  } catch (error) {
-    console.error('Update cart error:', error);
-    
-    // Return mock cart on error to prevent crashes
-    return {
-      id: cartId,
-      name: name || 'Updated Cart',
-      userId: userId,
-      products: products.map(product => ({
-        //productId: product.productId || product.id || `product-${Date.now()}`,
-        ProductId: product.id || product.productId || `product-${Date.now()}`,
-        Thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
-        Price: typeof product.price === 'number' ? product.price : 0,
-        Name: product.name || 'Product',
-        Brand: product.brand || 'Brand',
-        Store: product.store || 'Unknown Store', // Ensure store is included in mock response
-        Quantity: product.quantity || 1,
-        Url: product.url || product.productUrl || `https://${product.store}.com`
-      })),
-      createdAt: new Date().toISOString()
-    };
-  }
-};
+  };
 
 // Add products to cart function
 export const saveToCart = async (

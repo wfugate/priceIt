@@ -207,24 +207,33 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
 
   // Save changes to both carts
   const saveChanges = async () => {
-    if (!leftCart || !rightCart || !hasChanges) return;
+    if (!leftCart || !rightCart) return;
+    
+    // Allow saving even if just the carts exist (with or without products)
+    // Remove the !hasChanges check to allow saving empty carts
     
     setSaving(true);
     try {
-      // We need to send updates for both carts to the backend
-      console.log("Saving done here...")
-      const updates = [
-        updateCart(leftCart.id, leftCart.userId, leftCart.products, leftCart.name),
-        updateCart(rightCart.id, rightCart.userId, rightCart.products, rightCart.name)
-      ];
-
+      // Add defensive checks for products arrays
+      const leftCartProducts = Array.isArray(leftCart.products) ? leftCart.products : [];
+      const rightCartProducts = Array.isArray(rightCart.products) ? rightCart.products : [];
       
+      console.log("Saving cart changes...");
+      console.log(`Left cart ${leftCart.id} has ${leftCartProducts.length} products`);
+      console.log(`Right cart ${rightCart.id} has ${rightCartProducts.length} products`);
+      
+      // We need to send updates for both carts to the backend
+      const updates = [
+        updateCart(leftCart.id, leftCart.userId, leftCartProducts, leftCart.name),
+        updateCart(rightCart.id, rightCart.userId, rightCartProducts, rightCart.name)
+      ];
+  
       const [updatedLeftCart, updatedRightCart] = await Promise.all(updates);
       
       if (onCartsUpdated) {
         onCartsUpdated(updatedLeftCart, updatedRightCart);
       }
-
+  
       Alert.alert(
         'Success',
         'Changes to both carts have been saved.',
