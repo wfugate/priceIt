@@ -38,6 +38,7 @@ export default function HomeScreen() {
     carts,
     isRefreshing,
     currentCart,
+    setCurrentCart,
     fetchUserCarts,
     toggleCartSelection,
     isCartSelected,
@@ -112,10 +113,13 @@ export default function HomeScreen() {
 
   // generate a text summary of cart contents for sharing
   const generateCartSummary = (): string => {
-    if (!carts || carts.length === 0) return '';
+    // Use the selected carts instead of all carts
+    const selected = getSelectedCarts();
     
-    return carts.map(cart => {
-      const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
+    if (!selected || selected.length === 0) return '';
+    
+    return selected.map(cart => {
+      const totalPrice = cart.products.reduce((sum, product) => sum + product.price * (product.quantity || 1), 0);
       const productList = cart.products.map(product => 
         `- ${product.name} ($${product.price.toFixed(2)})`
       ).join('\n');
@@ -387,11 +391,17 @@ export default function HomeScreen() {
 
       {/* Cart Inspection Modal */}
       <CartInspectionModal
-        visible={inspectModalVisible}
-        cart={currentCart}
-        onClose={() => setInspectModalVisible(false)}
-        userId={userId}
-      />
+  visible={inspectModalVisible}
+  cart={currentCart}
+  onClose={() => setInspectModalVisible(false)}
+  userId={userId}
+  onDeleteItem={async (cartId, productId) => {
+    const updatedCart = await deleteCartItem(cartId, productId);
+    if (updatedCart) {
+      setCurrentCart(updatedCart);
+    }
+  }}
+/>
     </View>
   );
 }

@@ -13,9 +13,11 @@ import { isBarcode } from '../services/barcodeService';
 import { useAuth } from '../context/AuthContext'; 
 import { useStoreSettings } from '../hooks/useStoreSettings';
 import { useProductSearch } from '../hooks/useProductSearch';
+import { useIsFocused } from '@react-navigation/native';
 
 // main scanning screen component for both image and barcode scanning
 export default function ScanScreen() {
+  const isFocused = useIsFocused();
   // state for loading animations
   const [loading, setLoading] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -37,7 +39,7 @@ export default function ScanScreen() {
     handleBarCodeScanned: originalHandleBarCodeScanned,
     isBarcodeScanningActive,
     resetBarcodeScanner
-  } = useCameraScan();
+  } = useCameraScan(isFocused);
 
   // use store settings hook for managing which stores to search
   const { 

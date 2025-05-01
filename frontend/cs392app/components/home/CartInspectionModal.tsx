@@ -20,7 +20,8 @@ interface CartInspectionModalProps {
   visible: boolean;
   cart: Cart | null;
   onClose: () => void;
-  userId?: string;
+  userId: string | undefined;
+  onDeleteItem: (cartId: string, productId: string) => Promise<void>; // Add this prop
 }
 
 // modal for viewing and managing cart contents
@@ -28,7 +29,8 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
   visible,
   cart,
   onClose,
-  userId = ''
+  userId = '',
+  onDeleteItem, 
 }) => {
   // state for tracking loading states
   const [isDeleting, setIsDeleting] = useState(false);
@@ -52,29 +54,16 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
 
   // handle deleting a product from the cart
   const handleDeleteItem = async (productId: string) => {
-    Alert.alert(
-      'Delete Item',
-      'Are you sure you want to remove this item from the cart?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          style: 'destructive',
-          onPress: async () => {
-            setIsDeleting(true);
-            try {
-              // call cart management hook to delete item
-              await deleteCartItem(cart.id, productId);
-            } catch (error) {
-              console.error('Error deleting item:', error);
-              Alert.alert('Error', 'Failed to delete item. Please try again.');
-            } finally {
-              setIsDeleting(false);
-            }
-          }
-        }
-      ]
-    );
+    if (!cart || !userId) return;
+    
+    try {
+      // Call the parent component's deletion handler
+      await onDeleteItem(cart.id, productId);
+      // No need to close modal, just let the parent update the state
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      Alert.alert('Error', 'Failed to delete item');
+    }
   };
 
   // handle deleting the entire cart

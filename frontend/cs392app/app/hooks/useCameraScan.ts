@@ -3,7 +3,7 @@ import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-ca
 import { scanImage } from '../services/imageProcessingService';
 
 // hook for managing camera functionality including image scanning and barcode detection
-export function useCameraScan() {
+export function useCameraScan(focused: boolean = true) {
   // camera permissions management
   const [permission, requestPermission] = useCameraPermissions();
   // loading state for async operations
@@ -21,9 +21,10 @@ export function useCameraScan() {
 
   // initialize barcode scanning based on selected mode
   useEffect(() => {
-    console.log(`Scan mode initialized to ${scanMode}`);
-    setIsBarcodeScanningActive(scanMode === 'barcode');
-  }, []); 
+    console.log(`Scan mode: ${scanMode}, focused: ${focused}`);
+    setIsBarcodeScanningActive(scanMode === 'barcode' && focused);
+  }, [scanMode, focused]);
+
 
   // function to capture and process an image
   const captureImage = async () => {

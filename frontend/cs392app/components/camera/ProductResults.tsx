@@ -408,7 +408,7 @@ export default function ProductResultsScreen({
               {/* Relevance Keywords Input (only shown when relevance sort is selected) */}
               {currentSort === 'relevance' && (
                 <View style={styles.keywordsSection}>
-                  <Text style={styles.sectionTitle}>Relevance Keywords</Text>
+                  <Text style={styles.sectionTitle}>Search Terms</Text>
                   <TextInput
                     style={styles.keywordsInput}
                     value={relevanceKeywords}
