@@ -1,7 +1,6 @@
 // app/services/barcodeService.ts
 import { searchProducts } from './productService'
 import { Product, Stores } from '../types';
-import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
 
 /**
  * Check if input is likely a barcode

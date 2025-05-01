@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 //https://docs.expo.dev/versions/latest/sdk/video-av/
-// I know it's depreciated, but after readin its documentation and
+// I know it's depreciated, but after reading its documentation and
 // playing around with expo-video and trying to use
 // it to create a loading scree, I realize I couldn't close the video palyer
 // so i'm defaulting to video-av instead after going through its documentation 

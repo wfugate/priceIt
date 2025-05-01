@@ -98,7 +98,6 @@ export function useCartManagement(userId: string | undefined) {
       return null;
     }
   };
-  // Rest of the hook remains the same...
 
   return {
     carts,

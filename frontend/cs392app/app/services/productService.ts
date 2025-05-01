@@ -1,8 +1,5 @@
-
-
-import axios from 'axios';
-import { API_ENDPOINTS, COMMON_HEADERS, API_BASE_URL } from '../config/apiConfig';
-import { Product, Cart, Stores, CartProduct } from '../types';
+import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
+import { Product, Stores } from '../types';
 // Product search function with store selection
 export const searchProducts = async function(query: string, stores: Stores = { walmart: true, target: true, costco: true, samsClub: true }): Promise<Product[]> { 
   try {

@@ -4,10 +4,8 @@ import { Image, Platform, StyleSheet, TouchableOpacity, FlatList, RefreshControl
 import { useFocusEffect } from '@react-navigation/native';
 import { Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
-import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
-import { Cart, Product } from '../types';
+import { Cart } from '../types';
 import CartInspectionModal from '../../components/home/CartInspectionModal';
-import { deleteCart, removeProductFromCart } from '../services/cartService';
 import CompareCartsModal from '../../components/home/CompareCartsModal';
 import CartItemCard from '../../components/home/CartItemCard';
 import ShareModal from '../../components/home/ShareModal';
@@ -17,10 +15,6 @@ import { API_BASE_URL } from '../config/apiConfig';
 import { useProfile } from '../context/ProfileContxt';
 import { useCartManagement } from '../hooks/useCartManagement';
 
-// Extended Cart interface with selection state
-interface CartWithSelection extends Cart {
-  selected: boolean;
-}
 
 
 export default function HomeScreen() {
@@ -36,14 +30,10 @@ export default function HomeScreen() {
   const [inspectModalVisible, setInspectModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const cartManagement = useCartManagement(userId);
-
   const {
     carts,
-    loading,
     isRefreshing,
     currentCart,
-    setCurrentCart,
     fetchUserCarts,
     toggleCartSelection,
     isCartSelected,
@@ -86,8 +76,6 @@ export default function HomeScreen() {
   const handleToggleCartSelection = (cartId: string) => {
     toggleCartSelection(cartId); // Using the hook's method
   };
-
-
 
   // Handle Inspect Cart
   const handleInspectCartUI = (cartId: string) => {
@@ -201,18 +189,6 @@ export default function HomeScreen() {
     }
   };
 
-  // Handle inspect selected cart
-  const handleInspectSelectedCart = () => {
-    const selected = getSelectedCarts();
-    
-    if (selected.length !== 1) {
-      Alert.alert('Selection Error', 'Please select exactly 1 cart to inspect.');
-      return;
-    }
-    
-    handleInspectCart(selected[0].id);
-  };
-
   const handleDeleteCart = async (cartId: string | undefined) => {
     if (!cartId) return;
     
@@ -243,16 +219,6 @@ const renderCartItem = ({ item }: { item: Cart }) => {
     />
   );
 };
-
-  // // Loading state
-  // if (loading && carts.length === 0) {
-  //   return (
-  //     <View style={[styles.container, styles.centered]}>
-  //       <ActivityIndicator size="large" color="#e63b60" />
-  //       <Text style={styles.loadingText}>Loading your carts...</Text>
-  //     </View>
-  //   );
-  // }
 
   return (
     <View style={styles.container}>

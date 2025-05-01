@@ -68,10 +68,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         }
 
-        // if (age. > 3){
-        //   Alert.alert("Not Valid Age", "Please put in a valid age")
-        // }
-
         const res = await fetch(`${API_BASE_URL}/auth/update-profile`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -134,7 +130,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(tempData);
       await AsyncStorage.setItem('user', JSON.stringify(tempData));
       
-      //resetSessionTimer(logout); // Start session timer on login
 
       
       router.replace('/'); // Normal flow into index page
