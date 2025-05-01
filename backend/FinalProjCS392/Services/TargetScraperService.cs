@@ -24,7 +24,7 @@ namespace UnwrangleTargetDemo
         [JsonPropertyName("thumbnail")]
         public string Thumbnail { get; set; }
 
-        [JsonPropertyName ("url")]
+        [JsonPropertyName("url")]
         public string ProductUrl { get; set; }
     }
 
@@ -42,26 +42,37 @@ namespace UnwrangleTargetDemo
 
         public TargetWebScraperService()
         {
+            //1. initialize http client
             _httpClient = new HttpClient();
         }
 
         public async Task<List<SearchResult>> SearchProductsAsync(string query)
         {
+            //1. encode the query for url
             string encodedQuery = Uri.EscapeDataString(query);
+
+            //2. construct request url with query and api key
             string requestUrl = $"https://data.unwrangle.com/api/getter/?platform=target_search&search={encodedQuery}&api_key={_apiKey}";
 
+            //3. send http request
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
             Console.WriteLine(requestUrl.ToString());
 
+            //4. check response status
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Request failed (HTTP {response.StatusCode}).");
             }
 
-            string jsonResponse = await response.Content.ReadAsStringAsync();   
+            //5. read response content
+            string jsonResponse = await response.Content.ReadAsStringAsync();
             Console.WriteLine(jsonResponse);
+
+            //6. deserialize json response
             TargetSearchResponse data = JsonSerializer.Deserialize<TargetSearchResponse>(jsonResponse);
             var results = data?.Results ?? new List<SearchResult>();
+
+            //7. log results for debugging
             foreach (var result in results)
             {
                 Console.WriteLine($"Name: {result.Name}");
@@ -72,8 +83,10 @@ namespace UnwrangleTargetDemo
                 Console.WriteLine("-------------------");
             }
 
+            //8. order results by price
             results.OrderBy(r => r.Price).ToList();
 
+            //9. return the results
             return results;
         }
     }

@@ -29,7 +29,7 @@ namespace priceItBackend.HelperMethods
         /// <returns>A Task returning a byte array representing the generated PDF file, or null on generation error.</returns>
         public async Task<byte[]> GenerateListPdf(List<Cart> carts)
         {
-            // 1. Load Local Logo (Error tolerant)
+            //1. load local logo (error tolerant)
             var logoPath = GetAppLogoPath();
             byte[] logoBytes = null;
             try
@@ -49,14 +49,15 @@ namespace priceItBackend.HelperMethods
                 Console.WriteLine($"Error reading logo file {logoPath}: {ex.Message}");
             }
 
-            // 2. Pre-fetch Product Images Asynchronously (Error tolerant)
+            //2. pre-fetch product images asynchronously (error tolerant)
             var productImages = new Dictionary<string, byte[]>(); // Key: ProductId or Thumbnail URL, Value: image bytes or null
             if (carts != null)
             {
-                // Create tasks for all image downloads
+                //a. create tasks for all image downloads
                 var downloadTasks = new List<Task>();
                 var productsToDownload = new List<(string key, string url)>();
 
+                //b. collect all unique product images to download
                 foreach (var cart in carts.Where(c => c?.Products != null))
                 {
                     foreach (var p in cart.Products)
@@ -73,7 +74,7 @@ namespace priceItBackend.HelperMethods
                     }
                 }
 
-                // Execute downloads (potentially in parallel)
+                //c. execute downloads (potentially in parallel)
                 foreach (var item in productsToDownload)
                 {
                     downloadTasks.Add(Task.Run(async () =>
@@ -99,13 +100,13 @@ namespace priceItBackend.HelperMethods
                     }));
                 }
 
-                // Wait for all download tasks to complete
+                //d. wait for all download tasks to complete
                 await Task.WhenAll(downloadTasks);
                 Console.WriteLine("Image pre-fetching complete.");
             }
 
 
-            // 3. Configure QuestPDF Document
+            //3. configure QuestPDF document
             QuestPDF.Settings.License = LicenseType.Community; // Or your appropriate license
 
             var document = Document.Create(container =>
@@ -115,7 +116,7 @@ namespace priceItBackend.HelperMethods
                     page.Margin(40);
                     page.Size(PageSizes.A4);
 
-                    // Page Header Definition
+                    //a. page header definition
                     page.Header().ShowOnce().PaddingBottom(10).Row(row =>
                     {
                         row.RelativeItem().Column(col =>
@@ -132,7 +133,7 @@ namespace priceItBackend.HelperMethods
                         }
                     });
 
-                    // Page Content Definition
+                    //b. page content definition
                     page.Content().Column(col =>
                     {
                         if (carts == null || !carts.Any())
@@ -141,7 +142,7 @@ namespace priceItBackend.HelperMethods
                         }
                         else
                         {
-                            // Iterate through each cart
+                            //i. iterate through each cart
                             foreach (var cart in carts)
                             {
                                 var products = cart.Products ?? new List<CartProduct>();
@@ -150,7 +151,7 @@ namespace priceItBackend.HelperMethods
                                 col.Item().PaddingVertical(10).Text($"{cart.Name ?? "Unnamed Cart"} (${cartTotal:F2})")
                                     .FontSize(16).Bold().Underline().FontColor(Colors.Blue.Darken2);
 
-                                // Table for this cart's products
+                                //ii. table for this cart's products
                                 col.Item().Table(table =>
                                 {
                                     table.ColumnsDefinition(columns =>
@@ -163,7 +164,7 @@ namespace priceItBackend.HelperMethods
                                         columns.RelativeColumn(1.5f);   // Total
                                     });
 
-                                    // Table Header
+                                    //iii. table header
                                     table.Header(header =>
                                     {
                                         static IContainer HeaderCellStyle(IContainer c) => c.DefaultTextStyle(ts => ts.Bold()).PaddingVertical(5).PaddingHorizontal(5).Background(Colors.Grey.Lighten3);
@@ -176,7 +177,7 @@ namespace priceItBackend.HelperMethods
                                         header.Cell().Element(HeaderCellStyle).AlignRight().Text("Total");      // Align numeric header
                                     });
 
-                                    // Table Rows
+                                    //iv. table rows
                                     if (!products.Any())
                                     {
                                         table.Cell().ColumnSpan(6).Padding(10).AlignCenter().Text("No products in this cart.").Italic().FontColor(Colors.Grey.Medium);
@@ -189,7 +190,7 @@ namespace priceItBackend.HelperMethods
                                             // Define cell style within the loop or reuse static function if simple
                                             static IContainer DataCellStyle(IContainer c) => c.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5).PaddingHorizontal(5).AlignMiddle(); // Align vertically middle
 
-                                            // --- Image Cell ---
+                                            //v. image cell
                                             var imageCell = table.Cell().Element(DataCellStyle); // Apply style first
                                             string imageKey = p.ProductId ?? p.Thumbnail;
                                             if (productImages.TryGetValue(imageKey, out byte[] currentImageBytes) && currentImageBytes != null && currentImageBytes.Length > 0)
@@ -201,7 +202,7 @@ namespace priceItBackend.HelperMethods
                                                 imageCell.AlignCenter().Text("[No Image]").FontSize(8).FontColor(Colors.Grey.Medium); // Placeholder
                                             }
 
-                                            // --- Other Data Cells ---
+                                            //vi. other data cells
                                             table.Cell().Element(DataCellStyle).Text(p.Name ?? "N/A");
                                             table.Cell().Element(DataCellStyle).Text(p.Store ?? "N/A");
                                             table.Cell().Element(DataCellStyle).AlignRight().Text($"${p.Price:F2}");
@@ -211,7 +212,7 @@ namespace priceItBackend.HelperMethods
                                     }
                                 }); // End Table
 
-                                // Cart Total
+                                //vii. cart total
                                 col.Item().AlignRight().PaddingTop(5).Text($"Cart Total: ${cartTotal:F2}")
                                     .FontSize(12).Bold().FontColor(Colors.Green.Darken2);
 
@@ -219,7 +220,7 @@ namespace priceItBackend.HelperMethods
                             } // End foreach cart
                         } // End else (carts exist)
 
-                        // Final Thank You Note
+                        //viii. final thank you note
                         col.Item().PaddingTop(30).Text(text =>
                         {
                             text.Span("From The App's Founder:").FontSize(14).Bold().FontColor(Colors.Blue.Medium);
@@ -229,7 +230,7 @@ namespace priceItBackend.HelperMethods
                         });
                     }); // End Page Content Column
 
-                    // Page Footer Definition
+                    //c. page footer definition
                     page.Footer()
                       .AlignCenter()
                       .Text(x =>
@@ -244,7 +245,7 @@ namespace priceItBackend.HelperMethods
                 }); // End Page Definition
             }); // End Document Creation
 
-            // 4. Generate PDF Bytes (Synchronous part of QuestPDF)
+            //4. generate PDF bytes (synchronous part of QuestPDF)
             try
             {
                 Console.WriteLine("Generating PDF bytes...");
@@ -266,16 +267,24 @@ namespace priceItBackend.HelperMethods
         {
             try
             {
+                //1. get the current directory path
                 var rootPath = Directory.GetCurrentDirectory();
                 // Consider using AppContext.BaseDirectory if CurrentDirectory is unreliable
                 // var rootPath = AppContext.BaseDirectory;
+
+                //2. create the complete logo path
                 var logoPath = Path.Combine(rootPath, "wwwroot", "logo", "priceIt.jpg"); // Ensure filename is correct
+
+                //3. return the full path
                 return logoPath;
             }
             catch (Exception ex)
             {
+                //4. log any errors
                 Console.WriteLine($"Error determining logo path: {ex.Message}");
-                return string.Empty; // Return empty or null if path cannot be determined
+
+                //5. return empty string if path cannot be determined
+                return string.Empty;
             }
         }
     }

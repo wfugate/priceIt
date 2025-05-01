@@ -27,6 +27,7 @@ namespace FinalProjCS392.Services
             get { return _rawPrice; }
             set
             {
+                //1. handle price parsing based on value type
                 if (value is double doubleValue)
                 {
                     _price = doubleValue;
@@ -35,7 +36,7 @@ namespace FinalProjCS392.Services
                 else if (value is string stringValue)
                 {
                     _rawPrice = stringValue;
-                    // Try to extract numeric value from string (remove $ and other non-numeric characters)
+                    //2. extract numeric value from string (remove $ and other non-numeric characters)
                     var numericString = Regex.Replace(stringValue, @"[^\d.]", "");
                     if (double.TryParse(numericString, out double parsedValue))
                     {
@@ -91,25 +92,32 @@ namespace FinalProjCS392.Services
 
         public CostcoScraperService()
         {
+            //1. initialize http client
             _httpClient = new HttpClient();
         }
 
         public async Task<List<CostcoSearchResult>> SearchProductsAsync(string query)
         {
+            //1. encode the query for url
             string encodedQuery = Uri.EscapeDataString(query);
+
+            //2. construct request url with query and api key
             string requestUrl = $"https://data.unwrangle.com/api/getter/?platform=costco_search&search={encodedQuery}&api_key={_apiKey}";
 
+            //3. send http request
             HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
             Console.WriteLine($"Costco search URL: {requestUrl}");
 
+            //4. check response status
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Costco request failed (HTTP {response.StatusCode}).");
             }
 
+            //5. read response content
             string jsonResponse = await response.Content.ReadAsStringAsync();
 
-            // Use custom JsonSerializerOptions to handle potential conversion issues
+            //6. configure json serializer options
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -118,9 +126,11 @@ namespace FinalProjCS392.Services
 
             try
             {
+                //7. deserialize json response
                 CostcoSearchResponse data = JsonSerializer.Deserialize<CostcoSearchResponse>(jsonResponse, options);
                 var results = data?.Results ?? new List<CostcoSearchResult>();
 
+                //8. log results for debugging
                 foreach (var result in results)
                 {
                     Console.WriteLine($"Name: {result.Name}");
@@ -131,13 +141,15 @@ namespace FinalProjCS392.Services
                     Console.WriteLine("-------------------");
                 }
 
-                // Order results by price
+                //9. order results by price
                 results = results.OrderBy(r => r.Price).ToList();
 
+                //10. return the sorted results
                 return results;
             }
             catch (JsonException ex)
             {
+                //11. log parsing errors and rethrow with context
                 Console.WriteLine($"JSON parsing error: {ex.Message}");
                 Console.WriteLine($"Raw JSON: {jsonResponse}");
                 throw new Exception($"Error parsing Costco response: {ex.Message}");

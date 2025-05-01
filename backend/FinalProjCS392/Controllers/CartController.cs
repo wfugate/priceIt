@@ -1,99 +1,4 @@
-﻿//using FinalProjCS392.Models;
-//using FinalProjCS392.Services;
-//using Microsoft.AspNetCore.Mvc;
-//// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-//namespace FinalProjCS392.Controllers
-//{
-//    // Controllers/CartController.cs
-//    [ApiController]
-//    [Route("api/cart")]
-//    public class CartController : ControllerBase
-//    {
-//        private readonly CartService _cartService;
-//        public CartController(CartService cartService)
-//        {
-//            _cartService = cartService;
-//        }
-
-//        // Original endpoint
-//        [HttpPost("add")]
-//        public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
-//        {
-//            Console.WriteLine("Endpoint hit!");
-//            await _cartService.AddProductsToCart(request.UserId, request.Products);
-//            return Ok(new { success = true });
-//        }
-
-//        // GET /api/cart?userId=123 - Returns all carts for a user
-//        [HttpGet]
-//        public async Task<IActionResult> GetCart([FromQuery] string userId)
-//        {
-//            if (string.IsNullOrEmpty(userId))
-//            {
-//                return BadRequest("User ID is required");
-//            }
-
-//            try
-//            {
-//                var cart = await _cartService.GetOrCreateCart(userId);
-//                return Ok(cart);
-//            }
-//            catch (Exception ex)
-//            {
-//                return StatusCode(500, $"Internal server error: {ex.Message}");
-//            }
-//        }
-
-//        // POST /api/cart - Creates a new empty cart for a user
-//        [HttpPost]
-//        public async Task<IActionResult> CreateCart([FromBody] AddToCartRequest request)
-//        {
-//            if (string.IsNullOrEmpty(request.UserId))
-//            {
-//                return BadRequest("User ID is required");
-//            }
-
-//            try
-//            {
-//                var cart = await _cartService.GetOrCreateCart(request.UserId);
-//                return CreatedAtAction(nameof(GetCart), new { userId = request.UserId }, cart);
-//            }
-//            catch (Exception ex)
-//            {
-//                return StatusCode(500, $"Internal server error: {ex.Message}");
-//            }
-//        }
-
-//        // PUT /api/cart/:cartId - Adds products to a specific cart
-//        [HttpPut("{cartId}")]
-//        public async Task<IActionResult> UpdateCart(string cartId, [FromBody] AddToCartRequest request)
-//        {
-//            if (string.IsNullOrEmpty(request.UserId))
-//            {
-//                return BadRequest("User ID is required");
-//            }
-
-//            try
-//            {
-//                await _cartService.AddProductsToCart(request.UserId, request.Products);
-//                return NoContent();
-//            }
-//            catch (Exception ex)
-//            {
-//                return StatusCode(500, $"Internal server error: {ex.Message}");
-//            }
-//        }
-//    }
-
-//    public class AddToCartRequest
-//    {
-//        public string UserId { get; set; }
-//        public List<Product> Products { get; set; }
-//    }
-//}
-
-
-using FinalProjCS392.Models;
+﻿using FinalProjCS392.Models;
 using FinalProjCS392.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -111,6 +16,7 @@ namespace FinalProjCS392.Controllers
         public static int count = 0;
         public CartController(CartService cartService)
         {
+            //initialize cart service through dependency injection
             _cartService = cartService;
         }
 
@@ -119,7 +25,10 @@ namespace FinalProjCS392.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserCarts([FromQuery] string userId)
         {
-            Console.WriteLine($"X{count +1}GetUserCarts Tiggered");
+            //1. debug logging
+            Console.WriteLine($"X{count + 1}GetUserCarts Tiggered");
+
+            //2. validate input
             if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("User ID is required");
@@ -127,14 +36,21 @@ namespace FinalProjCS392.Controllers
 
             try
             {
+                //3. log process stages
                 Console.WriteLine("Sarting GetUserCarts");
-                var carts = await _cartService.GetUserCarts(userId);
-                Console.WriteLine("Passes GetUserCarts");
-                return Ok(carts);
 
+                //4. get all carts for the user
+                var carts = await _cartService.GetUserCarts(userId);
+
+                //5. log success
+                Console.WriteLine("Passes GetUserCarts");
+
+                //6. return carts to client
+                return Ok(carts);
             }
             catch (Exception ex)
             {
+                //7. log error and return error status
                 Console.WriteLine("Fails GetUserCarts");
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
@@ -145,9 +61,11 @@ namespace FinalProjCS392.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNewUserCart([FromBody] CreateCartRequest request)
         {
+            //1. log request with counter
             Console.WriteLine($"X{count + 1} CreateNewUserCart Tiggered");
-
             Console.WriteLine("CreateNew Tiggered");
+
+            //2. validate input
             if (string.IsNullOrEmpty(request.UserId))
             {
                 return BadRequest("User ID is required");
@@ -155,11 +73,15 @@ namespace FinalProjCS392.Controllers
 
             try
             {
+                //3. create new cart for user with specified name
                 var cart = await _cartService.CreateNewUserCart(request.UserId, request.Name);
+
+                //4. return created cart with location header
                 return CreatedAtAction(nameof(GetUserCarts), new { userId = request.UserId }, cart);
             }
             catch (Exception ex)
             {
+                //5. handle any errors
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -169,8 +91,10 @@ namespace FinalProjCS392.Controllers
         [HttpPut("add/{cartId}")]
         public async Task<IActionResult> SaveToCart(string cartId, [FromBody] AddToCartRequest request)
         {
+            //1. log request with counter
             Console.WriteLine($"X{count + 1} SaveToCart Tiggered");
 
+            //2. validate input
             if (string.IsNullOrEmpty(request.UserId))
             {
                 return BadRequest("User ID is required");
@@ -178,11 +102,15 @@ namespace FinalProjCS392.Controllers
 
             try
             {
+                //3. add products to the specified cart
                 var cart = await _cartService.AddProductsToCart(request.UserId, cartId, request.Products);
+
+                //4. return updated cart
                 return Ok(cart);
             }
             catch (Exception ex)
             {
+                //5. handle any errors
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -191,7 +119,10 @@ namespace FinalProjCS392.Controllers
         [HttpDelete("{cartId}")]
         public async Task<IActionResult> DeleteCart(string cartId, [FromQuery] string userId)
         {
+            //1. log request with counter
             Console.WriteLine($"X{count + 1} DeleteCart Tiggered");
+
+            //2. validate input
             if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("User ID is required");
@@ -199,7 +130,10 @@ namespace FinalProjCS392.Controllers
 
             try
             {
+                //3. delete the cart
                 var result = await _cartService.DeleteCart(userId, cartId);
+
+                //4. return appropriate response based on result
                 if (result)
                 {
                     return NoContent();
@@ -208,6 +142,7 @@ namespace FinalProjCS392.Controllers
             }
             catch (Exception ex)
             {
+                //5. handle any errors
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -216,8 +151,10 @@ namespace FinalProjCS392.Controllers
         [HttpDelete("{cartId}/products/{productId}")]
         public async Task<IActionResult> RemoveProductFromCart(string cartId, string productId, [FromQuery] string userId)
         {
+            //1. log request with counter
             Console.WriteLine($"X{count + 1} RemoveProductFromCart Tiggered");
 
+            //2. validate input
             if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("User ID is required");
@@ -225,12 +162,18 @@ namespace FinalProjCS392.Controllers
 
             try
             {
+                //3. log operation start
                 Console.WriteLine("Triggered RemoveProductFromCart");
+
+                //4. remove product from cart
                 var cart = await _cartService.RemoveProductFromCart(userId, cartId, productId);
+
+                //5. return updated cart
                 return Ok(cart);
             }
             catch (Exception ex)
             {
+                //6. handle any errors
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -239,9 +182,11 @@ namespace FinalProjCS392.Controllers
         [HttpPut("{cartId}")]
         public async Task<IActionResult> UpdateCart(string cartId, [FromBody] UpdateCartRequest request)
         {
+            //1. log request with counter
             Console.WriteLine($"X{count + 1} UpdateCart Tiggered");
-
             Console.WriteLine("Controller for update cart triggered");
+
+            //2. validate input
             if (string.IsNullOrEmpty(request.UserId))
             {
                 return BadRequest("User ID is required");
@@ -249,7 +194,7 @@ namespace FinalProjCS392.Controllers
 
             try
             {
-                // Verify the cart exists and belongs to the user
+                //3. verify the cart exists and belongs to the user
                 var existingCarts = await _cartService.GetUserCarts(request.UserId);
                 var cart = existingCarts.FirstOrDefault(c => c.Id == cartId);
 
@@ -258,8 +203,10 @@ namespace FinalProjCS392.Controllers
                     return NotFound($"Cart with ID {cartId} not found for this user");
                 }
 
+                //4. log progress
                 Console.WriteLine("Here");
-                // Update the cart with new products
+
+                //5. update the cart with new products
                 cart.Products = request.Products;
 
                 //// If a new name was provided, update it
@@ -268,17 +215,19 @@ namespace FinalProjCS392.Controllers
                 //    cart.Name = request.Name;
                 //}
 
-                // Save the updated cart
+                //6. save the updated cart
                 var updatedCart = await _cartService.UpdateCart(cart);
 
+                //7. return updated cart
                 return Ok(updatedCart);
             }
             catch (Exception ex)
             {
+                //8. handle any errors
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        
+
     }
 
     public class CreateCartRequest
@@ -298,6 +247,6 @@ namespace FinalProjCS392.Controllers
         public string UserId { get; set; }
         public string Name { get; set; }
         public List<CartProduct> Products { get; set; }
-        
+
     }
 }

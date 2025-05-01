@@ -11,7 +11,8 @@ namespace FinalProjCS392.Controllers
         private readonly EmailService _emailService;
         public EmailController(EmailService emailService)
         {
-            _emailService = emailService; 
+            //initialize email service through dependency injection
+            _emailService = emailService;
         }
 
         [HttpPost("send")]
@@ -19,14 +20,17 @@ namespace FinalProjCS392.Controllers
         {
             try
             {
+                //1. send email with cart details to user
                 await _emailService.SendEmailAsync(request.ToEmail, request.UserID, request.CartIds);
+
+                //2. return success message
                 return Ok(new { message = "Email sent successfully!" });
             }
             catch (Exception ex)
             {
+                //3. handle any errors that occurred during email sending
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-
     }
 }
