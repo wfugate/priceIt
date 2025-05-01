@@ -1,9 +1,8 @@
-// components/camera/CameraView.tsx
 import React from 'react';
 import { CameraView as ExpoCameraView } from 'expo-camera';
-import { View } from 'react-native';
 import { cameraStyles } from '../styles/styles';
 
+// camera view component that wraps expo-camera with barcode scanning configuration
 const CameraView = React.forwardRef<ExpoCameraView, {
   onBarCodeScanned?: (result: any) => void;
 }>((props, ref) => (
@@ -11,6 +10,7 @@ const CameraView = React.forwardRef<ExpoCameraView, {
     style={cameraStyles.camera} 
     facing="back" 
     ref={ref}
+    // barcode scanning configuration with supported barcode types
     barcodeScannerSettings={{
       barcodeTypes: [
         'aztec',

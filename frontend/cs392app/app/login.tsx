@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef} from 'react';
 import { Platform, View, TouchableWithoutFeedback, Image, TextInput, Text, StyleSheet, TouchableOpacity, Keyboard, Animated, Alert } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,19 +14,24 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // so i'm defaulting to video-av instead after going through its documentation 
 const Wrapper = Platform.OS === 'web' ? React.Fragment : TouchableWithoutFeedback;
 
+// login screen component for user authentication
 export default function LoginScreen() {
+  // get login function from auth context
   const { login } = useAuth();
+  // state for form inputs and loading status
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  // loading state for showing animation
   const [loading, setLoading] = useState(false);
-
+  // reference for fade animation
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  // handle login button press
   const handleLoginPress = () => {
-
+    // prevent multiple submits when loading
     if (loading) return;
 
+    // validate input fields
     if (email.length == 0){
       Alert.alert("Email Error","Email field is empty")
       return
@@ -36,10 +41,12 @@ export default function LoginScreen() {
       return
     }
 
+    // start loading animation
     setLoading(true);
     fadeIn(); // Start the fade-in animation
   };
 
+  // fade in animation for loading screen
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -48,6 +55,7 @@ export default function LoginScreen() {
     }).start();
   };
 
+  // fade out animation for loading screen
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
@@ -58,13 +66,14 @@ export default function LoginScreen() {
     });
   };
 
+  // function to handle video ready event during loading animation
   const handleVideoReady = async () => {
     //setVideoReady(true);
     setTimeout(async () => {
       try {
-        
-          await login(email, password);
-          await AsyncStorage.setItem('@justLoggedIn', 'true');
+        // attempt login with entered credentials
+        await login(email, password);
+        await AsyncStorage.setItem('@justLoggedIn', 'true');
         
       } catch (err: any) {
         Alert.alert('Error', err.message || 'Login failed');

@@ -1,15 +1,17 @@
-// app/services/homeService.ts
 import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
 
-// Get user carts with additional options
+// get user carts with additional options for customizing the response
 export const getUserCartsWithOptions = async (userId: string, options: { includeProducts?: boolean } = {}) => {
   try {
+    // build API endpoint URL with query parameters
     let endpoint = `${API_ENDPOINTS.cart.getAll}?userId=${userId}`;
     
+    // add optional parameters if specified
     if (options.includeProducts) {
       endpoint += '&includeProducts=true';
     }
     
+    // fetch carts from API
     const response = await fetch(endpoint, {
       method: 'GET',
       headers: COMMON_HEADERS,
@@ -27,9 +29,10 @@ export const getUserCartsWithOptions = async (userId: string, options: { include
   }
 };
 
-// Delete a cart
+// delete a cart by ID
 export const deleteCart = async (cartId: string, userId: string) => {
   try {
+    // send request to delete cart
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/${cartId}`, {
       method: 'DELETE',
       headers: COMMON_HEADERS,
@@ -48,9 +51,10 @@ export const deleteCart = async (cartId: string, userId: string) => {
   }
 };
 
-// Email cart as PDF
+// email a cart as PDF to user
 export const emailCartAsPdf = async (cartId: string, userId: string, email: string) => {
   try {
+    // send request to email cart
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/email/${cartId}`, {
       method: 'POST',
       headers: COMMON_HEADERS,
@@ -72,7 +76,7 @@ export const emailCartAsPdf = async (cartId: string, userId: string, email: stri
   }
 };
 
-// Transfer product between carts
+// transfer a product between two carts
 export const transferProduct = async (
   sourceCartId: string, 
   targetCartId: string, 
@@ -80,6 +84,7 @@ export const transferProduct = async (
   userId: string
 ) => {
   try {
+    // send request to transfer product
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/transfer`, {
       method: 'POST',
       headers: COMMON_HEADERS,
@@ -103,9 +108,10 @@ export const transferProduct = async (
   }
 };
 
-// Get detailed price comparison between two carts
+// get detailed price comparison between two carts
 export const compareCartPrices = async (cartIdA: string, cartIdB: string, userId: string) => {
   try {
+    // send request to compare cart prices
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/compare`, {
       method: 'POST',
       headers: COMMON_HEADERS,
@@ -128,4 +134,4 @@ export const compareCartPrices = async (cartIdA: string, cartIdB: string, userId
   }
 };
 
-export default {}; 
+export default {};

@@ -1,4 +1,3 @@
-// components/home/CartInspectionModal.tsx
 import React, { useState } from 'react';
 import { 
   StyleSheet, 
@@ -16,6 +15,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Cart, CartProduct } from '../../app/types';
 import { useCartManagement } from '../../app/hooks/useCartManagement';
 
+// interface for cart inspection modal props
 interface CartInspectionModalProps {
   visible: boolean;
   cart: Cart | null;
@@ -23,30 +23,34 @@ interface CartInspectionModalProps {
   userId?: string;
 }
 
+// modal for viewing and managing cart contents
 const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
   visible,
   cart,
   onClose,
   userId = ''
 }) => {
+  // state for tracking loading states
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeletingCart, setIsDeletingCart] = useState(false);
+  // state for store redirect modal
   const [isStoreModalVisible, setIsStoreModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<CartProduct | null>(null);
 
-  // Use the cart management hook
+  // use cart management hook for delete operations
   const { deleteCartById, deleteCartItem } = useCartManagement(userId);
 
+  // guard clause if no cart provided
   if (!cart) return null;
 
-  // Calculate total price
+  // calculate total cart price
   const totalPrice = cart.products.reduce((sum, product) => {
     const price = typeof product.price === 'number' ? product.price : 
                   (typeof product.price === 'string' ? parseFloat(product.price) : 0);
     return sum + price;
   }, 0);
 
-  // Handle delete item
+  // handle deleting a product from the cart
   const handleDeleteItem = async (productId: string) => {
     Alert.alert(
       'Delete Item',
@@ -59,6 +63,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
           onPress: async () => {
             setIsDeleting(true);
             try {
+              // call cart management hook to delete item
               await deleteCartItem(cart.id, productId);
             } catch (error) {
               console.error('Error deleting item:', error);
@@ -72,7 +77,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
     );
   };
 
-  // Handle delete cart
+  // handle deleting the entire cart
   const handleDeleteCart = () => {
     Alert.alert(
       'Delete Cart',
@@ -85,9 +90,10 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
           onPress: async () => {
             setIsDeletingCart(true);
             try {
+              // call cart management hook to delete cart
               const success = await deleteCartById(cart.id);
               if (success) {
-                onClose(); // Close modal after successful deletion
+                onClose(); // close modal after successful deletion
               }
             } catch (error) {
               console.error('Error deleting cart:', error);
@@ -101,11 +107,13 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
     );
   };
 
+  // handle long press on product to show store redirect option
   const handleLongPress = (product: CartProduct) => {
     setSelectedProduct(product);
     setIsStoreModalVisible(true);
   };
 
+  // handle redirect to store website
   const handleRedirectToStore = () => {
     if (selectedProduct && selectedProduct.productUrl) {
       Linking.openURL(selectedProduct.productUrl);
@@ -147,7 +155,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
                   <TouchableOpacity
                     key={`${productId}-${index}`}
                     style={styles.productCard}
-                    onLongPress={() => handleLongPress(product)} // Use TouchableOpacity here for long press
+                    onLongPress={() => handleLongPress(product)} // long press to show store redirect option
                   >
                     <Image 
                       source={{ uri: product.thumbnail || 'https://via.placeholder.com/80' }}
@@ -193,7 +201,7 @@ const CartInspectionModal: React.FC<CartInspectionModalProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Store modal */}
+      {/* Store redirect modal */}
       {isStoreModalVisible && selectedProduct && (
         <Modal visible={isStoreModalVisible} animationType="fade" transparent={true} onRequestClose={() => setIsStoreModalVisible(false)}>
           <View style={styles.modalOverlay}>

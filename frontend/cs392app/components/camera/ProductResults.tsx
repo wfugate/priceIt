@@ -1,4 +1,3 @@
-// components/camera/ProductResults.tsx
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
@@ -25,6 +24,7 @@ import { getUserCarts } from '../../app/services/cartService';
 import { useEnhancedProductSearch } from '../../app/hooks/useEnhancedProductSearch';
 import { API_BASE_URL } from '../../app/config/apiConfig';
 
+// interface for product results props
 interface ProductResultsProps {
   products: Product[];
   onAddToCart: (selectedProducts: Product[], cartId: string) => Promise<void>;
@@ -33,6 +33,7 @@ interface ProductResultsProps {
   searchQuery?: string;
 }
 
+// screen component to display search results and manage product selection
 export default function ProductResultsScreen({ 
   products = [], 
   onAddToCart,
@@ -40,34 +41,29 @@ export default function ProductResultsScreen({
   onClose,
   searchQuery = ''
 }: ProductResultsProps) {
-  // Use the enhanced product search hook
+  // use the enhanced product search hook with initial products and search query
   const {
     displayedProducts,
-    isSearching,
-    showResults,
     currentSort,
     currentFilter,
     showSuccessMessage,
     successMessage,
     relevanceKeywords,
     selectedProduct,
-    showProductModal,
     
     setCurrentSort,
     setCurrentFilter,
     toggleProductSelection,
     getSelectedProducts,
     clearSelections,
-    closeResults,
     showSuccess,
     getSortLabel,
     getFilterLabel,
     handleRelevanceKeywordsChange,
     viewProductDetails,
-    closeProductModal
   } = useEnhancedProductSearch(products, searchQuery);
 
-  // Local state for modals and loading
+  // state for modals and loading
   const [userCarts, setUserCarts] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -76,7 +72,7 @@ export default function ProductResultsScreen({
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Fetch user carts
+  // fetch user's carts from API
   const fetchUserCarts = async () => {
     if (!userId) return;
     
@@ -91,13 +87,16 @@ export default function ProductResultsScreen({
     }
   };
 
+  // fetch carts on component mount
   useEffect(() => {
     fetchUserCarts();
   }, []);
 
+  // handle adding selected products to cart
   const handleAddToCartPress = async () => {
     const selectedProducts = getSelectedProducts();
     
+    // validate at least one product is selected
     if (selectedProducts.length === 0) {
       Alert.alert('No Products Selected', 'Please select at least one product to add to your cart.');
       return;
@@ -110,10 +109,10 @@ export default function ProductResultsScreen({
         return;
       }
   
-      // Fetch the latest carts
+      // fetch the latest carts
       await fetchUserCarts();
       
-      // Now decide which modal to show
+      // decide which modal to show based on whether user has existing carts
       if (userCarts && userCarts.length > 0) {
         setShowCartModal(true);
       } else {
@@ -127,18 +126,20 @@ export default function ProductResultsScreen({
     }
   };
 
+  // handle selecting an existing cart
   const handleCartSelection = async (cartId: string) => {
     setIsSaving(true);
     try {
+      // get selected products and add them to selected cart
       const selectedProducts = getSelectedProducts();
       await onAddToCart(selectedProducts, cartId);
       setShowCartModal(false);
       
-      // Show success message
+      // show success message
       const count = selectedProducts.length;
       showSuccess(`${count} ${count === 1 ? 'product' : 'products'} added to cart`);
       
-      // Clear selections after adding to cart
+      // clear selections after adding to cart
       clearSelections();
       
     } catch (error) {
@@ -149,6 +150,7 @@ export default function ProductResultsScreen({
     }
   };
 
+  // handle creating a new cart
   const handleCreateNewCart = async (name: string) => {
     if (!name.trim()) {
       return;
@@ -161,7 +163,7 @@ export default function ProductResultsScreen({
         return;
       }
       
-      // Create new cart
+      // create new cart via API
       const response = await fetch(`${API_BASE_URL}/api/cart`, {
         method: 'POST',
         headers: {
@@ -179,19 +181,20 @@ export default function ProductResultsScreen({
         throw new Error('Failed to create new cart');
       }
 
+      // parse response to get new cart data
       const newCart = await response.json();
       
-      // Add products to the new cart
+      // add selected products to the new cart
       const selectedProducts = getSelectedProducts();
       await onAddToCart(selectedProducts, newCart.id);
       
-      // Close modal and show success message
+      // close modal and show success message
       setShowCartNameModal(false);
       
       const count = selectedProducts.length;
       showSuccess(`${count} ${count === 1 ? 'product' : 'products'} added to new cart: ${name}`);
       
-      // Clear selections after adding to cart
+      // clear selections after adding to cart
       clearSelections();
       
     } catch (error) {
@@ -202,11 +205,12 @@ export default function ProductResultsScreen({
     }
   };
 
-  // Close filter modal and apply the current filters
+  // close filter modal and apply current filters
   const applyFilters = () => {
     setShowFilterModal(false);
   };
 
+  // display empty state if no products
   if (products.length === 0) {
     return (
       <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -290,7 +294,7 @@ export default function ProductResultsScreen({
           </TouchableOpacity>
         ))}
 
-        {/* Show a message if no products match the current filter */}
+        {/* Show message if no products match the current filter */}
         {displayedProducts.length === 0 && (
           <View style={styles.noResultsContainer}>
             <Text style={styles.noResultsText}>

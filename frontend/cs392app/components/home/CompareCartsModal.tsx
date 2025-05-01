@@ -1,4 +1,3 @@
-// components/home/CompareCartsModal.tsx
 import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
@@ -16,7 +15,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { updateCart} from '../../app/services/cartService';
 import { Cart } from '../../app/types';
 
-// Update the prop interface to include the callback
+// interface for compare carts modal props
 interface CompareCartsModalProps {
   visible: boolean;
   cartA: Cart | undefined;
@@ -27,6 +26,7 @@ interface CompareCartsModalProps {
 
 const { width } = Dimensions.get('window');
 
+// modal for comparing products between two carts and moving items between them
 const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
   visible,
   cartA,
@@ -34,30 +34,22 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
   onClose,
   onCartsUpdated
 }) => {
-  // Log cart structures received from props to diagnose the issue
-  //console.log("RAW CART A:", JSON.stringify(cartA, null, 2));
-  //console.log("RAW CART B:", JSON.stringify(cartB, null, 2));
-  
-  // State for each cart
+  // state for each cart
   const [leftCart, setLeftCart] = useState<Cart | undefined>(undefined);
   const [rightCart, setRightCart] = useState<Cart | undefined>(undefined);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   
-  // Deep clone utility function with additional product property fixes
+  // utility function to deep clone cart with product property standardization
   const deepCloneCart = (cart: Cart | undefined): Cart | undefined => {
     if (!cart) return undefined;
     
-    // Create a complete clone with new arrays for products
+    // create complete clone with new arrays for products
     return {
       ...cart,
       products: cart.products ? cart.products.map(product => {
-        // Examine each product for structure issues
-        //console.log("EXAMINING PRODUCT:", JSON.stringify(product, null, 2));
-        
-        // Return a fixed product object with both id and productId for compatibility
+        // standardize product properties for compatibility
         return {
-          //id: product.id || product.productId || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           productId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           thumbnail: product.thumbnail || 'https://via.placeholder.com/80',
           price: typeof product.price === 'number' ? product.price : 0,
@@ -71,29 +63,27 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
     };
   };
   
-  // Initialize carts when props change
+  // initialize carts when props change
   useEffect(() => {
     if (visible) {
       console.log("EFFECT RUNNING - Setting initial cart state");
       
-      // Deep clone both carts to ensure isolation
+      // deep clone both carts to ensure isolation
       const clonedCartA = deepCloneCart(cartA);
       const clonedCartB = deepCloneCart(cartB);
       
       console.log("**************************************Original Cart B:*******************************************");
       console.log(JSON.stringify(cartB, null, 2))
       console.log("**************************************Clone Cart B:*******************************************");
-      //console.log("CART A:", JSON.stringify(clonedCartA, null, 2));
-      console.log("CART B:", JSON.stringify(clonedCartB, null, 2));
       
-      // Set cart state with cloned objects
+      // set cart state with cloned objects
       setLeftCart(clonedCartA);
       setRightCart(clonedCartB);
       setHasChanges(false);
     }
   }, [cartA, cartB, visible]);
 
-  // Check if we have valid carts to compare
+  // check if we have valid carts to compare
   if (!visible || !leftCart || !rightCart) {
     console.log('CompareCartsModal render conditions not met:', { 
       visible, 
@@ -103,7 +93,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
     return null;
   }
   
-  // Handle moving an item from left to right cart
+  // move an item from left cart to right cart
   const moveItemLeftToRight = (productId: string) => {
     console.log("MOVING LEFT TO RIGHT:", { productId });
     
@@ -112,7 +102,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       return;
     }
     
-    // Find the product in the left cart - try both id and productId
+    // find the product in the left cart - try both id and productId
     let productIndex = leftCart.products.findIndex(p => p.id === productId);
     if (productIndex === -1) {
       productIndex = leftCart.products.findIndex(p => p.productId === productId);
@@ -124,11 +114,11 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       return;
     }
     
-    // Get a deep clone of the product
+    // get a deep clone of the product
     const productToMove = {...leftCart.products[productIndex]};
     console.log("PRODUCT TO MOVE:", JSON.stringify(productToMove, null, 2));
     
-    // Create completely new cart objects with new product arrays
+    // create completely new cart objects with updated product arrays
     const updatedLeftProducts = leftCart.products.filter(p => 
       (p.id !== productId) && (p.productId !== productId)
     );
@@ -144,7 +134,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       products: updatedRightProducts
     };
     
-    // Set the new cart states with a slight delay to ensure React processes them correctly
+    // set the new cart states with slight delays to ensure React processes them correctly
     setTimeout(() => {
       setLeftCart(newLeftCart);
       setTimeout(() => {
@@ -154,7 +144,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
     }, 50);
   };
   
-  // Handle moving an item from right to left cart
+  // move an item from right cart to left cart
   const moveItemRightToLeft = (productId: string) => {
     console.log("MOVING RIGHT TO LEFT:", { productId });
     
@@ -163,7 +153,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       return;
     }
     
-    // Find the product in the right cart - try both id and productId
+    // find the product in the right cart - try both id and productId
     let productIndex = rightCart.products.findIndex(p => p.id === productId);
     if (productIndex === -1) {
       productIndex = rightCart.products.findIndex(p => p.productId === productId);
@@ -175,11 +165,11 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       return;
     }
     
-    // Get a deep clone of the product
+    // get a deep clone of the product
     const productToMove = {...rightCart.products[productIndex]};
     console.log("PRODUCT TO MOVE:", JSON.stringify(productToMove, null, 2));
     
-    // Create completely new cart objects with new product arrays
+    // create completely new cart objects with updated product arrays
     const updatedRightProducts = rightCart.products.filter(p => 
       (p.id !== productId) && (p.productId !== productId)
     );
@@ -195,7 +185,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       products: updatedLeftProducts
     };
     
-    // Set the new cart states with a slight delay to ensure React processes them correctly
+    // set the new cart states with slight delays to ensure React processes them correctly
     setTimeout(() => {
       setRightCart(newRightCart);
       setTimeout(() => {
@@ -205,16 +195,13 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
     }, 50);
   };
 
-  // Save changes to both carts
+  // save changes to both carts
   const saveChanges = async () => {
     if (!leftCart || !rightCart) return;
     
-    // Allow saving even if just the carts exist (with or without products)
-    // Remove the !hasChanges check to allow saving empty carts
-    
     setSaving(true);
     try {
-      // Add defensive checks for products arrays
+      // add defensive checks for products arrays
       const leftCartProducts = Array.isArray(leftCart.products) ? leftCart.products : [];
       const rightCartProducts = Array.isArray(rightCart.products) ? rightCart.products : [];
       
@@ -222,7 +209,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
       console.log(`Left cart ${leftCart.id} has ${leftCartProducts.length} products`);
       console.log(`Right cart ${rightCart.id} has ${rightCartProducts.length} products`);
       
-      // We need to send updates for both carts to the backend
+      // send updates for both carts to the backend
       const updates = [
         updateCart(leftCart.id, leftCart.userId, leftCartProducts, leftCart.name),
         updateCart(rightCart.id, rightCart.userId, rightCartProducts, rightCart.name)
@@ -230,6 +217,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
   
       const [updatedLeftCart, updatedRightCart] = await Promise.all(updates);
       
+      // notify parent of updates if callback provided
       if (onCartsUpdated) {
         onCartsUpdated(updatedLeftCart, updatedRightCart);
       }
@@ -254,7 +242,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
     }
   };
 
-  // Calculate totals
+  // calculate cart totals
   const leftTotal = leftCart.products.reduce((sum, product) => sum + product.price, 0);
   const rightTotal = rightCart.products.reduce((sum, product) => sum + product.price, 0);
 
@@ -378,7 +366,7 @@ const CompareCartsModal: React.FC<CompareCartsModalProps> = ({
           </ScrollView>
         </View>
 
-        {/* Save Changes Button */}
+        {/* Save Changes Button - only shown when changes have been made */}
         {hasChanges && (
           <TouchableOpacity 
             style={styles.saveButton}

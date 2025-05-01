@@ -1,12 +1,10 @@
+import { API_ENDPOINTS, COMMON_HEADERS } from '../config/apiConfig';
+import { Product, Cart, CartProduct } from '../types';
 
-
-import axios from 'axios';
-import { API_ENDPOINTS, COMMON_HEADERS, API_BASE_URL } from '../config/apiConfig';
-import { Product, Cart, Stores, CartProduct } from '../types';
-
-// Get user carts function
+// get user carts from backend
 export const getUserCarts = async (userId: string): Promise<Cart[]> => {
   try {
+    // fetch all carts for the specified user
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}?userId=${userId}`, {
       method: 'GET',
       headers: COMMON_HEADERS,
@@ -19,7 +17,7 @@ export const getUserCarts = async (userId: string): Promise<Cart[]> => {
     return await response.json();
   } catch (error) {
     console.error('Get user carts error:', error);
-    // For now, return mock data to prevent crashes
+    // return mock data on error to prevent crashes
     return [
       {
         id: '1',
@@ -32,9 +30,10 @@ export const getUserCarts = async (userId: string): Promise<Cart[]> => {
   }
 };
 
-// Create new cart function
+// create a new cart for a user
 export const createNewUserCart = async (userId: string, name: string): Promise<Cart> => {
   try {
+    // send request to create new cart
     const response = await fetch(API_ENDPOINTS.cart.create, {
       method: 'POST',
       headers: COMMON_HEADERS,
@@ -55,7 +54,7 @@ export const createNewUserCart = async (userId: string, name: string): Promise<C
   } catch (error) {
     console.error('Create cart error:', error);
     
-    // Return mock cart on error to prevent crashes
+    // return mock cart on error to prevent crashes
     return {
       id: `${Date.now()}`,
       name: name,
@@ -66,8 +65,7 @@ export const createNewUserCart = async (userId: string, name: string): Promise<C
   }
 };
 
-
-// Add products to cart function
+// update an existing cart
 export const updateCart = async (
     cartId: string,
     userId: string,
@@ -75,13 +73,12 @@ export const updateCart = async (
     name?: string
   ): Promise<Cart> => {
     try {
-      // Handle the case where products array is empty or undefined
+      // handle empty products array
       const productsToProcess = Array.isArray(products) ? products : [];
       
-      // Standardize product properties to ensure consistency
       console.log("Got to updateCart......to do: standardizedProducts");
       
-      // Only map products if there are any
+      // standardize product properties to ensure consistency
       const standardizedProducts = productsToProcess.length > 0 
         ? productsToProcess.map(product => ({
             ProductId: product.productId || product.id || `product-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
@@ -89,10 +86,10 @@ export const updateCart = async (
             Price: typeof product.price === 'number' ? product.price : 0,
             Name: product.name || 'Product',
             Brand: product.brand || 'Brand',
-            Store: product.store || 'Unknown Store', // Ensure store is always included
+            Store: product.store || 'Unknown Store', // ensure store is always included
             ProductUrl: product.url || product.productUrl || `https://${product.store || 'unknown'}.com`
           }))
-        : []; // Use empty array when no products
+        : []; // use empty array when no products
   
       console.log("Got to updateCart......did: standardizedProducts", 
         standardizedProducts.length > 0 
@@ -101,6 +98,7 @@ export const updateCart = async (
           
       console.log(API_ENDPOINTS.cart.update(cartId));
       
+      // send request to update cart
       const response = await fetch(API_ENDPOINTS.cart.update(cartId), {
         method: 'PUT',
         headers: COMMON_HEADERS,
@@ -122,8 +120,7 @@ export const updateCart = async (
     } catch (error) {
       console.error('Update cart error:', error);
       
-      // Return mock cart on error to prevent crashes
-      // Handle the empty products case in the error handler too
+      // return mock cart on error to prevent crashes
       return {
         id: cartId,
         name: name || 'Updated Cart',
@@ -139,19 +136,20 @@ export const updateCart = async (
               Quantity: product.quantity || 1,
               ProductUrl: product.url || product.productUrl || `https://${product.store || 'unknown'}.com`
             }))
-          : [], // Empty array for empty products
+          : [], // empty array for empty products
         createdAt: new Date().toISOString()
       };
     }
   };
 
-// Add products to cart function
+// add products to a cart
 export const saveToCart = async (
   products: Product[],
   userId: string,
   cartId: string
 ): Promise<void> => {
   try {
+    // map products to cart product format
     const cartProducts: CartProduct[] = products.map(p => ({
       productId: p.id,
       thumbnail: p.thumbnail,
@@ -163,6 +161,7 @@ export const saveToCart = async (
       productUrl: p.url,
     }));
     
+    // send request to add products to cart
     const response = await fetch(API_ENDPOINTS.cart.addProducts(cartId), {
       method: 'PUT',
       headers: COMMON_HEADERS,
@@ -183,16 +182,16 @@ export const saveToCart = async (
   } catch (error) {
     
     console.error('Cart save error:', error);
-    // Just return mock success
+    // just return mock success
     return;
   }
 };
 
-
-// Delete a cart
+// delete a cart
 export const deleteCart = async (cartId: string, userId: string): Promise<boolean> => {
   try {
     console.log("Here")
+    // send request to delete cart
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/${cartId}?userId=${userId}`, {
       method: 'DELETE',
       headers: COMMON_HEADERS
@@ -210,7 +209,7 @@ export const deleteCart = async (cartId: string, userId: string): Promise<boolea
   }
 };
 
-// Remove a product from a cart
+// remove a product from a cart
 export const removeProductFromCart = async (
   cartId: string,
   productId: string,
@@ -218,18 +217,17 @@ export const removeProductFromCart = async (
 ): Promise<Cart> => {
   try {
     console.log("removeProductFromCart triggered")
-    // This matches the backend controller endpoint format in the compareCarts branch
+    // send request to remove product from cart
     const response = await fetch(`${API_ENDPOINTS.cart.getAll}/${cartId}/products/${productId}?userId=${userId}`, {
       method: 'DELETE',
       headers: COMMON_HEADERS
     });
 
     if (!response.ok) {
-      // If the backend API is not ready, handle it gracefully
-      // Implement client-side product removal to maintain app functionality
+      // fallback to client-side product removal if API fails
       console.warn('Backend product removal API returned an error. Implementing client-side fallback.');
       
-      // Fetch the current cart
+      // fetch the current cart
       const cartResponse = await fetch(`${API_ENDPOINTS.cart.getAll}?userId=${userId}`, {
         method: 'GET',
         headers: COMMON_HEADERS
@@ -246,12 +244,12 @@ export const removeProductFromCart = async (
         throw new Error('Cart not found');
       }
       
-      // Filter out the product to be removed
+      // filter out the product to be removed
       const updatedProducts = cart.products.filter((p: any) => 
         p.id !== productId && p.productId !== productId
       );
       
-      // Update the cart with the filtered products
+      // update the cart with the filtered products
       return await updateCart(cartId, userId, updatedProducts, cart.name);
     }
 

@@ -1,27 +1,32 @@
 import React, { useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Video, ResizeMode } from 'expo-av';
-import { Platform, View, Image, SafeAreaView, TextInput, Keyboard, KeyboardAvoidingView, Text, StyleSheet, Animated, Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { Platform, View, Image, SafeAreaView, TextInput, Keyboard, Text, StyleSheet, Animated, Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { useAuth } from './context/AuthContext';
-import { router } from 'expo-router';
+import { router } from 'expo-router'; 
 
 
 const Wrapper = Platform.OS === 'web' ? React.Fragment : TouchableWithoutFeedback;
 
-
+// signup screen component for user registration
 export default function SignupScreen() {
+  // get signup function from auth context
   const { signup } = useAuth();
+  // state for form inputs and loading status
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // loading state for showing animation
   const [loading, setLoading] = useState(false); 
-
-    const fadeAnim = useRef(new Animated.Value(0)).current;
   
-
+  // reference for fade animation
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  
+  // handle signup button press
   const handleSignup = async () => {
+    // prevent multiple submits when loading
+    if (loading) return;
 
-    if (loading) return; // Prevent double taps
-
+    // validate input fields
     if (email.length == 0){
       Alert.alert("Email Error","Email field is empty")
       return
@@ -39,23 +44,12 @@ export default function SignupScreen() {
       return
     }
     
-    setLoading(true); // Disable button
+    // start loading animation
+    setLoading(true);
     fadeIn(); // Start the fade-in animation
-
-    // try {
-      
-    //   await signup(email, password);
-    //   await AsyncStorage.setItem('@justLoggedIn', 'true');
-    
-    // } catch (err: any) {
-    
-    //   Alert.alert('Error', err.message || 'Signup failed');
-    // } finally {
-    //   setLoading(false); // Re-enable button
-    //   fadeIn(); // Start the fade-in animation
-    // }
   };
 
+  // fade in animation for loading screen
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -63,7 +57,8 @@ export default function SignupScreen() {
       useNativeDriver: true,
     }).start();
   };
-  
+
+  // fade out animation for loading screen
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
@@ -74,27 +69,27 @@ export default function SignupScreen() {
     });
   };
 
+  // function to handle video ready event during loading animation
   const handleVideoReady = async () => {
     //setVideoReady(true);
     setTimeout(async () => {
       try {
-        
-          await signup(email, password);
-          await AsyncStorage.setItem('@justLoggedIn', 'true');
+        // attempt signup with entered credentials
+        await signup(email, password);
+        await AsyncStorage.setItem('@justLoggedIn', 'true');
         
       } catch (err: any) {
         Alert.alert('Error', err.message || 'Signup failed');
       } finally {
-        fadeOut(); 
+        fadeOut(); // Start fade-out after signup attempt
       }
-  }, 900); 
+    }, 900); 
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Wrapper {...(Platform.OS === 'web' ? {} : { onPress: Keyboard.dismiss, accessible: false })}>
         <View style={{ flex: 1 }}>
-        
           <View style={styles.container}>
             <View style={styles.header}>
               <View style={styles.logoContainer}>
@@ -149,19 +144,17 @@ export default function SignupScreen() {
                 style={styles.loadingVideo}
                 shouldPlay
                 isLooping={true} 
-                resizeMode={ResizeMode.STRETCH}
+                resizeMode={ResizeMode.COVER}
                 isMuted
                 onReadyForDisplay={handleVideoReady}
               />
             </Animated.View>
           )}
-          
-        </View>  
+        </View>
       </Wrapper>
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   safeArea: {

@@ -1,19 +1,21 @@
-// app/hooks/useEnhancedProductSearch.ts
 import { useState, useEffect } from 'react';
 import { Product } from '../types';
 import { searchProducts, getProductByBarcode } from '../services/productService';
 import { Alert } from 'react-native';
 
+// define sort and filter option types
 export type SortOption = 'relevance' | 'price-asc' | 'price-desc' | 'name-asc' | 'name-desc';
 export type FilterOption = 'all' | 'walmart' | 'target' | 'costco' | 'samsClub';
 
+// extend the Product type to include relevance scoring and selection state
 interface ProductWithRelevance extends Product {
   relevanceScore?: number;
   selected?: boolean;
 }
 
+// enhanced product search hook with advanced filtering, sorting, and UI management
 export function useEnhancedProductSearch(initialProducts: Product[], initialSearchQuery: string = '') {
-  // Product state
+  // product state with source products and filtered display products
   const [products, setProducts] = useState<ProductWithRelevance[]>(
     initialProducts.map(p => ({ 
       ...p, 
@@ -22,35 +24,38 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     }))
   );
   const [displayedProducts, setDisplayedProducts] = useState<ProductWithRelevance[]>(products);
+  // product detail viewing state
   const [selectedProduct, setSelectedProduct] = useState<ProductWithRelevance | null>(null);
   
-  // UI state
+  // UI state management
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
+  
+  // search configuration state
   const [relevanceKeywords, setRelevanceKeywords] = useState<string>(initialSearchQuery);
   
-  // Filter and sort state
+  // filter and sort state
   const [currentSort, setCurrentSort] = useState<SortOption>('relevance');
   const [currentFilter, setCurrentFilter] = useState<FilterOption>('all');
   
-  // Success message state
+  // success message state for feedback after operations
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Initialize relevance scores when first loaded
+  // calculate relevance scores based on search keywords when component mounts
   useEffect(() => {
     if (initialSearchQuery) {
       calculateRelevanceScores(initialSearchQuery);
     }
   }, []);
 
-  // Apply filters and sort whenever they change
+  // apply filters and sorting whenever they change
   useEffect(() => {
     applyFiltersAndSort();
   }, [products, currentSort, currentFilter, relevanceKeywords]);
 
-  // Auto-hide success message after 3 seconds
+  // auto-hide success message after delay
   useEffect(() => {
     if (showSuccessMessage) {
       const timer = setTimeout(() => {
@@ -61,6 +66,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     }
   }, [showSuccessMessage]);
 
+  // calculate relevance scores for products based on matching keywords
   const calculateRelevanceScores = (query: string) => {
     if (!query) return;
 
@@ -73,7 +79,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
         
         keywords.forEach(keyword => {
           if (productText.includes(keyword)) {
-            // More weight for exact matches
+            // more weight for exact matches
             if (productText.includes(` ${keyword} `)) {
               score += 3;
             } else {
@@ -87,8 +93,9 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     );
   };
 
+  // apply filters and sorting to products for display
   const applyFiltersAndSort = () => {
-    // First filter by store
+    // first filter by store
     let filtered = [...products];
     if (currentFilter !== 'all') {
       filtered = filtered.filter(p => {
@@ -100,7 +107,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
       });
     }
 
-    // Then sort
+    // then sort the filtered results
     let sorted = [...filtered];
     if (currentSort === 'relevance') {
       sorted.sort((a, b) => {
@@ -120,6 +127,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     setDisplayedProducts(sorted);
   };
 
+  // toggle selection state of a product
   const toggleProductSelection = (productId: string) => {
     setProducts(prev =>
       prev.map(p =>
@@ -128,14 +136,17 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     );
   };
 
+  // get array of currently selected products
   const getSelectedProducts = () => {
     return products.filter(p => p.selected);
   };
 
+  // reset all product selections
   const clearSelections = () => {
     setProducts(prev => prev.map(p => ({ ...p, selected: false })));
   };
 
+  // search for products by text query
   const searchByText = async (query: string, stores: any) => {
     if (!query) {
       return [];
@@ -146,6 +157,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
       const foundProducts = await searchProducts(query, stores);
       
       if (foundProducts.length > 0) {
+        // initialize products with relevance scores
         setProducts(foundProducts.map(p => ({ ...p, selected: false, relevanceScore: 0 })));
         calculateRelevanceScores(query);
         setShowResults(true);
@@ -163,6 +175,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     }
   };
 
+  // search for products by barcode
   const searchByBarcode = async (barcode: string, stores: any) => {
     if (!barcode) {
       return [];
@@ -173,9 +186,10 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
       const foundProducts = await getProductByBarcode(barcode, stores);
       
       if (foundProducts.length > 0) {
+        // initialize products with relevance scores
         setProducts(foundProducts.map(p => ({ ...p, selected: false, relevanceScore: 0 })));
         
-        // Use product name for relevance if available
+        // use product name for relevance if available
         if (foundProducts[0].name) {
           calculateRelevanceScores(foundProducts[0].name);
         }
@@ -198,21 +212,25 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     }
   };
 
+  // close the results modal
   const closeResults = () => {
     setShowResults(false);
   };
 
+  // clear search results and hide results modal
   const clearResults = () => {
     setProducts([]);
     setDisplayedProducts([]);
     setShowResults(false);
   };
 
+  // show a success message temporarily
   const showSuccess = (message: string) => {
     setSuccessMessage(message);
     setShowSuccessMessage(true);
   };
 
+  // get display label for current sort option
   const getSortLabel = (sort: SortOption): string => {
     switch (sort) {
       case 'relevance': return 'Most Relevant';
@@ -224,6 +242,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     }
   };
 
+  // get display label for current filter option
   const getFilterLabel = (filter: FilterOption): string => {
     switch (filter) {
       case 'all': return 'All Stores';
@@ -235,23 +254,26 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     }
   };
 
+  // update relevance keywords and recalculate scores
   const handleRelevanceKeywordsChange = (text: string) => {
     setRelevanceKeywords(text);
     calculateRelevanceScores(text);
   };
 
+  // show product details modal for a product
   const viewProductDetails = (product: ProductWithRelevance) => {
     setSelectedProduct(product);
     setShowProductModal(true);
   };
 
+  // close the product details modal
   const closeProductModal = () => {
     setShowProductModal(false);
     setSelectedProduct(null);
   };
 
   return {
-    // State
+    // state
     products,
     displayedProducts,
     isSearching,
@@ -264,7 +286,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     selectedProduct,
     showProductModal,
     
-    // Actions
+    // actions
     setCurrentSort,
     setCurrentFilter,
     toggleProductSelection,

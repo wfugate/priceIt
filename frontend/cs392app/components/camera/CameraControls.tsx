@@ -1,8 +1,8 @@
-// components/camera/CameraControls.tsx
 import React from 'react';
 import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { cameraStyles } from '../styles/styles';
 
+// interface for camera controls props
 interface Props {
   onCapture: () => void;
   onSubmit: () => void; 
@@ -11,6 +11,7 @@ interface Props {
   scanMode: 'image' | 'barcode';
 }
 
+// camera controls component with different UI based on scan mode
 export default function CameraControls({
   onCapture,
   onSubmit,
@@ -18,7 +19,7 @@ export default function CameraControls({
   loadingSubmit,
   scanMode
 }: Props) {
-  // Only render controls for the active scan mode
+  // only render controls for image scan mode
   if (scanMode === 'image') {
     return (
       <View style={cameraStyles.bottomContainer}>
@@ -46,8 +47,9 @@ export default function CameraControls({
         </TouchableOpacity>
       </View>
     );
-  } else if (scanMode === 'barcode') {
-    // For barcode mode, only show a status indicator
+  } 
+  // render barcode scanner status indicator for barcode scan mode
+  else if (scanMode === 'barcode') {
     return (
       <View style={cameraStyles.bottomContainer}>
         <View style={{ alignItems: 'center' }}>
@@ -62,6 +64,6 @@ export default function CameraControls({
     );
   }
   
-  // Fallback empty view
+  // fallback empty view if no scan mode matches
   return <View style={cameraStyles.bottomContainer} />;
 }

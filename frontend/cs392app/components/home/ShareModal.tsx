@@ -1,4 +1,3 @@
-// components/home/ShareModal.tsx
 import React from 'react';
 import { 
   StyleSheet, 
@@ -10,6 +9,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
+// interface for product data
 interface Product {
   productId: string;
   thumbnail: string;
@@ -19,6 +19,7 @@ interface Product {
   quantity?: number;
 }
 
+// interface for cart data
 interface Cart {
   id: string;
   name: string;
@@ -27,23 +28,27 @@ interface Cart {
   selected?: boolean;
 }
 
+// interface for share modal props
 interface ShareModalProps {
   visible: boolean;
   onClose: () => void;
   carts: Cart[];
 }
 
+// modal for sharing cart information
 const ShareModal: React.FC<ShareModalProps> = ({
   visible,
   onClose,
   carts
 }) => {
-  // Generate cart summary text for sharing
+  // generate text summary of carts for sharing
   const generateCartSummary = (): string => {
     if (!carts || carts.length === 0) return '';
     
     return carts.map(cart => {
+      // calculate total price for each cart
       const totalPrice = cart.products.reduce((sum, product) => sum + product.price, 0);
+      // format product list with names and prices
       const productList = cart.products.map(product => 
         `- ${product.name} ($${product.price.toFixed(2)})`
       ).join('\n');
@@ -52,7 +57,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
     }).join('\n\n----------\n\n');
   };
 
-  // Share to social platforms
+  // share cart information using native share functionality
   const shareToSocial = async (platform: string) => {
     const summary = generateCartSummary();
     try {
@@ -75,8 +80,6 @@ const ShareModal: React.FC<ShareModalProps> = ({
     >
       <View style={styles.container}>
         <View style={styles.modalContent}>
-          
-          
           <TouchableOpacity 
             style={[styles.shareButton, styles.moreButton]} 
             onPress={() => shareToSocial('more')}

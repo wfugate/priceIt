@@ -1,4 +1,3 @@
-// app/(tabs)/scan.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Modal, Alert, Switch, StyleSheet, SafeAreaView, Animated } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
@@ -15,14 +14,17 @@ import { useAuth } from '../context/AuthContext';
 import { useStoreSettings } from '../hooks/useStoreSettings';
 import { useProductSearch } from '../hooks/useProductSearch';
 
+// main scanning screen component for both image and barcode scanning
 export default function ScanScreen() {
+  // state for loading animations
   const [loading, setLoading] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   
-  // Mock userId - In a real app, this would come from authentication
+  // get user information from auth context
   const { user } = useAuth();
   const userId = user?.UserId;
 
+  // use camera scanning hook for camera functionality
   const {
     cameraRef,
     item,
@@ -37,6 +39,7 @@ export default function ScanScreen() {
     resetBarcodeScanner
   } = useCameraScan();
 
+  // use store settings hook for managing which stores to search
   const { 
     stores, 
     showStoreSettings, 
@@ -44,6 +47,7 @@ export default function ScanScreen() {
     toggleStoreSettings 
   } = useStoreSettings();
 
+  // use product search hook for managing product search results
   const { 
     products, 
     isSearching, 
@@ -54,11 +58,12 @@ export default function ScanScreen() {
     clearResults
   } = useProductSearch();
 
+  // clear results when scan mode changes
   useEffect(() => {
-    clearResults(); // Clear results when scan mode changes
+    clearResults();
   }, [scanMode]);
 
-  // Animation functions
+  // fade in animation function
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -67,6 +72,7 @@ export default function ScanScreen() {
     }).start();
   };
   
+  // fade out animation function
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
@@ -77,7 +83,7 @@ export default function ScanScreen() {
     });
   };
 
-  // Function to handle video ready event
+  // function to handle loading animation with video
   const handleVideoReady = async (callback: () => Promise<void>) => {
     setTimeout(async () => {
       try {
@@ -88,12 +94,12 @@ export default function ScanScreen() {
       } finally {
         fadeOut();
       }
-    }, 900); // Minimum 0.9 seconds delay
+    }, 900); // minimum delay for loading animation
   };
 
-  // Wrapped handleBarCodeScanned with loading screen
+  // wrapper for barcode scan handler with loading animation
   const handleBarCodeScanned = (data: any) => {
-    if (loading) return; // Prevent processing while loading
+    if (loading) return; // prevent processing while loading
     
     setLoading(true);
     fadeIn();
@@ -105,9 +111,9 @@ export default function ScanScreen() {
     handleVideoReady(barcodeCallback);
   };
 
-  // Wrapped captureImage with loading screen
+  // wrapper for image capture with loading animation
   const captureImage = async () => {
-    if (loading) return; // Prevent double taps
+    if (loading) return; // prevent double taps
     
     setLoading(true);
     fadeIn();
@@ -119,45 +125,44 @@ export default function ScanScreen() {
     handleVideoReady(captureCallback);
   };
 
-  // Ensure we reset the item in the parent component when toggling modes
+  // handle switching between image and barcode scanning modes
   const handleScanModeToggle = (mode: 'image' | 'barcode') => {
-    clearResults(); // Use the hook function
+    clearResults();
     toggleScanMode(mode);
     console.log(`Toggled to ${mode} mode, cleared previous results`);
   };
-  // Reset UI state when scan mode change
 
+  // automatically search for products when barcode is detected
   useEffect(() => {
-    // Skip the effect entirely if we're not in barcode mode
+    // skip if not in barcode mode
     if (scanMode !== 'barcode') return;
     
-    // Skip if no item, or already searching/showing results
+    // skip if no item, or already searching/showing results
     if (!item || isSearching || showResults) return;
     
     console.log('Barcode detected, triggering search for:', item);
     
-    // Set loading state and start animation
+    // set loading state and start animation
     setLoading(true);
     fadeIn();
     
-    // Define an async function to search for products
+    // search for products using the barcode
     const searchForBarcodeProducts = async () => {
       try {
         await searchByBarcode(item, stores);
       } catch (error) {
         console.error('Barcode search failed:', error);
-        // Alert user of the error
         Alert.alert('Error', 'Failed to process barcode. Please try again.');
       } finally {
         fadeOut();
-        // Reset the scanner even if there was an error
+        // reset the scanner even if there was an error
         setTimeout(() => {
           resetBarcodeScanner();
         }, 1000);
       }
     };
     
-    // Run the search with a delay to ensure minimum display time
+    // run search with delay for loading animation
     const searchTimeout = setTimeout(() => {
       searchForBarcodeProducts();
     }, 900);
@@ -166,34 +171,36 @@ export default function ScanScreen() {
       clearTimeout(searchTimeout);
     };
   }, [item, scanMode]);
-  // Updated handleSubmit function with loading screen
+
+  // handle submit button press to search for products
   const handleSubmit = async () => {
     if (!item) {
       Alert.alert('Error', 'No item scanned yet');
       return;
     }
     
-    if (loading) return; // Prevent double taps
+    if (loading) return; // prevent double taps
     
     setLoading(true);
     fadeIn();
     
     const submitCallback = async () => {
       try {
-        // Use the hook's function instead of inline logic
+        // determine search method based on whether input is a barcode
         if (isBarcode(item)) {
           await searchByBarcode(item, stores);
         } else {
           await searchByText(item, stores);
         }
       } finally {
-        // The isSearching state is managed by the hook now
+        // isSearching state is managed by the hook
       }
     };
     
     handleVideoReady(submitCallback);
   };
 
+  // handle adding selected products to a cart
   const handleAddToCart = async (selectedProducts: Product[], cartId: string) => {
     try {
       if (!userId) return;
@@ -206,8 +213,9 @@ export default function ScanScreen() {
     }
   };
 
+  // close results modal and reset barcode scanner if needed
   const closeResultsModal = () => {
-    closeResults(); // Use the hook function
+    closeResults();
     
     if (scanMode === 'barcode') {
       console.log('Re-enabling barcode scanning after closing results');
@@ -215,6 +223,7 @@ export default function ScanScreen() {
     }
   };
 
+  // if camera permission is not granted, show permission request
   if (!permission) {
     return <SafeAreaView style={styles.container} />;
   }

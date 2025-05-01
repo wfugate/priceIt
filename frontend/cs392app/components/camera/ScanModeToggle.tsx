@@ -1,12 +1,13 @@
-// components/camera/ScanModeToggle.tsx
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+// interface for scan mode toggle props
 interface ScanModeToggleProps {
   mode: 'barcode' | 'image';
   onToggle: (mode: 'barcode' | 'image') => void;
 }
 
+// component for toggling between barcode and image scanning modes
 export const ScanModeToggle: React.FC<ScanModeToggleProps> = ({ mode, onToggle }) => {
   return (
     <View style={styles.container}>

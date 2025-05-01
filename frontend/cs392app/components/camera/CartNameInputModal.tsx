@@ -1,4 +1,3 @@
-// components/camera/CartNameInputModal.tsx
 import React, { useState } from 'react';
 import { 
   Modal, 
@@ -11,6 +10,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
+// interface for cart name input modal props
 interface CartNameInputModalProps {
   visible: boolean;
   onClose: () => void;
@@ -18,25 +18,31 @@ interface CartNameInputModalProps {
   isLoading: boolean;
 }
 
+// modal for entering a new cart name
 export const CartNameInputModal: React.FC<CartNameInputModalProps> = ({
   visible,
   onClose,
   onCreateCart,
   isLoading
 }) => {
+  // state for cart name input and error message
   const [cartName, setCartName] = useState('');
   const [error, setError] = useState('');
 
+  // handle cart creation submission
   const handleSubmit = async () => {
+    // validate cart name is not empty
     if (!cartName.trim()) {
       setError('Please enter a cart name');
       return;
     }
     
+    // clear any previous error
     setError('');
     try {
+      // attempt to create cart with entered name
       await onCreateCart(cartName);
-      setCartName(''); // Reset the input
+      setCartName(''); // reset the input after successful creation
     } catch (error) {
       setError('Failed to create cart');
     }
@@ -99,7 +105,6 @@ export const CartNameInputModal: React.FC<CartNameInputModalProps> = ({
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,

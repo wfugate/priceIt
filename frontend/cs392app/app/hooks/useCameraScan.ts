@@ -1,28 +1,37 @@
-// app/hooks/useCameraScan.ts
 import { useState, useRef, useEffect } from 'react';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { scanImage } from '../services/imageProcessingService';
 
+// hook for managing camera functionality including image scanning and barcode detection
 export function useCameraScan() {
+  // camera permissions management
   const [permission, requestPermission] = useCameraPermissions();
+  // loading state for async operations
   const [loading, setLoading] = useState(false);
+  // state for storing scan result (product name or barcode value)
   const [item, setItem] = useState<string | null>(null);
+  // state for tracking current scan mode
   const [scanMode, setScanMode] = useState<'image' | 'barcode'>('image');
+  // state for controlling barcode scanner activity
   const [isBarcodeScanningActive, setIsBarcodeScanningActive] = useState(false);
+  // track last scanned barcode to prevent duplicate scans
   const [lastScannedBarcode, setLastScannedBarcode] = useState<string | null>(null);
+  // reference to camera component
   const cameraRef = useRef<CameraView>(null);
 
-  // Initialize barcode scanning based on mode
+  // initialize barcode scanning based on selected mode
   useEffect(() => {
     console.log(`Scan mode initialized to ${scanMode}`);
     setIsBarcodeScanningActive(scanMode === 'barcode');
   }, []); 
 
+  // function to capture and process an image
   const captureImage = async () => {
     if (!cameraRef.current || loading || scanMode !== 'image') return;
     
     setLoading(true);
     try {
+      // step 1: take a photo with the camera
       const photo = await cameraRef.current.takePictureAsync({
         quality: 0.8,
         base64: true,
@@ -31,7 +40,9 @@ export function useCameraScan() {
 
       if (!photo?.base64) throw new Error('Failed to capture photo');
       
+      // step 2: send the image to the backend for processing
       const result = await scanImage(photo.base64);
+      // step 3: update state with the recognized item
       setItem(result.item);
     } catch (error) {
       console.error('Error during image capture:', error);
@@ -41,33 +52,35 @@ export function useCameraScan() {
     }
   };
 
+  // function to handle barcode scanning
   const handleBarCodeScanned = async ({ type, data }: BarcodeScanningResult) => {
-    // Prevent multiple scans
+    // prevent multiple scans of the same barcode or when scanner is disabled
     if (!isBarcodeScanningActive || loading || data === lastScannedBarcode) {
       console.log(`Barcode scan skipped: ${data} - active:${isBarcodeScanningActive}, loading:${loading}`);
       return;
     }
     
-    // Disable scanning to prevent duplicate scans
+    // disable scanner to prevent duplicate scans
     setIsBarcodeScanningActive(false);
     
     console.log(`Barcode detected: ${type} - ${data}`);
     setLoading(true);
     
-    // Update lastScannedBarcode to prevent duplicate scans
+    // store scanned barcode to prevent duplicates
     setLastScannedBarcode(data);
     
-    // Set the detected barcode as the item
+    // set the detected barcode as the item
     setItem(data);
     
-    // Change loading state after a short delay
+    // change loading state after a short delay
     setTimeout(() => {
       setLoading(false);
     }, 100);
   };
 
+  // function to toggle between image and barcode scanning modes
   const toggleScanMode = (mode: 'image' | 'barcode') => {
-    // Don't do anything if we're already in this mode
+    // don't do anything if already in the selected mode
     if (mode === scanMode) {
       console.log(`Already in ${mode} mode, no change needed`);
       return;
@@ -75,18 +88,18 @@ export function useCameraScan() {
     
     console.log(`Setting scan mode to: ${mode}`);
     
-    // Clear previous data
+    // clear previous scan results
     setItem(null);
     setLastScannedBarcode(null);
     setLoading(false);
     
-    // Update the scan mode
+    // update the scan mode
     setScanMode(mode);
     
-    // Set barcode scanning state based on the mode
+    // enable or disable barcode scanning based on mode
     if (mode === 'barcode') {
       console.log('Enabling barcode scanning');
-      // Short delay to ensure clean state before enabling
+      // short delay to ensure clean state before enabling
       setTimeout(() => {
         setIsBarcodeScanningActive(true);
       }, 100);
@@ -95,22 +108,22 @@ export function useCameraScan() {
     }
   };
 
-  // Function to reset barcode scanner without mode changes
+  // function to reset barcode scanner without changing mode
   const resetBarcodeScanner = () => {
-    // Only applies to barcode mode
+    // only applies to barcode mode
     if (scanMode !== 'barcode') return;
     
     console.log('Performing controlled reset of barcode scanner');
     
-    // Disable scanning to prevent new detections during reset
+    // disable scanning during reset to prevent new detections
     setIsBarcodeScanningActive(false);
     
-    // Clear state in a controlled sequence
+    // clear state in a controlled sequence
     setLoading(false);
     setLastScannedBarcode(null);
     setItem(null);
     
-    // Re-enable scanning after a delay
+    // re-enable scanning after a delay
     setTimeout(() => {
       console.log('Re-enabling barcode scanning after reset');
       setIsBarcodeScanningActive(true);
@@ -131,6 +144,3 @@ export function useCameraScan() {
     resetBarcodeScanner
   };
 }
-
-
-export default function removeWarning(){}

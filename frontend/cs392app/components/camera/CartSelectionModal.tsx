@@ -1,13 +1,13 @@
-// components/camera/CartSelectionModal.tsx
-import React, { useState } from 'react';
 import { View, ScrollView, Text, TouchableOpacity, Modal, StyleSheet, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
+// interface for cart data
 interface Cart {
   id: string;
   name: string;
 }
 
+// interface for cart selection modal props
 interface CartSelectionModalProps {
   visible: boolean;
   onClose: () => void;
@@ -16,6 +16,7 @@ interface CartSelectionModalProps {
   userCarts: Cart[];
 }
 
+// modal for selecting an existing cart or creating a new one
 export const CartSelectionModal: React.FC<CartSelectionModalProps> = ({
   visible,
   onClose,
@@ -23,8 +24,6 @@ export const CartSelectionModal: React.FC<CartSelectionModalProps> = ({
   onCreateNewCart,
   userCarts,
 }) => {
-  const [newCartName, setNewCartName] = useState('');
-
   return (
     <Modal
       visible={visible}
@@ -42,7 +41,7 @@ export const CartSelectionModal: React.FC<CartSelectionModalProps> = ({
             <View style={styles.spacer} />
           </View>
           
-          {/* Existing carts */}
+          {/* list of existing carts */}
           {userCarts.length > 0 ? (
             <ScrollView style={styles.cartsContainer}>
               {userCarts.map(cart => (
@@ -60,12 +59,12 @@ export const CartSelectionModal: React.FC<CartSelectionModalProps> = ({
             <Text style={styles.noCarts}>You don't have any carts yet.</Text>
           )}
           
-          {/* Create new cart button */}
+          {/* button to create a new cart */}
           <TouchableOpacity
             style={styles.createNewCartButton}
             onPress={() => {
-              onClose(); // Close the current modal
-              onCreateNewCart(''); // Open the cart name input modal
+              onClose(); // close the current modal
+              onCreateNewCart(''); // open the cart name input modal
             }}
           >
             <FontAwesome name="plus" size={16} color="#fff" style={styles.cartIcon} />
