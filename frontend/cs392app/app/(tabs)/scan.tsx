@@ -130,8 +130,10 @@ export default function ScanScreen() {
   useEffect(() => {
     // Skip the effect entirely if we're not in barcode mode
     if (scanMode !== 'barcode') return;
+    
     // Skip if no item, or already searching/showing results
-    if (!item || isSearching || showResults || loading) return;
+    if (!item || isSearching || showResults) return;
+    
     console.log('Barcode detected, triggering search for:', item);
     
     // Set loading state and start animation
@@ -142,8 +144,16 @@ export default function ScanScreen() {
     const searchForBarcodeProducts = async () => {
       try {
         await searchByBarcode(item, stores);
+      } catch (error) {
+        console.error('Barcode search failed:', error);
+        // Alert user of the error
+        Alert.alert('Error', 'Failed to process barcode. Please try again.');
       } finally {
         fadeOut();
+        // Reset the scanner even if there was an error
+        setTimeout(() => {
+          resetBarcodeScanner();
+        }, 1000);
       }
     };
     
@@ -156,7 +166,6 @@ export default function ScanScreen() {
       clearTimeout(searchTimeout);
     };
   }, [item, scanMode]);
-  
   // Updated handleSubmit function with loading screen
   const handleSubmit = async () => {
     if (!item) {

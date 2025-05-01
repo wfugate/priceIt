@@ -108,11 +108,9 @@ export function useCameraScan() {
     // Clear state in a controlled sequence
     setLoading(false);
     setLastScannedBarcode(null);
-    
-    // Clear item last to avoid triggering search effects
     setItem(null);
     
-    // Re-enable scanning after a short delay
+    // Re-enable scanning after a delay
     setTimeout(() => {
       console.log('Re-enabling barcode scanning after reset');
       setIsBarcodeScanningActive(true);

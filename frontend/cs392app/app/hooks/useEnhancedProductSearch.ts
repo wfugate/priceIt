@@ -167,7 +167,7 @@ export function useEnhancedProductSearch(initialProducts: Product[], initialSear
     if (!barcode) {
       return [];
     }
-
+  
     setIsSearching(true);
     try {
       const foundProducts = await getProductByBarcode(barcode, stores);
